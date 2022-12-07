@@ -9,6 +9,8 @@ class MaximumSubarray {
   // find all subarrays
   // find the sum
   // max the sum
+  // time complexity: O(n^2) all subarrays * O(n) subarray sum = O(n^3)
+  // space complexity: O(1) for no extra space usage
   private int maxSubArray(int[] nums) {
     int maxSubarraySum = Integer.MIN_VALUE;
     if (nums.length == 0) {
@@ -36,6 +38,8 @@ class MaximumSubarray {
 
   // record all the max sums for each index
   // only add the sum if the prev sum is positive
+  // time complexity: O(n) for one pass
+  // space complexity: O(n) for max sum array
   private int maxSubArrayV2(int[] nums) {
     // the smallest sum is 0 because subarray can be empty
     int maxSubarraySum = 0;
