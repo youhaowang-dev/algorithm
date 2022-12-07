@@ -29,7 +29,7 @@ class MaximumSubarray {
 
   private int getSubArraySum(int subarray_left, int subarray_right, int[] nums) {
     int sum = 0;
-    for (int index = subarray_left; index < subarray_right; index++) {
+    for (int index = subarray_left; index < subarray_right + 1; index++) {
       sum += nums[index];
     }
 
@@ -41,14 +41,13 @@ class MaximumSubarray {
   // time complexity: O(n) for one pass
   // space complexity: O(n) for max sum array
   private int maxSubArrayV2(int[] nums) {
-    // the smallest sum is 0 because subarray can be empty
-    int maxSubarraySum = 0;
     if (nums.length == 0) {
-      return maxSubarraySum;
+      return Integer.MIN_VALUE;
     }
 
+    int maxSubarraySum = nums[0];
     int[] maxSums = new int[nums.length];
-    maxSums[0] = nums[0]; // init
+    maxSums[0] = maxSubarraySum;
 
     for (int index = 1; index < nums.length; index++) {
       if (maxSums[index - 1] > 0) {
@@ -66,12 +65,17 @@ class MaximumSubarray {
 
   public static void main(String[] args) {
     MaximumSubarray maxSubArray = new MaximumSubarray();
-    int[] nums = new int[] {-2,1,-3,4,-1,2,1,-5,4};
+    int[][] testCases = new int[][] {
+      new int[] {-2,1,-3,4,-1,2,1,-5,4},
+      new int[] {5},
+    };
 
-    int bruteForceResult = maxSubArray.maxSubArray(nums);
-    System.out.println("bruteForceResult: " + bruteForceResult);
+    for (int[] nums: testCases) {
+      int bruteForceResult = maxSubArray.maxSubArray(nums);
+      System.out.println("bruteForceResult: " + bruteForceResult);
 
-    int maxSumArrayResult = maxSubArray.maxSubArrayV2(nums);
-    System.out.println("maxSumArrayResult: " + maxSumArrayResult);
+      int maxSumArrayResult = maxSubArray.maxSubArrayV2(nums);
+      System.out.println("maxSumArrayResult: " + maxSumArrayResult);
+    }
   }
 }
