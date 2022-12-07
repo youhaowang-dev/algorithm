@@ -11,6 +11,10 @@ class MaximumSubarray {
   // max the sum
   private int maxSubArray(int[] nums) {
     int maxSubarraySum = Integer.MIN_VALUE;
+    if (nums.length == 0) {
+      return maxSubarraySum;
+    }
+
     for (int subarray_left = 0; subarray_left < nums.length; subarray_left++) {
       for (int subarray_right = subarray_left; subarray_right < nums.length; subarray_right++) {
         int subarraySum = this.getSubArraySum(subarray_left, subarray_right, nums);
@@ -30,10 +34,40 @@ class MaximumSubarray {
     return sum;
   }
 
+  // record all the max sums for each index
+  // only add the sum if the prev sum is positive
+  private int maxSubArrayV2(int[] nums) {
+    // the smallest sum is 0 because subarray can be empty
+    int maxSubarraySum = 0;
+    if (nums.length == 0) {
+      return maxSubarraySum;
+    }
+
+    int[] maxSums = new int[nums.length];
+    maxSums[0] = nums[0]; // init
+
+    for (int index = 1; index < nums.length; index++) {
+      if (maxSums[index - 1] > 0) {
+        // prev sum is positive, so it can increase the subarray sum
+        maxSums[index] = nums[index] + maxSums[index - 1];
+      } else {
+        // prev sum is negative, no need to add it
+        maxSums[index] = nums[index];
+      }
+      maxSubarraySum = Math.max(maxSubarraySum, maxSums[index]);
+    }
+
+    return maxSubarraySum;
+  }
+
   public static void main(String[] args) {
     MaximumSubarray maxSubArray = new MaximumSubarray();
     int[] nums = new int[] {-2,1,-3,4,-1,2,1,-5,4};
+
     int bruteForceResult = maxSubArray.maxSubArray(nums);
     System.out.println("bruteForceResult: " + bruteForceResult);
+
+    int maxSumArrayResult = maxSubArray.maxSubArrayV2(nums);
+    System.out.println("maxSumArrayResult: " + maxSumArrayResult);
   }
 }
