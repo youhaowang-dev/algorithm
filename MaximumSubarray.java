@@ -1,4 +1,5 @@
-// tag: Amazon 41 Apple 10 Microsoft 9 Adobe 9 Google 8 Cisco 8 Facebook 6 LinkedIn 5 Bloomberg 5 Expedia 3 Uber 3 JPMorgan 3 Twilio 3 Oracle 2 DE Shaw
+// tag: Array, Divide and Conquer, Dynamic Programming
+// Amazon 41 Apple 10 Microsoft 9 Adobe 9 Google 8 Cisco 8 Facebook 6 LinkedIn 5 Bloomberg 5 Expedia 3 Uber 3 JPMorgan 3 Twilio 3 Oracle 2 DE Shaw
 // source: https://leetcode.com/problems/maximum-subarray/
 // description: Given an integer array nums, find the subarray which has the largest sum and return its sum.
 // example: maxSubArray([-2,1,-3,4,-1,2,1,-5,4]) => 6 because [4,-1,2,1] has the largest sum = 6
