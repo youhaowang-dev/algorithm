@@ -8,6 +8,7 @@
 // example: nums = [3,2,1,5,6,4], k = 2, output = 5
 //          nums = [3,2,3,1,2,4,5,5,6], k = 4, output = 4
 
+import java.util.Arrays;
 import java.util.Map;
 
 class KthLargestElementInAnArray {
@@ -60,6 +61,48 @@ class KthLargestElementInAnArray {
     this.quickSort(nums, pivot_index + 1, right_start);
   }
 
+  public int findKthLargestQuickSortV2(int[] nums, int k) {
+    this.quickSortV2(nums, 0, nums.length - 1);
+
+    return nums[nums.length - 1 - (k - 1)];
+  }
+
+  private void quickSortV2(int[] nums, int left_start, int right_start) {
+    int pivotIndex = this.setPivot(nums, left_start, right_start);
+    if (left_start < pivotIndex - 1) {
+      this.quickSortV2(nums, left_start, pivotIndex - 1);
+    }
+    if (right_start > pivotIndex) {
+      this.quickSortV2(nums, pivotIndex, right_start);
+    }
+  }
+
+  // set the pivot at the sorted position and return the pivot index
+  private int setPivot(int[] nums, int left_start, int right_start) {
+    int left = left_start;
+    int right = right_start;
+    int pivot = nums[left_start];
+
+    while (left <= right) {
+      while (nums[left] < pivot) {
+        left++;
+      }
+      while (nums[right] > pivot) {
+        right--;
+      }
+      if (left <= right) {
+        int left_copy = nums[left];
+        nums[left] = nums[right];
+        nums[right] = left_copy;
+        // move pointers after swapping
+        left++;
+        right--;
+      }
+    }
+
+    return left; // left = right = pivot index
+  }
+
   static class Params {
 
     public int[] nums;
@@ -71,11 +114,7 @@ class KthLargestElementInAnArray {
     }
 
     public String toString() {
-      return String.format(
-        "nums: %s, k: %s",
-        java.util.Arrays.toString(nums),
-        k
-      );
+      return String.format("nums: %s, k: %s", Arrays.toString(nums), k);
     }
   }
 
@@ -83,28 +122,42 @@ class KthLargestElementInAnArray {
     KthLargestElementInAnArray kthLargestElementInAnArray = new KthLargestElementInAnArray();
     Params[] testCases = new Params[] {
       new Params(new int[] { 3, 2, 1, 5, 6, 4 }, 2),
-      new Params(new int[] { 3, 2, 3, 1, 2, 4, 5, 5, 6 }, 4),
+      new Params(
+        new int[] { 1, 1, 1, 1, 11, 11, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
+        4
+      ),
     };
     // NOTE: the method must be public to make .getMethod work
-    String[] testMethodNames = new String[] { "findKthLargestQuickSort" };
+    String[] testMethodNames = new String[] {
+      "findKthLargestQuickSort",
+      "findKthLargestQuickSortV2",
+    };
 
     for (Params params : testCases) {
       for (String methodName : testMethodNames) {
+        System.out.println(
+          String.format(
+            "Method Name: %s\nInput: %s",
+            methodName,
+            params.toString()
+          )
+        );
         java.lang.reflect.Method method = kthLargestElementInAnArray
           .getClass()
           .getMethod(methodName, int[].class, int.class);
+        int[] numsCopy = Arrays.copyOf(params.nums, params.nums.length);
         int kthLargest = (int) method.invoke(
           kthLargestElementInAnArray,
-          params.nums,
+          numsCopy,
           params.k
         );
-        String printContent = String.format(
-          "Method Name: %s\nInput: %s, Output: %s",
-          methodName,
-          params.toString(),
-          kthLargest
+        System.out.println(
+          String.format(
+            "Output: %s. Input Array: %s",
+            kthLargest,
+            Arrays.toString(numsCopy)
+          )
         );
-        System.out.println(printContent);
       }
     }
   }
