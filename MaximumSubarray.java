@@ -28,7 +28,8 @@ class MaximumSubarray {
   }
 
   // brute force with prefix sum
-  // time complexity: O(n) prefix sum array building + O(n^2) all subarrays = O(n^2)
+  // time complexity: O(n) prefix sum array building + O(n^2) all subarrays =
+  // O(n^2)
   // space complexity: O(n) for prefix sum array
   public int maxSubArrayV3(int[] nums) {
     int maxSubArraySum = Integer.MIN_VALUE;
@@ -101,17 +102,18 @@ class MaximumSubarray {
   public static void main(String[] args) throws Exception {
     MaximumSubarray maxSubArray = new MaximumSubarray();
     int[][] testCases = new int[][] {
-      new int[] {-2,1,-3,4,-1,2,1,-5,4},
-      new int[] {5},
+        new int[] { -2, 1, -3, 4, -1, 2, 1, -5, 4 },
+        new int[] { 5 },
     };
     // NOTE: the function must be public to make .getMethod work
-    String[] testMethodNames = new String[] {"maxSubArray", "maxSubArrayV2", "maxSubArrayV3"};
+    String[] testMethodNames = new String[] { "maxSubArray", "maxSubArrayV2", "maxSubArrayV3" };
 
     for (int[] nums : testCases) {
       for (String methodName : testMethodNames) {
         java.lang.reflect.Method method = maxSubArray.getClass().getMethod(methodName, int[].class);
         int maxSubArraySum = (int) method.invoke(maxSubArray, nums);
-        String printContent = String.format("Function Name: %s, Input: %s, Output: %s", methodName, java.util.Arrays.toString(nums), maxSubArraySum);
+        String printContent = String.format("Function Name: %s, Input: %s, Output: %s", methodName,
+            java.util.Arrays.toString(nums), maxSubArraySum);
         System.out.println(printContent);
       }
     }
