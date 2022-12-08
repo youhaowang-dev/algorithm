@@ -11,7 +11,7 @@ class MaximumSubarray {
   // max the sum
   // time complexity: O(n^2) all subarrays * O(n) subarray sum = O(n^3)
   // space complexity: O(1) for no extra space usage
-  private int maxSubArray(int[] nums) {
+  public int maxSubArray(int[] nums) {
     int maxSubarraySum = Integer.MIN_VALUE;
     if (nums.length == 0) {
       return maxSubarraySum;
@@ -30,7 +30,7 @@ class MaximumSubarray {
   // brute force with prefix sum
   // time complexity: O(n) prefix sum array building + O(n^2) all subarrays = O(n^2)
   // space complexity: O(n) for prefix sum array
-  private int maxSubArrayV3(int[] nums) {
+  public int maxSubArrayV3(int[] nums) {
     int maxSubArraySum = Integer.MIN_VALUE;
     if (nums.length == 0) {
       return maxSubArraySum;
@@ -98,23 +98,22 @@ class MaximumSubarray {
     return maxSubarraySum;
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     MaximumSubarray maxSubArray = new MaximumSubarray();
-
     int[][] testCases = new int[][] {
       new int[] {-2,1,-3,4,-1,2,1,-5,4},
       new int[] {5},
     };
+    // NOTE: the function must be public to make .getMethod work
+    String[] testMethodNames = new String[] {"maxSubArray", "maxSubArrayV2", "maxSubArrayV3"};
 
-    for (int[] nums: testCases) {
-      int bruteForceResult = maxSubArray.maxSubArray(nums);
-      System.out.println("bruteForceResult: " + bruteForceResult);
-
-      int bruteForceWithPrefixSumResult = maxSubArray.maxSubArrayV3(nums);
-      System.out.println("bruteForceWithPrefixSumResult: " + bruteForceWithPrefixSumResult);
-
-      int maxSumArrayResult = maxSubArray.maxSubArrayV2(nums);
-      System.out.println("maxSumArrayResult: " + maxSumArrayResult);
+    for (int[] nums : testCases) {
+      for (String methodName : testMethodNames) {
+        java.lang.reflect.Method method = maxSubArray.getClass().getMethod(methodName, int[].class);
+        int maxSubArraySum = (int) method.invoke(maxSubArray, nums);
+        String printContent = String.format("Function Name: %s, Input: %s, Output: %s", methodName, java.util.Arrays.toString(nums), maxSubArraySum);
+        System.out.println(printContent);
+      }
     }
   }
 }
