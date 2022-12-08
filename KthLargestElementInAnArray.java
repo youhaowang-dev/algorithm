@@ -56,8 +56,8 @@ class KthLargestElementInAnArray {
     nums[pivot_index] = pivot;
 
     // continue unsorted partitions, pivot_index is already at the sorted position
-    quickSort(nums, left_start, pivot_index - 1);
-    quickSort(nums, pivot_index + 1, right_start);
+    this.quickSort(nums, left_start, pivot_index - 1);
+    this.quickSort(nums, pivot_index + 1, right_start);
   }
 
   static class Params {
