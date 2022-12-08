@@ -1,4 +1,4 @@
-// tag: array, 
+// tag: array,
 // source: https://leetcode.com/problems/maximum-subarray/
 // description: Given an integer array nums, find the subarray which has the largest sum and return its sum.
 // example: maxSubArray([-2,1,-3,4,-1,2,1,-5,4]) => 6 because [4,-1,2,1] has the largest sum = 6
@@ -11,15 +11,19 @@ class MaximumSubarray {
   // max the sum
   // time complexity: O(n^2) all subarrays * O(n) subarray sum = O(n^3)
   // space complexity: O(1) for no extra space usage
-  private int maxSubArray(int[] nums) {
+  public int maxSubArrayBruteForce(int[] nums) {
     int maxSubarraySum = Integer.MIN_VALUE;
     if (nums.length == 0) {
       return maxSubarraySum;
     }
 
-    for (int subarray_left = 0; subarray_left < nums.length; subarray_left++) {
-      for (int subarray_right = subarray_left; subarray_right < nums.length; subarray_right++) {
-        int subarraySum = this.getSubArraySum(subarray_left, subarray_right, nums);
+    for (int subarr_left = 0; subarr_left < nums.length; subarr_left++) {
+      for (
+        int subarr_right = subarr_left;
+        subarr_right < nums.length;
+        subarr_right++
+      ) {
+        int subarraySum = this.getSubArraySum(subarr_left, subarr_right, nums);
         maxSubarraySum = Math.max(maxSubarraySum, subarraySum);
       }
     }
@@ -27,20 +31,68 @@ class MaximumSubarray {
     return maxSubarraySum;
   }
 
-  private int getSubArraySum(int subarray_left, int subarray_right, int[] nums) {
+  // brute force with prefix sum
+  // time complexity: O(n) prefix sum array building + O(n^2) all subarrays =
+  // O(n^2)
+  // space complexity: O(n) for prefix sum array
+  public int maxSubArrayBruteForceWithPrefixSum(int[] nums) {
+    int maxSubArraySum = Integer.MIN_VALUE;
+    if (nums.length == 0) {
+      return maxSubArraySum;
+    }
+
+    int[] prefixSum = this.getPrefixSum(nums);
+
+    for (int subarr_left = 0; subarr_left < nums.length; subarr_left++) {
+      for (
+        int subarr_right = subarr_left;
+        subarr_right < nums.length;
+        subarr_right++
+      ) {
+        // [1,2,3] => [0,1,3,6]
+        // left 0, right 1, expect 3, so 3 - 0, index 2 - index 0
+        int subArraySum = prefixSum[subarr_right + 1] - prefixSum[subarr_left];
+        maxSubArraySum = Math.max(maxSubArraySum, subArraySum);
+      }
+    }
+
+    return maxSubArraySum;
+  }
+
+  // [1,2,3] => [0,1,3,6]
+  private int[] getPrefixSum(int[] nums) {
+    int[] prefixSum = new int[nums.length + 1];
+    prefixSum[0] = 0;
+
+    for (int index = 1; index < prefixSum.length; index++) {
+      prefixSum[index] = prefixSum[index - 1] + nums[index - 1];
+    }
+
+    return prefixSum;
+  }
+
+  private int getSubArraySum(int subarr_left, int subarr_right, int[] nums) {
     int sum = 0;
-    for (int index = subarray_left; index < subarray_right + 1; index++) {
+    for (int index = subarr_left; index < subarr_right + 1; index++) {
       sum += nums[index];
     }
 
     return sum;
   }
 
+  // "Whenever you see a question that asks for the maximum or minimum of something, consider Dynamic Programming
+  // as a possibility. The difficult part of this problem is figuring out when a negative number is "worth" keeping
+  //  in a subarray. We need a general way to figure out when a part of the array is worth keeping. As expected, any
+  // subarray whose sum is positive is worth keeping. Let's start with an empty array, and iterate through the input,
+  // adding numbers to our array as we go along. Whenever the sum of the array is negative, we know the entire array
+  // is not worth keeping, so we'll reset it back to an empty array. However, we don't actually need to build the
+  // subarray, we can just keep an integer variable current_subarray and add the values of each element there.
+  // When it becomes negative, we reset it to 0 (an empty array)."
   // record all the max sums for each index
   // only add the sum if the prev sum is positive
   // time complexity: O(n) for one pass
-  // space complexity: O(n) for max sum array
-  private int maxSubArrayV2(int[] nums) {
+  // space complexity: O(n) for max sum array, this can be improved because we only need the prev sum
+  public int maxSubArrayDynamicProgramming(int[] nums) {
     if (nums.length == 0) {
       return Integer.MIN_VALUE;
     }
@@ -63,19 +115,33 @@ class MaximumSubarray {
     return maxSubarraySum;
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     MaximumSubarray maxSubArray = new MaximumSubarray();
     int[][] testCases = new int[][] {
-      new int[] {-2,1,-3,4,-1,2,1,-5,4},
-      new int[] {5},
+      new int[] { -2, 1, -3, 4, -1, 2, 1, -5, 4 },
+      new int[] { 5 },
+    };
+    // NOTE: the method must be public to make .getMethod work
+    String[] testMethodNames = new String[] {
+      "maxSubArrayBruteForce",
+      "maxSubArrayBruteForceWithPrefixSum",
+      "maxSubArrayDynamicProgramming",
     };
 
-    for (int[] nums: testCases) {
-      int bruteForceResult = maxSubArray.maxSubArray(nums);
-      System.out.println("bruteForceResult: " + bruteForceResult);
-
-      int maxSumArrayResult = maxSubArray.maxSubArrayV2(nums);
-      System.out.println("maxSumArrayResult: " + maxSumArrayResult);
+    for (int[] nums : testCases) {
+      for (String methodName : testMethodNames) {
+        java.lang.reflect.Method method = maxSubArray
+          .getClass()
+          .getMethod(methodName, int[].class);
+        int maxSubArraySum = (int) method.invoke(maxSubArray, nums);
+        String printContent = String.format(
+          "Method Name: %s\nInput: %s, Output: %s",
+          methodName,
+          java.util.Arrays.toString(nums),
+          maxSubArraySum
+        );
+        System.out.println(printContent);
+      }
     }
   }
 }
