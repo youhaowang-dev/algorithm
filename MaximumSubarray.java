@@ -27,6 +27,41 @@ class MaximumSubarray {
     return maxSubarraySum;
   }
 
+  // brute force with prefix sum
+  // time complexity: O(n) prefix sum array building + O(n^2) all subarrays = O(n^2)
+  // space complexity: O(n) for prefix sum array
+  private int maxSubArrayV3(int[] nums) {
+    int maxSubArraySum = Integer.MIN_VALUE;
+    if (nums.length == 0) {
+      return maxSubArraySum;
+    }
+
+    int[] prefixSum = this.getPrefixSum(nums);
+
+    for (int subarray_left = 0; subarray_left < nums.length; subarray_left++) {
+      for (int subarray_right = subarray_left; subarray_right < nums.length; subarray_right++) {
+        // [1,2,3] => [0,1,3,6]
+        // left 0, right 1, expect 3, so 3 - 0, index 2 - index 0
+        int subArraySum = prefixSum[subarray_right + 1] - prefixSum[subarray_left];
+        maxSubArraySum = Math.max(maxSubArraySum, subArraySum);
+      }
+    }
+
+    return maxSubArraySum;
+  }
+
+  // [1,2,3] => [0,1,3,6]
+  private int[] getPrefixSum(int[] nums) {
+    int[] prefixSum = new int[nums.length + 1];
+    prefixSum[0] = 0;
+
+    for (int index = 1; index < prefixSum.length; index++) {
+      prefixSum[index] = prefixSum[index - 1] + nums[index - 1];
+    }
+
+    return prefixSum;
+  }
+
   private int getSubArraySum(int subarray_left, int subarray_right, int[] nums) {
     int sum = 0;
     for (int index = subarray_left; index < subarray_right + 1; index++) {
@@ -40,7 +75,7 @@ class MaximumSubarray {
   // only add the sum if the prev sum is positive
   // time complexity: O(n) for one pass
   // space complexity: O(n) for max sum array
-  private int maxSubArrayV2(int[] nums) {
+  public int maxSubArrayV2(int[] nums) {
     if (nums.length == 0) {
       return Integer.MIN_VALUE;
     }
@@ -65,6 +100,7 @@ class MaximumSubarray {
 
   public static void main(String[] args) {
     MaximumSubarray maxSubArray = new MaximumSubarray();
+
     int[][] testCases = new int[][] {
       new int[] {-2,1,-3,4,-1,2,1,-5,4},
       new int[] {5},
@@ -73,6 +109,9 @@ class MaximumSubarray {
     for (int[] nums: testCases) {
       int bruteForceResult = maxSubArray.maxSubArray(nums);
       System.out.println("bruteForceResult: " + bruteForceResult);
+
+      int bruteForceWithPrefixSumResult = maxSubArray.maxSubArrayV3(nums);
+      System.out.println("bruteForceWithPrefixSumResult: " + bruteForceWithPrefixSumResult);
 
       int maxSumArrayResult = maxSubArray.maxSubArrayV2(nums);
       System.out.println("maxSumArrayResult: " + maxSumArrayResult);
