@@ -80,10 +80,18 @@ class MaximumSubarray {
     return sum;
   }
 
+  // "Whenever you see a question that asks for the maximum or minimum of something, consider Dynamic Programming
+  // as a possibility. The difficult part of this problem is figuring out when a negative number is "worth" keeping
+  //  in a subarray. We need a general way to figure out when a part of the array is worth keeping. As expected, any
+  // subarray whose sum is positive is worth keeping. Let's start with an empty array, and iterate through the input,
+  // adding numbers to our array as we go along. Whenever the sum of the array is negative, we know the entire array
+  // is not worth keeping, so we'll reset it back to an empty array. However, we don't actually need to build the
+  // subarray, we can just keep an integer variable current_subarray and add the values of each element there.
+  // When it becomes negative, we reset it to 0 (an empty array)."
   // record all the max sums for each index
   // only add the sum if the prev sum is positive
   // time complexity: O(n) for one pass
-  // space complexity: O(n) for max sum array
+  // space complexity: O(n) for max sum array, this can be improved because we only need the prev sum
   public int maxSubArrayDynamicProgramming(int[] nums) {
     if (nums.length == 0) {
       return Integer.MIN_VALUE;
