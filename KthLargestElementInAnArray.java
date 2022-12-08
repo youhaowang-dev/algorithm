@@ -14,7 +14,6 @@ class KthLargestElementInAnArray {
 
   public int findKthLargestQuickSort(int[] nums, int k) {
     this.quickSort(nums, 0, nums.length - 1);
-    System.out.println(java.util.Arrays.toString(nums));
 
     return nums[nums.length - 1 - (k - 1)];
   }
@@ -50,14 +49,15 @@ class KthLargestElementInAnArray {
       }
     }
 
-    // now left == right, swap it with the pivot because pivot is meant to be in the middle
-    // int pivot_index = left;
-    nums[left_start] = nums[left];
-    nums[left] = pivot;
+    // now left == right, so the pivot value should be at this position
+    int pivot_index = left;
+    // swap it with the pivot value
+    nums[left_start] = nums[pivot_index];
+    nums[pivot_index] = pivot;
 
-    // continue unsorted partitions, pivot is already at the sorted position
-    quickSort(nums, left_start, left - 1);
-    quickSort(nums, left + 1, right_start);
+    // continue unsorted partitions, pivot_index is already at the sorted position
+    quickSort(nums, left_start, pivot_index - 1);
+    quickSort(nums, pivot_index + 1, right_start);
   }
 
   static class Params {
