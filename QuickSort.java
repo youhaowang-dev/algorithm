@@ -4,7 +4,7 @@ public final class QuickSort {
 
   // time complexity: O(nlog(n)) on average, O(n^2) the worst case
   // space complexity: O(stack space)
-  public void quickSort(int[] nums, int left_start, int right_start) {
+  public void quickSortV2(int[] nums, int left_start, int right_start) {
     // exit condition
     if (left_start >= right_start) {
       return;
@@ -40,17 +40,17 @@ public final class QuickSort {
     nums[pivot_index] = pivot;
 
     // continue unsorted partitions, pivot_index is already at the sorted position
-    this.quickSort(nums, left_start, pivot_index - 1);
-    this.quickSort(nums, pivot_index + 1, right_start);
+    this.quickSortV2(nums, left_start, pivot_index - 1);
+    this.quickSortV2(nums, pivot_index + 1, right_start);
   }
 
-  public void quickSortV2(int[] nums, int left_start, int right_start) {
+  public void quickSortV3(int[] nums, int left_start, int right_start) {
     int pivotIndex = this.setPivot(nums, left_start, right_start);
     if (left_start < pivotIndex - 1) {
-      this.quickSortV2(nums, left_start, pivotIndex - 1);
+      this.quickSortV3(nums, left_start, pivotIndex - 1);
     }
     if (right_start > pivotIndex) {
-      this.quickSortV2(nums, pivotIndex, right_start);
+      this.quickSortV3(nums, pivotIndex, right_start);
     }
   }
 
@@ -88,7 +88,7 @@ public final class QuickSort {
       new int[] { 1, 4, 2, 4, 2, 4, 1, 2, 4, 1, 2, 2, 2, 2, 4, 1, 4, 4, 4 },
     };
 
-    String[] testMethodNames = new String[] { "quickSort", "quickSortV2" };
+    String[] testMethodNames = new String[] { "quickSortV2", "quickSortV3" };
 
     for (int[] testCase : testCases) {
       for (String methodName : testMethodNames) {
