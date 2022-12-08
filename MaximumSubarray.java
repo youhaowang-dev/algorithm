@@ -113,7 +113,7 @@ class MaximumSubarray {
       new int[] { -2, 1, -3, 4, -1, 2, 1, -5, 4 },
       new int[] { 5 },
     };
-    // NOTE: the function must be public to make .getMethod work
+    // NOTE: the method must be public to make .getMethod work
     String[] testMethodNames = new String[] {
       "maxSubArrayBruteForce",
       "maxSubArrayBruteForceWithPrefixSum",
@@ -127,7 +127,7 @@ class MaximumSubarray {
           .getMethod(methodName, int[].class);
         int maxSubArraySum = (int) method.invoke(maxSubArray, nums);
         String printContent = String.format(
-          "Function Name: %s, Input: %s, Output: %s",
+          "Method Name: %s\nInput: %s, Output: %s",
           methodName,
           java.util.Arrays.toString(nums),
           maxSubArraySum
