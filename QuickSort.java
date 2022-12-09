@@ -3,92 +3,57 @@ import java.util.Arrays;
 public final class QuickSort {
 
   // time complexity: O(nlog(n)) on average, O(n^2) the worst case
-  // space complexity: O(stack space)
-  public void quickSortV2(int[] nums, int left_start, int right_start) {
-    // exit condition
-    if (left_start >= right_start) {
-      return;
+  // do O(n) linear scan in log(n) partitions
+  // space complexity: O(log(n)) stack space cost where the recursion tree height is log(n)
+  public void quickSort(int[] nums, int partitionStart, int partitionEnd) {
+    if (partitionStart >= partitionEnd) {
+      return; // handle edge cases and exiting condition
     }
-
-    int pivot = nums[left_start]; // or right, or mid
-    int left = left_start;
-    int right = right_start;
-    while (left < right) {
-      // NOTE: this while loop order matters! Otherwise the sorting result will be different.
-      //       The right pointer should move first because the left pointer moves with <=, which means it can move more.
-      // right to left, right find the first num <= pivot
-      while (nums[right] > pivot && left < right) {
-        right--;
-      }
-      // left to right, left find the first num > pivot
-      while (nums[left] <= pivot && left < right) {
-        left++;
-      }
-
-      if (left < right) {
-        // swap
-        int temp = nums[left];
-        nums[left] = nums[right];
-        nums[right] = temp;
-      }
-    }
-
-    // now left == right, so the pivot value should be at this position
-    int pivot_index = left;
-    // swap it with the pivot value
-    nums[left_start] = nums[pivot_index];
-    nums[pivot_index] = pivot;
-
-    // continue unsorted partitions, pivot_index is already at the sorted position
-    this.quickSortV2(nums, left_start, pivot_index - 1);
-    this.quickSortV2(nums, pivot_index + 1, right_start);
+    int pivotIndex = this.partition(nums, partitionStart, partitionEnd);
+    this.quickSort(nums, partitionStart, pivotIndex - 1);
+    this.quickSort(nums, pivotIndex, partitionEnd);
   }
 
-  public void quickSortV3(int[] nums, int left_start, int right_start) {
-    int pivotIndex = this.setPivot(nums, left_start, right_start);
-    if (left_start < pivotIndex - 1) {
-      this.quickSortV3(nums, left_start, pivotIndex - 1);
+  // Goal: put the pivot value to the sorted position and make sure (left values) <= pivot < (right values)
+  // pick a pivot and the pivot index
+  // partition index starts at start and moves towards right; all elements at or before the partition index
+  // scan from start and swap with partition index value when the current value is greater than pivot
+  // set the pivot at the partition index, which is a sorted index
+  // return the partition index
+  private int partition(int[] nums, int start, int end) {
+    int partitionIndex = start; // aka swap to location for the bigger number
+    int pivot = nums[end]; // end is picked as the pivot index
+
+    // two pointers moving to right where the index normally moves a little faster
+    for (int index = start; index < end; index++) {
+      // to move partionIndex to right, all the values to the left must be smaller or equal to pivot
+      if (nums[index] <= pivot) {
+        this.swap(nums, index, partitionIndex);
+        partitionIndex++;
+      }
     }
-    if (right_start > pivotIndex) {
-      this.quickSortV3(nums, pivotIndex, right_start);
-    }
+    // the partitionIndex now stops at the sorted position for the pivot value, so swap it with pivot
+    this.swap(nums, partitionIndex, end);
+
+    return partitionIndex;
   }
 
-  // set the pivot at the sorted position and return the pivot index
-  private int setPivot(int[] nums, int left_start, int right_start) {
-    int left = left_start;
-    int right = right_start;
-    int pivot = nums[left_start];
-
-    while (left <= right) {
-      while (nums[left] < pivot) {
-        left++;
-      }
-      while (nums[right] > pivot) {
-        right--;
-      }
-      if (left <= right) {
-        int left_copy = nums[left];
-        nums[left] = nums[right];
-        nums[right] = left_copy;
-        // move pointers after swapping
-        left++;
-        right--;
-      }
-    }
-
-    return left; // left = right = pivot index
+  private void swap(int[] nums, int lowNumIndex, int highNumIndex) {
+    int smallerNumberCopy = nums[lowNumIndex];
+    nums[lowNumIndex] = nums[highNumIndex];
+    nums[highNumIndex] = smallerNumberCopy;
   }
 
   public static void main(String[] args) throws Exception {
     QuickSort quickSort = new QuickSort();
     int[][] testCases = {
       new int[] { 3, 2, 1, 5, 6, 4 },
+      new int[] { 89, 47, 2, 17, 8, 19 },
       new int[] { 1, 1, 1, 1, 11, 11, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 },
       new int[] { 1, 4, 2, 4, 2, 4, 1, 2, 4, 1, 2, 2, 2, 2, 4, 1, 4, 4, 4 },
     };
 
-    String[] testMethodNames = new String[] { "quickSortV2", "quickSortV3" };
+    String[] testMethodNames = new String[] { "quickSort" };
 
     for (int[] testCase : testCases) {
       for (String methodName : testMethodNames) {
