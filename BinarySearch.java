@@ -1,4 +1,7 @@
-// tag: Array, Divide and Conquer
+// tag: Array, Divide and Conquer, Binary Search
+// Amazon 15 Facebook 11 Bloomberg 6 Adobe 6 Apple 4 Intuit 4 Uber 3 LinkedIn 2 Google 2 Samsung 2
+
+// source: https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
 
 import java.util.*;
 
