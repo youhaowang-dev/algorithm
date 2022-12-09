@@ -41,21 +41,53 @@ final class BinarySearch {
     return Integer.MIN_VALUE;
   }
 
+  public int findLastPosition(int[] nums, int target) {
+    if (nums.length == 0) {
+      return Integer.MIN_VALUE;
+    }
+
+    int start = 0;
+    int end = nums.length - 1;
+    while (start + 1 < end) {
+      int mid = start + (end - start) / 2;
+      if (nums[mid] == target) {
+        start = mid;
+      }
+      if (nums[mid] > target) {
+        end = mid;
+      }
+      if (nums[mid] < target) {
+        start = mid;
+      }
+    }
+
+    if (nums[end] == target) {
+      return end;
+    }
+    if (nums[start] == target) {
+      return start;
+    }
+
+    return Integer.MIN_VALUE;
+  }
+
   public static void main(String[] args) throws Exception {
     BinarySearch binarySearch = new BinarySearch();
     int[][] testCases = new int[][] {
-      new int[] { 1, 2, 3, 4, 5, 6 },
-      new int[] { 1, 12, 123, 1234, 12345, 123456 },
+      new int[] { 1, 2, 3, 3, 3, 3, 3, 4, 4, 5, 5, 6 },
     };
     // NOTE: the method must be public to make .getMethod work
-    String[] testMethodNames = new String[] { "findFirstPosition" };
+    String[] testMethodNames = new String[] {
+      "findFirstPosition",
+      "findLastPosition",
+    };
 
     for (int[] nums : testCases) {
       for (String methodName : testMethodNames) {
         java.lang.reflect.Method method = binarySearch
           .getClass()
           .getMethod(methodName, int[].class, int.class);
-        int targetIndex = (int) method.invoke(binarySearch, nums, nums[3]);
+        int targetIndex = (int) method.invoke(binarySearch, nums, 3);
 
         System.out.println(
           String.format(
