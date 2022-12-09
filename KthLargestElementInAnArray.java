@@ -51,6 +51,68 @@ class KthLargestElementInAnArray {
     return topKNums.peek();
   }
 
+  // use to partition of quick sort
+  // since the pivot index is at the sorted position
+  // we can compare the index with the index of the kth largest,
+  // so we can pick the left or right to continue the partition and find the partition_index==kthlargest_index
+  // time complexity: nlog(n) for log(n) partitions and each partition has a linear search
+  // space complexity: log(n) stack space
+  public int findKthLargestByQuickSelect(int[] nums, int k) {
+    if (nums.length < k) {
+      return Integer.MIN_VALUE;
+    }
+
+    // if the array is sorted, the kth largest value index is known
+    int kthLargestIndex = nums.length - 1 - (k - 1);
+
+    return this.quickSelect(nums, 0, nums.length - 1, kthLargestIndex);
+  }
+
+  private int quickSelect(
+    int[] nums,
+    int partitionStart,
+    int partitionEnd,
+    int kthLargestIndex
+  ) {
+    int pivotIndex = this.partition(nums, partitionStart, partitionEnd);
+
+    if (kthLargestIndex == pivotIndex) {
+      // found
+      return nums[kthLargestIndex];
+    }
+    if (kthLargestIndex > pivotIndex) {
+      // search in the right partition
+      return quickSelect(nums, pivotIndex + 1, partitionEnd, kthLargestIndex);
+    }
+    if (kthLargestIndex < pivotIndex) {
+      // search in the left partition
+      return quickSelect(nums, partitionStart, pivotIndex - 1, kthLargestIndex);
+    }
+
+    return Integer.MIN_VALUE;
+  }
+
+  private int partition(int[] nums, int partitionStart, int partitionEnd) {
+    int pivot = nums[partitionEnd];
+    int partitionIndex = partitionStart;
+    for (int index = partitionStart; index < partitionEnd; index++) {
+      if (nums[index] <= pivot) {
+        this.swap(nums, index, partitionIndex);
+        partitionIndex++;
+      }
+    }
+    // start to end-1 are processed, now process the end
+    this.swap(nums, partitionIndex, partitionEnd);
+
+    return partitionIndex;
+  }
+
+  private void swap(int[] nums, int lowIndex, int highIndex) {
+    int lowCopy = nums[lowIndex];
+    nums[lowIndex] = nums[highIndex];
+    nums[highIndex] = lowCopy;
+  }
+
   static class Params {
 
     public int[] nums;
@@ -75,6 +137,7 @@ class KthLargestElementInAnArray {
     String[] testMethodNames = new String[] {
       "findKthLargestByQuickSort",
       "findKthLargestByHeap",
+      "findKthLargestByQuickSelect",
     };
 
     for (Params params : testCases) {
