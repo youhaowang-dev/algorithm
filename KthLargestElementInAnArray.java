@@ -10,17 +10,12 @@
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Queue;
 
 class KthLargestElementInAnArray {
 
   public int findKthLargestQuickSort(int[] nums, int k) {
     (new QuickSort()).quickSort(nums, 0, nums.length - 1);
-
-    return nums[nums.length - 1 - (k - 1)];
-  }
-
-  public int findKthLargestQuickSortV2(int[] nums, int k) {
-    (new QuickSort()).quickSortV2(nums, 0, nums.length - 1);
 
     return nums[nums.length - 1 - (k - 1)];
   }
@@ -34,10 +29,6 @@ class KthLargestElementInAnArray {
       this.nums = nums;
       this.k = k;
     }
-
-    public String toString() {
-      return String.format("nums: %s, k: %s", Arrays.toString(nums), k);
-    }
   }
 
   public static void main(String[] args) throws Exception {
@@ -50,24 +41,21 @@ class KthLargestElementInAnArray {
       ),
     };
     // NOTE: the method must be public to make .getMethod work
-    String[] testMethodNames = new String[] {
-      "findKthLargestQuickSort",
-      "findKthLargestQuickSortV2",
-    };
+    String[] testMethodNames = new String[] { "findKthLargestQuickSort" };
 
     for (Params params : testCases) {
       for (String methodName : testMethodNames) {
+        int[] numsCopy = Arrays.copyOf(params.nums, params.nums.length);
         System.out.println(
           String.format(
             "Method Name: %s\nInput: %s",
             methodName,
-            params.toString()
+            Arrays.toString(numsCopy)
           )
         );
         java.lang.reflect.Method method = kthLargestElementInAnArray
           .getClass()
           .getMethod(methodName, int[].class, int.class);
-        int[] numsCopy = Arrays.copyOf(params.nums, params.nums.length);
         int kthLargest = (int) method.invoke(
           kthLargestElementInAnArray,
           numsCopy,
@@ -75,7 +63,7 @@ class KthLargestElementInAnArray {
         );
         System.out.println(
           String.format(
-            "Output: %s. Input Array: %s",
+            "Output: %s\nInput Array: %s",
             kthLargest,
             Arrays.toString(numsCopy)
           )
