@@ -31,6 +31,7 @@ final class BinarySearch {
       }
     }
 
+    // check left bound first
     if (nums[start] == target) {
       return start;
     }
@@ -61,11 +62,12 @@ final class BinarySearch {
       }
     }
 
-    if (nums[start] == target) {
-      return start;
-    }
+    // check right bound first
     if (nums[end] == target) {
       return end;
+    }
+    if (nums[start] == target) {
+      return start;
     }
 
     return Integer.MIN_VALUE;
