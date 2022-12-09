@@ -21,7 +21,7 @@ final class BinarySearch {
       // not start / 2 + end / 2 for losing 2 values, not (start+end)/2 for overflow
       int mid = start + (end - start) / 2;
       if (nums[mid] == target) {
-        end = mid; // move left for integer division
+        end = mid; // move left for searching the first position
       }
       if (nums[mid] > target) {
         end = mid;
@@ -51,7 +51,7 @@ final class BinarySearch {
     while (start + 1 < end) {
       int mid = start + (end - start) / 2;
       if (nums[mid] == target) {
-        start = mid;
+        start = mid; // move right for searching the last position
       }
       if (nums[mid] > target) {
         end = mid;
@@ -61,11 +61,11 @@ final class BinarySearch {
       }
     }
 
-    if (nums[end] == target) {
-      return end;
-    }
     if (nums[start] == target) {
       return start;
+    }
+    if (nums[end] == target) {
+      return end;
     }
 
     return Integer.MIN_VALUE;
