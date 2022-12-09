@@ -42,6 +42,10 @@ final class BinarySearch {
     return Integer.MIN_VALUE;
   }
 
+  public int findFirstPositionV2(int[] nums, int target) {
+    return this.findPosition(nums, target, Position.FIRST);
+  }
+
   public int findLastPosition(int[] nums, int target) {
     if (nums.length == 0) {
       return Integer.MIN_VALUE;
@@ -73,6 +77,56 @@ final class BinarySearch {
     return Integer.MIN_VALUE;
   }
 
+  public int findLastPositionV2(int[] nums, int target) {
+    return this.findPosition(nums, target, Position.LAST);
+  }
+
+  private enum Position {
+    FIRST,
+    LAST,
+  }
+
+  public int findPosition(int[] nums, int target, Position position) {
+    if (nums.length == 0) {
+      return Integer.MIN_VALUE;
+    }
+
+    int start = 0;
+    int end = nums.length - 1;
+    while (start + 1 < end) {
+      int mid = start - (start - end) / 2;
+      int currentNum = nums[mid];
+      if (currentNum == target) {
+        if (position == Position.FIRST) {
+          end = mid;
+        }
+        if (position == Position.LAST) {
+          start = mid;
+        }
+      }
+      if (currentNum < target) {
+        start = mid;
+      }
+      if (currentNum > target) {
+        end = mid;
+      }
+    }
+
+    if (nums[start] == target && position == Position.FIRST) {
+      return start;
+    } else if (nums[end] == target) {
+      return end;
+    }
+
+    if (nums[end] == target && position == Position.LAST) {
+      return end;
+    } else if (nums[start] == target) {
+      return start;
+    }
+
+    return Integer.MIN_VALUE;
+  }
+
   public static void main(String[] args) throws Exception {
     BinarySearch binarySearch = new BinarySearch();
     int target = 3;
@@ -83,7 +137,9 @@ final class BinarySearch {
     // NOTE: the method must be public to make .getMethod work
     String[] testMethodNames = new String[] {
       "findFirstPosition",
+      "findFirstPositionV2",
       "findLastPosition",
+      "findLastPositionV2",
     };
 
     for (int[] nums : testCases) {
