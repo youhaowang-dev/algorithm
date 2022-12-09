@@ -73,8 +73,10 @@ final class BinarySearch {
 
   public static void main(String[] args) throws Exception {
     BinarySearch binarySearch = new BinarySearch();
+    int target = 3;
     int[][] testCases = new int[][] {
-      new int[] { 1, 2, 3, 3, 3, 3, 3, 4, 4, 5, 5, 6 },
+      new int[] { 1, 2, target, target, target, target, target, 4, 4, 5, 5, 6 },
+      new int[] { target, target, target, target, target },
     };
     // NOTE: the method must be public to make .getMethod work
     String[] testMethodNames = new String[] {
@@ -87,7 +89,7 @@ final class BinarySearch {
         java.lang.reflect.Method method = binarySearch
           .getClass()
           .getMethod(methodName, int[].class, int.class);
-        int targetIndex = (int) method.invoke(binarySearch, nums, 3);
+        int targetIndex = (int) method.invoke(binarySearch, nums, target);
 
         System.out.println(
           String.format(
