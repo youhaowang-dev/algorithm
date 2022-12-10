@@ -22,9 +22,78 @@
 
 final class SearchInRotatedSortedArray {
 
+  // 1. find the min index by binary search
+  // 2. find the target by binary search
   public int search(int[] nums, int target) {
     if (nums.length == 0) {
       return -1;
+    }
+
+    int minIndex = this.findMinIndex(nums);
+    int lastVal = nums[nums.length - 1];
+    int start;
+    int end;
+    if (target == lastVal) {
+      return nums.length - 1;
+    }
+
+    if (target < lastVal) {
+      start = minIndex;
+      end = nums.length - 1;
+    } else if (target > lastVal) {
+      start = 0;
+      end = minIndex - 1;
+    } else {
+      // make jvm happy; wont use
+      start = Integer.MIN_VALUE;
+      end = Integer.MIN_VALUE;
+    }
+
+    while (start + 1 < end) {
+      int mid = start - (start - end) / 2;
+      int midVal = nums[mid];
+      if (midVal == target) {
+        return mid;
+      }
+      if (midVal < target) {
+        start = mid;
+      }
+      if (midVal > target) {
+        end = mid;
+      }
+    }
+
+    if (start >= 0 && start <= nums.length - 1 && nums[start] == target) {
+      return start;
+    }
+    if (end >= 0 && end <= nums.length - 1 && nums[end] == target) {
+      return end;
+    }
+
+    return -1;
+  }
+
+  private int findMinIndex(int[] nums) {
+    int start = 0;
+    int end = nums.length - 1;
+    while (start + 1 < end) {
+      int mid = start - (start - end) / 2;
+      int midVal = nums[mid];
+      int lastVal = nums[end];
+      if (midVal < lastVal) {
+        end = mid;
+      }
+      if (midVal > lastVal) {
+        start = mid;
+      }
+    }
+
+    if (nums[start] < nums[end]) {
+      return start;
+    }
+
+    if (nums[start] > nums[end]) {
+      return end;
     }
 
     return -1;
@@ -37,6 +106,9 @@ final class SearchInRotatedSortedArray {
       { 0, 1, target, 4, 5, 6, 7 },
       { 4, 5, 6, 7, 0, 1, target },
       { 7, 0, 1, 4, 5, 6 },
+      { 0, 1 },
+      { 1 },
+      { 2 },
     };
     // NOTE: the method must be public to make .getMethod work
     String[] testMethodNames = new String[] { "search" };
