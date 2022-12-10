@@ -6,6 +6,7 @@
 //              The first integer of each row is greater than the last integer of the previous row.
 // Input: matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3, Output: true
 // Input: matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 13, Output: false
+import java.util.*;
 
 final class SearchA2DMatrix {
 
@@ -13,17 +14,70 @@ final class SearchA2DMatrix {
   // binary search can be used on the sorted array
   // need to take care of 1D => 2D conversion
   public boolean searchMatrix(int[][] matrix, int target) {
+    if (matrix.length == 0 || matrix[0].length == 0) {
+      return false;
+    }
+    int start = 0;
+    int end = matrix.length * matrix[0].length - 1;
+    while (start + 1 < end) {
+      int mid = start - (start - end) / 2;
+      int midVal = this.getValue(matrix, mid);
+      if (midVal == target) {
+        return true;
+      }
+      if (midVal < target) {
+        start = mid;
+      }
+      if (midVal > target) {
+        end = mid;
+      }
+      // System.out.println(
+      //   Arrays.toString(
+      //     new Object[] {
+      //       "target: " + target,
+      //       "mid: " + mid,
+      //       "midVal: " + midVal,
+      //       "start: " + start,
+      //       "end: " + end,
+      //     }
+      //   )
+      // );
+    }
+
+    if (this.getValue(matrix, start) == target) {
+      return true;
+    }
+    if (this.getValue(matrix, end) == target) {
+      return true;
+    }
+
     return false;
   }
 
   // get matrix value by using 1D index
+  // given [[1,2,3],[4,5,6],[7,8,9]]
+  // index = 3 => rowIndex = 1, columnIndex = 0 => rowIndex = index / columnCount = 3/3 = 1, columnIndex = index % columnCount = 3%3=0
+  // index = 5 => expect value = 6, expect rowIndex = 1 = 5 / 3, columnIndex = 2 = 5 % 3
   private int getValue(int[][] matrix, int index) {
-    return -1;
+    if (
+      matrix.length == 0 ||
+      matrix[0].length == 0 ||
+      index < 0 ||
+      index > matrix.length * matrix[0].length
+    ) {
+      return Integer.MAX_VALUE;
+    }
+
+    int columnCount = matrix[0].length;
+    int rowIndex = index / columnCount;
+    int columnIndex = index % columnCount;
+
+    return matrix[rowIndex][columnIndex];
   }
 
   public static void main(String[] args) throws Exception {
     SearchA2DMatrix SearchA2DMatrix = new SearchA2DMatrix();
-    int[] targets = new int[] { 1, 11, 60, 0 };
+    int[] targets = new int[] { 1, 3, 5, 7, 10, 20, 23, 60, 0, 22 };
     int[][] matrix = new int[][] {
       { 1, 3, 5, 7 },
       { 10, 11, 16, 20 },
@@ -47,7 +101,7 @@ final class SearchA2DMatrix {
           String.format(
             "Method Name: %s\nInput: %s, Output: %s",
             methodName,
-            java.util.Arrays.deepToString(matrix) + " Target: " + target,
+            Arrays.deepToString(matrix) + " Target: " + target,
             found
           )
         );
