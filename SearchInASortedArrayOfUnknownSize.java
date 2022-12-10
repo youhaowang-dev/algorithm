@@ -4,7 +4,7 @@
 // You have a sorted array of unique elements and an unknown size.
 // You do not have an access to the array but you can use the ArrayReader interface to access it. You can call ArrayReader.get(i) that:
 // returns the value at the ith index (0-indexed) of the secret array (i.e., secret[i]), or
-// returns 231 - 1 if the i is out of the boundary of the array.
+// returns 2^31 - 1 if the i is out of the boundary of the array.
 // You are also given an integer target.
 
 // Return the index k of the hidden array where secret[k] == target or return -1 otherwise.
@@ -22,5 +22,35 @@
 
 final class SearchInASortedArrayOfUnknownSize {
 
-  public int search(ArrayReader reader, int target) {}
+  public int search(ArrayReader reader, int target) {
+    int start = 0;
+    int end = 1;
+    // binary search the boundary
+    while (reader.get(end) < target) {
+      start = end;
+      end = end * 2; // can also do << 1
+    }
+    // binary search the target
+    while (start + 1 < end) {
+      int mid = start - (start - end) / 2;
+      int midVal = reader.get(mid);
+      if (midVal == target) {
+        return mid;
+      }
+      if (midVal < target) {
+        start = mid;
+      }
+      if (midVal > target) {
+        end = mid;
+      }
+    }
+    if (reader.get(start) == target) {
+      return start;
+    }
+    if (reader.get(end) == target) {
+      return end;
+    }
+
+    return -1;
+  }
 }
