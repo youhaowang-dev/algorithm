@@ -24,7 +24,7 @@ final class SearchInRotatedSortedArray {
 
   // 1. find the min index by binary search
   // 2. find the target by binary search
-  public int search(int[] nums, int target) {
+  public int searchTwoPasses(int[] nums, int target) {
     if (nums.length == 0) {
       return -1;
     }
@@ -99,19 +99,75 @@ final class SearchInRotatedSortedArray {
     return -1;
   }
 
+  // https://leetcode.com/problems/search-in-rotated-sorted-array/solutions/216624/search-in-rotated-sorted-array/comments/1350031
+  // If a sorted array is shifted, the mid splits the arrays in two sides and one side must be sorted.
+  //    The other side may or may not be sorted.
+  // for sorted side, if (startVal < midVal < endVal) continue binary search in this side, otherwise abandon this side
+  // the unsorted side needs no handling because we either continue binary search in the sorted side or abandon the sorted side
+  public int searchOnePass(int[] nums, int target) {
+    if (nums.length == 0) {
+      return -1;
+    }
+    int start = 0;
+    int end = nums.length - 1;
+    while (start + 1 < end) {
+      int mid = start - (start - end) / 2;
+      int midVal = nums[mid];
+      if (midVal == target) {
+        return mid;
+      }
+      // we don't use <= or >=, so handle the == cases here
+      if (nums[start] == target) {
+        return start;
+      }
+      if (nums[end] == target) {
+        return end;
+      }
+      if (nums[start] < midVal) { // left side is sorted
+        if (nums[start] < target && target < midVal) {
+          // target in left side
+          end = mid;
+        } else {
+          start = mid;
+        }
+      }
+      if (midVal < nums[end]) { // right side is sorted
+        if (midVal < target && target < nums[end]) {
+          // target in right side
+          start = mid;
+        } else {
+          end = mid;
+        }
+      }
+    }
+
+    if (nums[start] == target) {
+      return start;
+    }
+
+    if (nums[end] == target) {
+      return end;
+    }
+
+    return -1;
+  }
+
   public static void main(String[] args) throws Exception {
     SearchInRotatedSortedArray SearchInRotatedSortedArray = new SearchInRotatedSortedArray();
     int target = 2;
     int[][] testCases = new int[][] {
-      { 0, 1, target, 4, 5, 6, 7 },
+      // { 0, 1, target, 4, 5, 6, 7 },
       { 4, 5, 6, 7, 0, 1, target },
-      { 7, 0, 1, 4, 5, 6 },
-      { 0, 1 },
-      { 1 },
-      { 2 },
+      // { 7, 0, 1, 4, 5, 6 },
+      // { 0, 1 },
+      // { 1 },
+      // { 2 },
     };
     // NOTE: the method must be public to make .getMethod work
-    String[] testMethodNames = new String[] { "search" };
+    String[] testMethodNames = new String[] {
+      "searchTwoPasses",
+      "searchOnePass",
+    };
 
     for (int[] nums : testCases) {
       for (String methodName : testMethodNames) {
