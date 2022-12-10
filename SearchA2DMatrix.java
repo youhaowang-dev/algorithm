@@ -47,7 +47,7 @@ final class SearchA2DMatrix {
           String.format(
             "Method Name: %s\nInput: %s, Output: %s",
             methodName,
-            java.util.Arrays.toString(matrix) + " Target: " + target,
+            java.util.Arrays.deepToString(matrix) + " Target: " + target,
             found
           )
         );
