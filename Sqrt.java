@@ -65,6 +65,17 @@ final class Sqrt {
     return n;
   }
 
+  // binary search the int part
+  // linear search the decimals
+  public double sqrtDoubleBinarySearch(int x, double precise) {
+    double n = this.sqrtInt(x);
+    // this part is O(1) as precise cannot keep growing
+    while ((n + precise) * (n + precise) <= x) {
+      n += precise;
+    }
+    return n;
+  }
+
   public static void main(String[] args) throws Exception {
     Sqrt Sqrt = new Sqrt();
     int[] targets = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 2147395599 };
@@ -89,7 +100,10 @@ final class Sqrt {
       }
     }
 
-    String[] doubleSqrtMethods = new String[] { "sqrtDouble" };
+    String[] doubleSqrtMethods = new String[] {
+      "sqrtDouble",
+      "sqrtDoubleBinarySearch",
+    };
     double precise = 0.001;
     for (int target : targets) {
       for (String methodName : doubleSqrtMethods) {
