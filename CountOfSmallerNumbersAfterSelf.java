@@ -26,22 +26,14 @@ final class CountOfSmallerNumbersAfterSelf {
 
   public List<Integer> countSmaller(int[] nums) {
     int[] numsSorted = nums.clone();
-    this.quickSort(numsSorted, 0, nums.length - 1);
-    Map<Integer, Integer> numberToCount = new HashMap<>();
-    for (int index = 0; index < numsSorted.length; index++) {
-      // [1,2,3]
-      // 1 expect 2, so 3(length) - 0(index) - 1
-      // 2 expect 1, so 3(length) - 1(index) - 1
-      int count = numsSorted.length - index - 1;
-      numberToCount.put(numsSorted[index], count);
-    }
+    this.mergesort(numsSorted, 0, nums.length - 1);
+
     List<Integer> counts = new ArrayList<>();
-    for (int num : nums) {
-      counts.add(numberToCount.get(num));
-    }
 
     return counts;
   }
+
+  private void mergesort(int[] nums, int left, int right) {}
 
   private void quickSort(int[] nums, int first, int last) {
     if (first >= last) {
