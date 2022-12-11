@@ -3,67 +3,71 @@ import java.util.*;
 final class MergeSort {
 
   // https://www.geeksforgeeks.org/merge-sort/
-  // Main function that sorts arr[l..r] using
-  public void mergesort(int arr[], int l, int r) {
-    if (l < r) {
+  // Main function that sorts nums[l..r] using
+  public void mergesort(int nums[], int left, int right) {
+    if (left < right) {
       // Find the middle point
-      int m = l + (r - l) / 2;
+      int mid = left + (right - left) / 2;
 
       // Sort first and second halves
-      mergesort(arr, l, m);
-      mergesort(arr, m + 1, r);
+      mergesort(nums, left, mid);
+      mergesort(nums, mid + 1, right);
 
       // Merge the sorted halves
-      merge(arr, l, m, r);
+      merge(nums, left, mid, right);
     }
   }
 
-  // Merges two subarrays of arr[].
-  // First subarray is arr[l..m]
-  // Second subarray is arr[m+1..r]
-  public void merge(int arr[], int l, int m, int r) {
+  // Merges two subarrays of nums[].
+  // First subarray is nums[left..mid]
+  // Second subarray is nums[left+1..right]
+  public void merge(int nums[], int left, int mid, int right) {
     // Find sizes of two subarrays to be merged
-    int n1 = m - l + 1;
-    int n2 = r - m;
+    int leftArraySize = mid - left + 1;
+    int rightArraySize = right - mid;
 
     /* Create temp arrays */
-    int L[] = new int[n1];
-    int R[] = new int[n2];
+    int leftArray[] = new int[leftArraySize];
+    int rightArray[] = new int[rightArraySize];
 
     /*Copy data to temp arrays*/
-    for (int i = 0; i < n1; ++i) L[i] = arr[l + i];
-    for (int j = 0; j < n2; ++j) R[j] = arr[m + 1 + j];
+    for (int i = 0; i < leftArraySize; i++) {
+      leftArray[i] = nums[left + i];
+    }
+    for (int i = 0; i < rightArraySize; i++) {
+      rightArray[i] = nums[mid + 1 + i];
+    }
 
     /* Merge the temp arrays */
 
     // Initial indexes of first and second subarrays
-    int i = 0, j = 0;
-
+    int leftArrayIndex = 0;
+    int rightArrayIndex = 0;
     // Initial index of merged subarray array
-    int k = l;
-    while (i < n1 && j < n2) {
-      if (L[i] <= R[j]) {
-        arr[k] = L[i];
-        i++;
+    int mergeIndex = left;
+    while (leftArrayIndex < leftArraySize && rightArrayIndex < rightArraySize) {
+      if (leftArray[leftArrayIndex] <= rightArray[rightArrayIndex]) {
+        nums[mergeIndex] = leftArray[leftArrayIndex];
+        leftArrayIndex++;
       } else {
-        arr[k] = R[j];
-        j++;
+        nums[mergeIndex] = rightArray[rightArrayIndex];
+        rightArrayIndex++;
       }
-      k++;
+      mergeIndex++;
     }
 
-    /* Copy remaining elements of L[] if any */
-    while (i < n1) {
-      arr[k] = L[i];
-      i++;
-      k++;
+    /* Copy remaining elements of leftArray[] if any */
+    while (leftArrayIndex < leftArraySize) {
+      nums[mergeIndex] = leftArray[leftArrayIndex];
+      leftArrayIndex++;
+      mergeIndex++;
     }
 
-    /* Copy remaining elements of R[] if any */
-    while (j < n2) {
-      arr[k] = R[j];
-      j++;
-      k++;
+    /* Copy remaining elements of rightArray[] if any */
+    while (rightArrayIndex < rightArraySize) {
+      nums[mergeIndex] = rightArray[rightArrayIndex];
+      rightArrayIndex++;
+      mergeIndex++;
     }
   }
 
