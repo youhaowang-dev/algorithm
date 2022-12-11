@@ -16,12 +16,66 @@
 // Input: x = 8
 // Output: 2
 // Explanation: The square root of 8 is 2.82842..., and since we round it down to the nearest integer, 2 is returned.
+import java.util.*;
 
 final class Sqrt {
 
   public int mySqrt(int x) {
-    return -1;
+    if (x <= 1) {
+      return x;
+    }
+
+    int start = 1;
+    int end = x;
+    while (start + 1 < end) {
+      int mid = start - (start - end) / 2;
+      int dividedByMid = x / mid; // avoid mid * mid overflow
+      if (dividedByMid == mid) {
+        return mid;
+      }
+      if (dividedByMid < mid) {
+        // mid too big; need to make it smaller
+        end = mid;
+      }
+      if (dividedByMid > mid) {
+        // mid too small; need to make it bigger
+        start = mid;
+      }
+    }
+
+    if (start <= x / start) {
+      return start;
+    }
+
+    if (end <= x / end) {
+      return end;
+    }
+
+    return Integer.MIN_VALUE; // throw new Exception();
   }
 
-  public static void main(String[] args) throws Exception {}
+  public static void main(String[] args) throws Exception {
+    Sqrt Sqrt = new Sqrt();
+    int[] targets = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 2147395599 };
+    // NOTE: the method must be public to make .getMethod work
+    String[] testMethodNames = new String[] { "mySqrt" };
+
+    for (int target : targets) {
+      for (String methodName : testMethodNames) {
+        java.lang.reflect.Method method = Sqrt
+          .getClass()
+          .getMethod(methodName, int.class);
+        int sqrt = (int) method.invoke(Sqrt, target);
+
+        System.out.println(
+          String.format(
+            "Method Name: %s\nInput: %s, Output: %s",
+            methodName,
+            target,
+            sqrt
+          )
+        );
+      }
+    }
+  }
 }
