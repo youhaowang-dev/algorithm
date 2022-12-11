@@ -20,5 +20,33 @@
 // Example 3:
 // Input: nums = [-1,-1]
 // Output: [0,0]
+import java.util.*;
 
-final class CountOfSmallerNumbersAfterSelf {}
+final class CountOfSmallerNumbersAfterSelf {
+
+  public List<Integer> countSmaller(int[] nums) {
+    return new ArrayList<Integer>();
+  }
+
+  public static void main(String[] args) throws Exception {
+    CountOfSmallerNumbersAfterSelf CountOfSmallerNumbersAfterSelf = new CountOfSmallerNumbersAfterSelf();
+    int[][] testCases = new int[][] { { 5, 2, 6, 1 }, { -1 }, { -1, -1 } };
+    // NOTE: the method must be public to make .getMethod work
+    String[] testMethodNames = new String[] { "countSmaller" };
+
+    for (int[] nums : testCases) {
+      for (String methodName : testMethodNames) {
+        java.lang.reflect.Method method = CountOfSmallerNumbersAfterSelf
+          .getClass()
+          .getMethod(methodName, int[].class);
+        ArrayList<Integer> counts = (ArrayList<Integer>) method.invoke(
+          CountOfSmallerNumbersAfterSelf,
+          nums
+        );
+
+        System.out.println("nums: " + Arrays.toString(nums));
+        System.out.println("counts: " + Arrays.toString(counts.toArray()));
+      }
+    }
+  }
+}
