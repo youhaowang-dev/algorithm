@@ -27,5 +27,27 @@
 // Explanation: The arrays we are merging are [] and [1].
 // The result of the merge is [1].
 // Note that because m = 0, there are no elements in nums1. The 0 is only there to ensure the merge result can fit in nums1.
+import java.util.*;
 
-final class MergeSortedArray {}
+final class MergeSortedArray {
+
+  public void merge(int[] nums1, int m, int[] nums2, int n) {}
+
+  public static void main(String[] args) throws Exception {
+    MergeSortedArray MergeSortedArray = new MergeSortedArray();
+    int[] arr1 = new int[] { 1, 2, 3, 0, 0, 0 };
+    int[] arr2 = new int[] { 2, 5, 6 };
+    // NOTE: the method must be public to make .getMethod work
+    String methodName = "merge";
+    System.out.println("methodName: " + methodName);
+    System.out.println("before merge arr1: " + Arrays.toString(arr1));
+    System.out.println("before merge arr2: " + Arrays.toString(arr2));
+    java.lang.reflect.Method method = MergeSortedArray
+      .getClass()
+      .getMethod(methodName, int[].class, int.class, int[].class, int.class);
+    method.invoke(MergeSortedArray, arr1, 3, arr2, 3);
+
+    System.out.println("after merge arr1: " + Arrays.toString(arr1));
+    System.out.println("after merge arr2: " + Arrays.toString(arr2));
+  }
+}
