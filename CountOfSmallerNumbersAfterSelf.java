@@ -26,14 +26,89 @@ final class CountOfSmallerNumbersAfterSelf {
 
   public List<Integer> countSmaller(int[] nums) {
     int[] numsSorted = nums.clone();
+    System.out.println("before sorting " + Arrays.toString(numsSorted));
     this.mergesort(numsSorted, 0, nums.length - 1);
+    System.out.println(
+      "Arrays.toString(numsSorted): " + Arrays.toString(numsSorted)
+    );
 
     List<Integer> counts = new ArrayList<>();
 
     return counts;
   }
 
-  private void mergesort(int[] nums, int left, int right) {}
+  private void mergesort(int[] nums, int left, int right) {
+    // exit condition
+    if (left >= right) {
+      return;
+    }
+
+    int mid = left - (left - right) / 2;
+    // mergesort left and right
+    this.mergesort(nums, left, mid);
+    this.mergesort(nums, mid + 1, right);
+    // merge left and right
+    this.merge(nums, left, mid, right);
+  }
+
+  // left [left, mid]
+  // right [mid + 1, right]
+  private void merge(int[] nums, int left, int mid, int right) {
+    int[] leftArray = Arrays.copyOfRange(nums, left, mid + 1);
+    int[] rightArray = Arrays.copyOfRange(nums, mid + 1, right + 1);
+    int leftSize = leftArray.length;
+    int rightSize = rightArray.length;
+    int leftIndex = 0;
+    int rightIndex = 0;
+    int mergeIndex = left;
+    while (leftIndex < leftSize && rightIndex < rightSize) {
+      if (leftArray[leftIndex] < rightArray[rightIndex]) {
+        nums[mergeIndex] = leftArray[leftIndex];
+        leftIndex++;
+      } else {
+        nums[mergeIndex] = rightArray[rightIndex];
+        rightIndex++;
+      }
+      mergeIndex++;
+    }
+    while (leftIndex < leftSize) {
+      nums[mergeIndex] = leftArray[leftIndex];
+      leftIndex++;
+      mergeIndex++;
+    }
+    while (rightIndex < rightSize) {
+      nums[mergeIndex] = rightArray[rightIndex];
+      rightIndex++;
+      mergeIndex++;
+    }
+  }
+
+  class ArrayIterator {
+
+    int[] nums;
+    int start;
+    int end;
+
+    public ArrayIterator(int[] nums, int start, int end) {
+      this.nums = nums;
+      this.start = start;
+      this.end = end;
+    }
+
+    public boolean hasNext() {
+      return start <= end;
+    }
+
+    public int popNext() {
+      int currentVal = nums[start];
+      start++;
+      return currentVal;
+    }
+
+    public int getNext() {
+      return nums[start];
+    }
+  }
 
   private void quickSort(int[] nums, int first, int last) {
     if (first >= last) {
@@ -66,7 +141,10 @@ final class CountOfSmallerNumbersAfterSelf {
 
   public static void main(String[] args) throws Exception {
     CountOfSmallerNumbersAfterSelf CountOfSmallerNumbersAfterSelf = new CountOfSmallerNumbersAfterSelf();
-    int[][] testCases = new int[][] { { 5, 2, 6, 1 }, { -1 }, { -1, -1 } };
+    int[][] testCases = new int[][] {
+      { 5, 2, 6, 1 },
+      // , { -1 }, { -1, -1 }
+    };
     // NOTE: the method must be public to make .getMethod work
     String[] testMethodNames = new String[] { "countSmaller" };
 
