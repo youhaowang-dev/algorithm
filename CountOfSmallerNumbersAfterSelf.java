@@ -54,59 +54,55 @@ final class CountOfSmallerNumbersAfterSelf {
   // left [left, mid]
   // right [mid + 1, right]
   private void merge(int[] nums, int left, int mid, int right) {
-    int[] leftArray = Arrays.copyOfRange(nums, left, mid + 1);
-    int[] rightArray = Arrays.copyOfRange(nums, mid + 1, right + 1);
-    int leftSize = leftArray.length;
-    int rightSize = rightArray.length;
-    int leftIndex = 0;
-    int rightIndex = 0;
+    // int[] leftArray = Arrays.copyOfRange(nums, left, mid + 1);
+    // int[] rightArray = Arrays.copyOfRange(nums, mid + 1, right + 1);
+    // int leftSize = leftArray.length;
+    // int rightSize = rightArray.length;
+    // int leftIndex = 0;
+    // int rightIndex = 0;
+    SubarrayIterator leftIterator = new SubarrayIterator(nums, left, mid);
+    SubarrayIterator rightIterator = new SubarrayIterator(nums, mid + 1, right);
     int mergeIndex = left;
-    while (leftIndex < leftSize && rightIndex < rightSize) {
-      if (leftArray[leftIndex] < rightArray[rightIndex]) {
-        nums[mergeIndex] = leftArray[leftIndex];
-        leftIndex++;
+    while (leftIterator.hasNext() && rightIterator.hasNext()) {
+      if (leftIterator.getNext() < rightIterator.getNext()) {
+        nums[mergeIndex] = leftIterator.popNext();
       } else {
-        nums[mergeIndex] = rightArray[rightIndex];
-        rightIndex++;
+        nums[mergeIndex] = rightIterator.popNext();
       }
       mergeIndex++;
     }
-    while (leftIndex < leftSize) {
-      nums[mergeIndex] = leftArray[leftIndex];
-      leftIndex++;
+    while (leftIterator.hasNext()) {
+      nums[mergeIndex] = leftIterator.popNext();
       mergeIndex++;
     }
-    while (rightIndex < rightSize) {
-      nums[mergeIndex] = rightArray[rightIndex];
-      rightIndex++;
+    while (rightIterator.hasNext()) {
+      nums[mergeIndex] = rightIterator.popNext();
       mergeIndex++;
     }
   }
 
-  class ArrayIterator {
+  class SubarrayIterator {
 
     int[] nums;
-    int start;
-    int end;
+    int index;
 
-    public ArrayIterator(int[] nums, int start, int end) {
-      this.nums = nums;
-      this.start = start;
-      this.end = end;
+    public SubarrayIterator(int[] nums, int start, int end) {
+      this.index = 0;
+      this.nums = Arrays.copyOfRange(nums, start, end + 1);
     }
 
     public boolean hasNext() {
-      return start <= end;
+      return index < nums.length;
     }
 
     public int popNext() {
-      int currentVal = nums[start];
-      start++;
+      int currentVal = nums[index];
+      index++;
       return currentVal;
     }
 
     public int getNext() {
-      return nums[start];
+      return nums[index];
     }
   }
 
