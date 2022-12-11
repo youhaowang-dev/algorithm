@@ -31,12 +31,42 @@ import java.util.*;
 
 final class MergeSortedArray {
 
-  public void merge(int[] nums1, int m, int[] nums2, int n) {}
+  // merge backward to avoid O(n) inserts
+  public void merge(int[] nums1, int m, int[] nums2, int n) {
+    int nums1Position = m - 1;
+    int nums2Position = nums2.length - 1;
+    int insertPosition = nums1.length - 1;
+    while (nums1Position >= 0 && nums2Position >= 0) {
+      if (nums1[nums1Position] > nums2[nums2Position]) {
+        nums1[insertPosition] = nums1[nums1Position];
+        nums1Position--;
+        insertPosition--;
+      } else {
+        nums1[insertPosition] = nums2[nums2Position];
+        nums2Position--;
+        insertPosition--;
+      }
+    }
+    while (nums1Position >= 0) {
+      nums1[insertPosition] = nums1[nums1Position];
+      nums1Position--;
+      insertPosition--;
+    }
+    while (nums2Position >= 0) {
+      nums1[insertPosition] = nums2[nums2Position];
+      nums2Position--;
+      insertPosition--;
+    }
+  }
 
   public static void main(String[] args) throws Exception {
     MergeSortedArray MergeSortedArray = new MergeSortedArray();
-    int[] arr1 = new int[] { 1, 2, 3, 0, 0, 0 };
-    int[] arr2 = new int[] { 2, 5, 6 };
+    // int[] arr1 = new int[] { 1, 2, 3, 0, 0, 0 };
+    // int[] arr2 = new int[] { 2, 5, 6 };
+    // int[] arr1 = new int[] { 0 };
+    // int[] arr2 = new int[] { 1 };
+    int[] arr1 = new int[] { 2, 0 };
+    int[] arr2 = new int[] { 1 };
     // NOTE: the method must be public to make .getMethod work
     String methodName = "merge";
     System.out.println("methodName: " + methodName);
@@ -45,7 +75,9 @@ final class MergeSortedArray {
     java.lang.reflect.Method method = MergeSortedArray
       .getClass()
       .getMethod(methodName, int[].class, int.class, int[].class, int.class);
-    method.invoke(MergeSortedArray, arr1, 3, arr2, 3);
+    // method.invoke(MergeSortedArray, arr1, 3, arr2, 3);
+    // method.invoke(MergeSortedArray, arr1, 0, arr2, 1);
+    method.invoke(MergeSortedArray, arr1, 1, arr2, 1);
 
     System.out.println("after merge arr1: " + Arrays.toString(arr1));
     System.out.println("after merge arr2: " + Arrays.toString(arr2));
