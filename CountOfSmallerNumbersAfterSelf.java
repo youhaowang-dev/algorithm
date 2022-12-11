@@ -51,15 +51,9 @@ final class CountOfSmallerNumbersAfterSelf {
     this.merge(nums, left, mid, right);
   }
 
-  // left [left, mid]
-  // right [mid + 1, right]
+  // left subarray [left, mid]
+  // right subarray [mid + 1, right]
   private void merge(int[] nums, int left, int mid, int right) {
-    // int[] leftArray = Arrays.copyOfRange(nums, left, mid + 1);
-    // int[] rightArray = Arrays.copyOfRange(nums, mid + 1, right + 1);
-    // int leftSize = leftArray.length;
-    // int rightSize = rightArray.length;
-    // int leftIndex = 0;
-    // int rightIndex = 0;
     SubarrayIterator leftIterator = new SubarrayIterator(nums, left, mid);
     SubarrayIterator rightIterator = new SubarrayIterator(nums, mid + 1, right);
     int mergeIndex = left;
