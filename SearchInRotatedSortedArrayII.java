@@ -15,7 +15,7 @@ import java.util.*;
 final class SearchInRotatedSortedArrayII {
 
   // with duplicates, we cannot tell the partition the target belongs to,
-  // so the pointer can only move forward by 1 and the worst complexity can be O(n).
+  // so the pointer can only move by 1 and the worst complexity can be O(n).
   // Worst case: This happens when all the elements are the same and we search for some different element.
   // At each step, we will only be able to reduce the search space by 1 since arr[mid] equals arr[start] and
   // it's not possible to decide the relative position of target from arr[mid]. Example: [1, 1, 1, 1, 1, 1, 1], target = 2.
@@ -39,6 +39,10 @@ final class SearchInRotatedSortedArrayII {
       }
       if (!this.partitionCanBinarySearch(firstVal, midVal)) {
         start++;
+        continue;
+      }
+      if (!this.partitionCanBinarySearch(midVal, lastVal)) {
+        end--;
         continue;
       }
       if (this.isSorted(firstVal, midVal)) {
@@ -79,8 +83,8 @@ final class SearchInRotatedSortedArrayII {
 
   public static void main(String[] args) throws Exception {
     SearchInRotatedSortedArrayII SearchInRotatedSortedArrayII = new SearchInRotatedSortedArrayII();
-    int[] array = new int[] { 4, 5, 6, 6, 7, 0, 1, 2, 4, 4 };
-    int[] targets = new int[] { 1, 4, 8 };
+    int[] array = new int[] { 3, 3, 3, 1, 1, 1 };
+    int[] targets = new int[] { 1, 3, 8 };
     // NOTE: the method must be public to make .getMethod work
     String[] testMethodNames = new String[] { "search" };
 
