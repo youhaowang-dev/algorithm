@@ -22,23 +22,26 @@ final class MergeSort {
   // First subarray is nums[left..mid]
   // Second subarray is nums[left+1..right]
   public void merge(int nums[], int left, int mid, int right) {
-    // Find sizes of two subarrays to be merged
-    int leftArraySize = mid - left + 1;
-    int rightArraySize = right - mid;
+    // int leftArraySize = mid - (left - 1);
+    // int rightArraySize = right - (mid + 1 - 1);
+    // int[] leftArray = new int[leftArraySize];
+    // int[] rightArray = new int[rightArraySize];
+    // for (int i = 0; i < leftArraySize; i++) {
+    //   leftArray[i] = nums[left + i];
+    // }
+    // for (int i = 0; i < rightArraySize; i++) {
+    //   rightArray[i] = nums[mid + 1 + i];
+    // }
 
-    /* Create temp arrays */
-    int leftArray[] = new int[leftArraySize];
-    int rightArray[] = new int[rightArraySize];
-
-    /*Copy data to temp arrays*/
-    for (int i = 0; i < leftArraySize; i++) {
-      leftArray[i] = nums[left + i];
-    }
-    for (int i = 0; i < rightArraySize; i++) {
-      rightArray[i] = nums[mid + 1 + i];
-    }
-
-    /* Merge the temp arrays */
+    // public static short[] copyOfRange(short[] original, int from, int to)
+    // Parameters
+    // original − This is the array from which a range is to to be copied.
+    // from − This is the initial index of the range to be copied, inclusive.
+    // to − This is the final index of the range to be copied, exclusive.
+    int[] leftArray = Arrays.copyOfRange(nums, left, mid + 1);
+    int[] rightArray = Arrays.copyOfRange(nums, mid + 1, right + 1);
+    int leftArraySize = leftArray.length;
+    int rightArraySize = rightArray.length;
 
     // Initial indexes of first and second subarrays
     int leftArrayIndex = 0;
