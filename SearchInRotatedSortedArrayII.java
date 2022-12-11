@@ -45,18 +45,20 @@ final class SearchInRotatedSortedArrayII {
         end--;
         continue;
       }
-      if (this.isSorted(firstVal, midVal)) {
+      if (this.partitionIsSorted(firstVal, midVal)) {
         if (this.partitionHasTarget(firstVal, target, midVal)) {
           end = mid;
-        }
-        // continue search in the other partition
-        start = mid;
-      }
-      if (this.isSorted(midVal, lastVal)) {
-        if (this.partitionHasTarget(midVal, target, lastVal)) {
+        } else { // else is must have here otherwise we will move start to the wrong position
+          // continue search in the other partition
           start = mid;
         }
-        end = mid;
+      }
+      if (this.partitionIsSorted(midVal, lastVal)) {
+        if (this.partitionHasTarget(midVal, target, lastVal)) {
+          start = mid;
+        } else {
+          end = mid;
+        }
       }
     }
     if (nums[start] == target) {
@@ -73,7 +75,7 @@ final class SearchInRotatedSortedArrayII {
     return firstVal != lastVal;
   }
 
-  private boolean isSorted(int firstVal, int lastVal) {
+  private boolean partitionIsSorted(int firstVal, int lastVal) {
     return firstVal < lastVal;
   }
 
@@ -83,8 +85,10 @@ final class SearchInRotatedSortedArrayII {
 
   public static void main(String[] args) throws Exception {
     SearchInRotatedSortedArrayII SearchInRotatedSortedArrayII = new SearchInRotatedSortedArrayII();
-    int[] array = new int[] { 3, 3, 3, 1, 1, 1 };
-    int[] targets = new int[] { 1, 3, 8 };
+    // int[] array = new int[] { 3, 3, 3, 1, 1, 1 };
+    // int[] targets = new int[] { 1, 3, 8 };
+    int[] array = new int[] { 4, 5, 6, 7, 0, 1, 2 };
+    int[] targets = new int[] { 1 };
     // NOTE: the method must be public to make .getMethod work
     String[] testMethodNames = new String[] { "search" };
 
