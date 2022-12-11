@@ -24,20 +24,28 @@ import java.util.*;
 
 final class CountOfSmallerNumbersAfterSelf {
 
-  public List<Integer> countSmaller(int[] nums) {
-    int[] numsSorted = nums.clone();
-    System.out.println("before sorting " + Arrays.toString(numsSorted));
-    this.mergesort(numsSorted, 0, nums.length - 1);
-    System.out.println(
-      "Arrays.toString(numsSorted): " + Arrays.toString(numsSorted)
-    );
+  // https://leetcode.com/problems/count-of-smaller-numbers-after-self/solutions/445769/merge-sort-clear-simple-explanation-with-examples-o-n-lg-n/
+  public List<Integer> countSmallerMergeSort(int[] nums) {
+    ValWithIndex[] numsCopy = new ValWithIndex[nums.length];
+    for (int i = 0; i < nums.length; i++) {
+      numsCopy[i] = new ValWithIndex(nums[i], i);
+    }
 
-    List<Integer> counts = new ArrayList<>();
-
-    return counts;
+    int[] counts = new int[nums.length];
+    this.mergesort(numsCopy, 0, nums.length - 1, counts);
+    List<Integer> countList = new ArrayList<>();
+    for (int count : counts) {
+      countList.add(count);
+    }
+    return countList;
   }
 
-  private void mergesort(int[] nums, int left, int right) {
+  private void mergesort(
+    ValWithIndex[] nums,
+    int left,
+    int right,
+    int[] counts
+  ) {
     // exit condition
     if (left >= right) {
       return;
@@ -45,27 +53,42 @@ final class CountOfSmallerNumbersAfterSelf {
 
     int mid = left - (left - right) / 2;
     // mergesort left and right
-    this.mergesort(nums, left, mid);
-    this.mergesort(nums, mid + 1, right);
+    this.mergesort(nums, left, mid, counts);
+    this.mergesort(nums, mid + 1, right, counts);
     // merge left and right
-    this.merge(nums, left, mid, right);
+    this.merge(nums, left, mid, right, counts);
   }
 
   // left subarray [left, mid]
   // right subarray [mid + 1, right]
-  private void merge(int[] nums, int left, int mid, int right) {
+  private void merge(
+    ValWithIndex[] nums,
+    int left,
+    int mid,
+    int right,
+    int[] counts
+  ) {
     SubarrayIterator leftIterator = new SubarrayIterator(nums, left, mid);
     SubarrayIterator rightIterator = new SubarrayIterator(nums, mid + 1, right);
     int mergeIndex = left;
+    int numElemsRightArrayLessThanLeftArray = 0;
     while (leftIterator.hasNext() && rightIterator.hasNext()) {
-      if (leftIterator.getNext() < rightIterator.getNext()) {
+      if (leftIterator.getNext().val <= rightIterator.getNext().val) {
+        counts[leftIterator.getNext().originalIndex] +=
+          numElemsRightArrayLessThanLeftArray;
+
         nums[mergeIndex] = leftIterator.popNext();
       } else {
+        numElemsRightArrayLessThanLeftArray++;
+
         nums[mergeIndex] = rightIterator.popNext();
       }
       mergeIndex++;
     }
     while (leftIterator.hasNext()) {
+      counts[leftIterator.getNext().originalIndex] +=
+        numElemsRightArrayLessThanLeftArray;
+
       nums[mergeIndex] = leftIterator.popNext();
       mergeIndex++;
     }
@@ -75,12 +98,23 @@ final class CountOfSmallerNumbersAfterSelf {
     }
   }
 
+  class ValWithIndex {
+
+    int val;
+    int originalIndex;
+
+    public ValWithIndex(int val, int originalIndex) {
+      this.val = val;
+      this.originalIndex = originalIndex;
+    }
+  }
+
   class SubarrayIterator {
 
-    int[] nums;
+    ValWithIndex[] nums;
     int index;
 
-    public SubarrayIterator(int[] nums, int start, int end) {
+    public SubarrayIterator(ValWithIndex[] nums, int start, int end) {
       this.index = 0;
       this.nums = Arrays.copyOfRange(nums, start, end + 1);
     }
@@ -89,13 +123,13 @@ final class CountOfSmallerNumbersAfterSelf {
       return index < nums.length;
     }
 
-    public int popNext() {
-      int currentVal = nums[index];
+    public ValWithIndex popNext() {
+      ValWithIndex currentVal = nums[index];
       index++;
       return currentVal;
     }
 
-    public int getNext() {
+    public ValWithIndex getNext() {
       return nums[index];
     }
   }
@@ -131,12 +165,9 @@ final class CountOfSmallerNumbersAfterSelf {
 
   public static void main(String[] args) throws Exception {
     CountOfSmallerNumbersAfterSelf CountOfSmallerNumbersAfterSelf = new CountOfSmallerNumbersAfterSelf();
-    int[][] testCases = new int[][] {
-      { 5, 2, 6, 1 },
-      // , { -1 }, { -1, -1 }
-    };
+    int[][] testCases = new int[][] { { 5, 2, 6, 1 }, { -1 }, { -1, -1 } };
     // NOTE: the method must be public to make .getMethod work
-    String[] testMethodNames = new String[] { "countSmaller" };
+    String[] testMethodNames = new String[] { "countSmallerMergeSort" };
 
     for (int[] nums : testCases) {
       for (String methodName : testMethodNames) {
