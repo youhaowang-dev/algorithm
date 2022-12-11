@@ -24,7 +24,7 @@ import java.util.*;
 
 final class CountOfSmallerNumbersAfterSelf {
 
-  public List<Integer> countSmallerQuickSort(int[] nums) {
+  public List<Integer> countSmaller(int[] nums) {
     int[] numsSorted = nums.clone();
     this.quickSort(numsSorted, 0, nums.length - 1);
     Map<Integer, Integer> numberToCount = new HashMap<>();
@@ -76,7 +76,7 @@ final class CountOfSmallerNumbersAfterSelf {
     CountOfSmallerNumbersAfterSelf CountOfSmallerNumbersAfterSelf = new CountOfSmallerNumbersAfterSelf();
     int[][] testCases = new int[][] { { 5, 2, 6, 1 }, { -1 }, { -1, -1 } };
     // NOTE: the method must be public to make .getMethod work
-    String[] testMethodNames = new String[] { "countSmallerQuickSort" };
+    String[] testMethodNames = new String[] { "countSmaller" };
 
     for (int[] nums : testCases) {
       for (String methodName : testMethodNames) {
