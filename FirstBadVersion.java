@@ -26,5 +26,38 @@
 
 final class FirstBadVersion {
 
-  public int firstBadVersion(int n) {}
+  // TLE on leetcode but same complexity
+  public int firstBadVersion(int n) {
+    int start = 1;
+    int end = n;
+    while (start + 1 < end) {
+      int mid = start - (start - end) / 2;
+      if (isBadVersion(mid)) {
+        end = mid;
+      } else {
+        start = mid + 1;
+      }
+    }
+    if (isBadVersion(start)) {
+      return start;
+    }
+
+    return end;
+  }
+
+  public int firstBadVersionV2(int n) {
+    int start = 1;
+    int end = n;
+    while (start < end) {
+      int mid = start - (start - end) / 2;
+      if (isBadVersion(mid)) {
+        end = mid;
+      } else {
+        start = mid + 1;
+      }
+    }
+
+    // start == end
+    return start;
+  }
 }
