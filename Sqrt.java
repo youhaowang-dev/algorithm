@@ -20,7 +20,7 @@ import java.util.*;
 
 final class Sqrt {
 
-  public int mySqrt(int x) {
+  public int sqrtInt(int x) {
     if (x <= 1) {
       return x;
     }
@@ -54,11 +54,22 @@ final class Sqrt {
     return Integer.MIN_VALUE; // throw new Exception();
   }
 
+  public double sqrtDouble(int x, double precise) {
+    double n = 0;
+    while (((n + 1) * (n + 1)) <= x) {
+      n++;
+    }
+    while ((n + precise) * (n + precise) <= x) {
+      n += precise;
+    }
+    return n;
+  }
+
   public static void main(String[] args) throws Exception {
     Sqrt Sqrt = new Sqrt();
     int[] targets = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 2147395599 };
     // NOTE: the method must be public to make .getMethod work
-    String[] testMethodNames = new String[] { "mySqrt" };
+    String[] testMethodNames = new String[] { "sqrtInt" };
 
     for (int target : targets) {
       for (String methodName : testMethodNames) {
@@ -66,6 +77,26 @@ final class Sqrt {
           .getClass()
           .getMethod(methodName, int.class);
         int sqrt = (int) method.invoke(Sqrt, target);
+
+        System.out.println(
+          String.format(
+            "Method Name: %s\nInput: %s, Output: %s",
+            methodName,
+            target,
+            sqrt
+          )
+        );
+      }
+    }
+
+    String[] doubleSqrtMethods = new String[] { "sqrtDouble" };
+    double precise = 0.001;
+    for (int target : targets) {
+      for (String methodName : doubleSqrtMethods) {
+        java.lang.reflect.Method method = Sqrt
+          .getClass()
+          .getMethod(methodName, int.class, double.class);
+        double sqrt = (double) method.invoke(Sqrt, target, precise);
 
         System.out.println(
           String.format(
