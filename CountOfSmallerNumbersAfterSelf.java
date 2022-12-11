@@ -24,15 +24,59 @@ import java.util.*;
 
 final class CountOfSmallerNumbersAfterSelf {
 
-  public List<Integer> countSmaller(int[] nums) {
-    return new ArrayList<Integer>();
+  public List<Integer> countSmallerQuickSort(int[] nums) {
+    int[] numsSorted = nums.clone();
+    this.quickSort(numsSorted, 0, nums.length - 1);
+    Map<Integer, Integer> numberToCount = new HashMap<>();
+    for (int index = 0; index < numsSorted.length; index++) {
+      // [1,2,3]
+      // 1 expect 2, so 3(length) - 0(index) - 1
+      // 2 expect 1, so 3(length) - 1(index) - 1
+      int count = numsSorted.length - index - 1;
+      numberToCount.put(numsSorted[index], count);
+    }
+    List<Integer> counts = new ArrayList<>();
+    for (int num : nums) {
+      counts.add(numberToCount.get(num));
+    }
+
+    return counts;
+  }
+
+  private void quickSort(int[] nums, int first, int last) {
+    if (first >= last) {
+      return;
+    }
+    int partitionIndex = this.partition(nums, first, last);
+    this.quickSort(nums, first, partitionIndex - 1);
+    this.quickSort(nums, partitionIndex, last);
+  }
+
+  private int partition(int[] nums, int first, int last) {
+    int partitionIndex = 0;
+    int pivotValue = nums[last];
+    for (int index = 0; index < last; index++) {
+      if (nums[index] <= pivotValue) {
+        this.swap(nums, index, partitionIndex);
+        partitionIndex++;
+      }
+    }
+    swap(nums, partitionIndex, last);
+
+    return partitionIndex;
+  }
+
+  private void swap(int[] nums, int index1, int index2) {
+    int index1Copy = nums[index1];
+    nums[index1] = nums[index2];
+    nums[index2] = index1Copy;
   }
 
   public static void main(String[] args) throws Exception {
     CountOfSmallerNumbersAfterSelf CountOfSmallerNumbersAfterSelf = new CountOfSmallerNumbersAfterSelf();
     int[][] testCases = new int[][] { { 5, 2, 6, 1 }, { -1 }, { -1, -1 } };
     // NOTE: the method must be public to make .getMethod work
-    String[] testMethodNames = new String[] { "countSmaller" };
+    String[] testMethodNames = new String[] { "countSmallerQuickSort" };
 
     for (int[] nums : testCases) {
       for (String methodName : testMethodNames) {
@@ -44,6 +88,7 @@ final class CountOfSmallerNumbersAfterSelf {
           nums
         );
 
+        System.out.println("methodName: " + methodName);
         System.out.println("nums: " + Arrays.toString(nums));
         System.out.println("counts: " + Arrays.toString(counts.toArray()));
       }
