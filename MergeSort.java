@@ -22,14 +22,14 @@ final class MergeSort {
   // First subarray is nums[left..mid]
   // Second subarray is nums[left+1..right]
   public void merge(int nums[], int left, int mid, int right) {
-    // int leftArraySize = mid - (left - 1);
-    // int rightArraySize = right - (mid + 1 - 1);
-    // int[] leftArray = new int[leftArraySize];
-    // int[] rightArray = new int[rightArraySize];
-    // for (int i = 0; i < leftArraySize; i++) {
+    // int leftSize = mid - (left - 1);
+    // int rightSize = right - (mid + 1 - 1);
+    // int[] leftArray = new int[leftSize];
+    // int[] rightArray = new int[rightSize];
+    // for (int i = 0; i < leftSize; i++) {
     //   leftArray[i] = nums[left + i];
     // }
-    // for (int i = 0; i < rightArraySize; i++) {
+    // for (int i = 0; i < rightSize; i++) {
     //   rightArray[i] = nums[mid + 1 + i];
     // }
 
@@ -40,36 +40,36 @@ final class MergeSort {
     // to − This is the final index of the range to be copied, exclusive.
     int[] leftArray = Arrays.copyOfRange(nums, left, mid + 1);
     int[] rightArray = Arrays.copyOfRange(nums, mid + 1, right + 1);
-    int leftArraySize = leftArray.length;
-    int rightArraySize = rightArray.length;
+    int leftSize = leftArray.length;
+    int rightSize = rightArray.length;
 
     // Initial indexes of first and second subarrays
-    int leftArrayIndex = 0;
-    int rightArrayIndex = 0;
+    int leftIndex = 0;
+    int rightIndex = 0;
     // Initial index of merged subarray array
     int mergeIndex = left;
-    while (leftArrayIndex < leftArraySize && rightArrayIndex < rightArraySize) {
-      if (leftArray[leftArrayIndex] <= rightArray[rightArrayIndex]) {
-        nums[mergeIndex] = leftArray[leftArrayIndex];
-        leftArrayIndex++;
+    while (leftIndex < leftSize && rightIndex < rightSize) {
+      if (leftArray[leftIndex] <= rightArray[rightIndex]) {
+        nums[mergeIndex] = leftArray[leftIndex];
+        leftIndex++;
       } else {
-        nums[mergeIndex] = rightArray[rightArrayIndex];
-        rightArrayIndex++;
+        nums[mergeIndex] = rightArray[rightIndex];
+        rightIndex++;
       }
       mergeIndex++;
     }
 
     /* Copy remaining elements of leftArray[] if any */
-    while (leftArrayIndex < leftArraySize) {
-      nums[mergeIndex] = leftArray[leftArrayIndex];
-      leftArrayIndex++;
+    while (leftIndex < leftSize) {
+      nums[mergeIndex] = leftArray[leftIndex];
+      leftIndex++;
       mergeIndex++;
     }
 
     /* Copy remaining elements of rightArray[] if any */
-    while (rightArrayIndex < rightArraySize) {
-      nums[mergeIndex] = rightArray[rightArrayIndex];
-      rightArrayIndex++;
+    while (rightIndex < rightSize) {
+      nums[mergeIndex] = rightArray[rightIndex];
+      rightIndex++;
       mergeIndex++;
     }
   }
