@@ -19,8 +19,25 @@
 
 final class Pow {
 
+  // power can be 2^a+2^b+2^c+...
+  // when n % 2 == 1, mutiply the answer by current_product because / will remove one
+  // do current_product = base * base n times
   public double myPow(double base, int power) {
-    return 0.001;
+    if (power < 0) {
+      base = 1 / base;
+      power = -power;
+    }
+    double result = 1;
+    double current_product = base;
+    while (power > 0) {
+      if (power % 2 == 1) {
+        result = result * current_product;
+      }
+      current_product = current_product * current_product;
+      power = power / 2;
+    }
+
+    return result;
   }
 
   public static void main(String[] args) throws Exception {
@@ -36,15 +53,11 @@ final class Pow {
           .getClass()
           .getMethod(methodName, double.class, int.class);
         double result = (double) method.invoke(Pow, base, power);
-
-        System.out.println(
-          String.format(
-            "Method Name: %s\nInput: %s, Output: %s",
-            methodName,
-            "Base: " + base + "Power: " + power,
-            result
-          )
-        );
+        System.out.println("methodName: " + methodName);
+        System.out.println("base: " + base);
+        System.out.println("power: " + power);
+        System.out.println("result: " + result);
+        System.out.println();
       }
     }
   }
