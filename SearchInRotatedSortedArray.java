@@ -113,26 +113,28 @@ final class SearchInRotatedSortedArray {
     while (start + 1 < end) {
       int mid = start - (start - end) / 2;
       int midVal = nums[mid];
+      int firstVal = nums[start];
+      int lastVal = nums[end];
       if (midVal == target) {
         return mid;
       }
       // we don't use <= or >=, so handle the == cases here
-      if (nums[start] == target) {
+      if (firstVal == target) {
         return start;
       }
-      if (nums[end] == target) {
+      if (lastVal == target) {
         return end;
       }
-      if (nums[start] < midVal) { // left side is sorted
-        if (nums[start] < target && target < midVal) {
+      if (firstVal < midVal) { // left side is sorted
+        if (firstVal < target && target < midVal) {
           // target in left side
           end = mid;
         } else {
           start = mid;
         }
       }
-      if (midVal < nums[end]) { // right side is sorted
-        if (midVal < target && target < nums[end]) {
+      if (midVal < lastVal) { // right side is sorted
+        if (midVal < target && target < lastVal) {
           // target in right side
           start = mid;
         } else {
@@ -156,12 +158,12 @@ final class SearchInRotatedSortedArray {
     SearchInRotatedSortedArray SearchInRotatedSortedArray = new SearchInRotatedSortedArray();
     int target = 2;
     int[][] testCases = new int[][] {
-      // { 0, 1, target, 4, 5, 6, 7 },
+      { 0, 1, target, 4, 5, 6, 7 },
       { 4, 5, 6, 7, 0, 1, target },
-      // { 7, 0, 1, 4, 5, 6 },
-      // { 0, 1 },
-      // { 1 },
-      // { 2 },
+      { 7, 0, 1, 4, 5, 6 },
+      { 0, 1 },
+      { 1 },
+      { target },
     };
     // NOTE: the method must be public to make .getMethod work
     String[] testMethodNames = new String[] {
