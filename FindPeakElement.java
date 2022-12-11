@@ -24,8 +24,28 @@ import java.util.*;
 
 final class FindPeakElement {
 
+  // https://youtu.be/HtSuA80QTyo?t=1645
+  // based on the assumption, peak always exists, so we just need to binary search by abandoning the increasing side or decreasing side
+  // if mid value > mid+1 value, peak is at the left, move the end to mid
+  // else peak is at the right side, move the start to end
   public int findPeakElement(int[] nums) {
-    return -1;
+    // TODO: validation
+    int start = 0;
+    int end = nums.length - 1;
+    while (start + 1 < end) {
+      int mid = start - (start - end) / 2;
+      if (nums[mid] > nums[mid + 1]) {
+        // mid is at a decreasing slope, so peak is on the left side
+        end = mid;
+      } else {
+        // peak always exist, so check the other side
+        start = mid;
+      }
+    }
+    if (nums[start] < nums[end]) {
+      return end;
+    }
+    return start;
   }
 
   public static void main(String[] args) throws Exception {
