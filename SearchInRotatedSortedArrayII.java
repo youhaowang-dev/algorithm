@@ -10,6 +10,7 @@
 // For example, [0,1,2,4,4,4,5,6,6,7] might be rotated at pivot index 5 and become [4,5,6,6,7,0,1,2,4,4].
 // Given the array nums after the rotation and an integer target, return true if target is in nums, or false if it is not in nums.
 // You must decrease the overall operation steps as much as possible.
+import java.util.*;
 
 final class SearchInRotatedSortedArrayII {
 
@@ -30,24 +31,25 @@ final class SearchInRotatedSortedArrayII {
     while (start + 1 < end) {
       int mid = start - (start - end) / 2;
       int midVal = nums[mid];
-      int startVal = nums[start];
-      int endVal = nums[end];
-      if (midVal == target) {
+      int firstVal = nums[start];
+      int lastVal = nums[end];
+      // IMPORTANT to check equal here
+      if (firstVal == target || midVal == target || lastVal == target) {
         return true;
       }
-      if (!this.canBinarySearch(startVal, midVal)) {
+      if (!this.partitionCanBinarySearch(firstVal, midVal)) {
         start++;
         continue;
       }
-      if (this.isSorted(startVal, midVal)) {
-        if (this.targetInPartition(startVal, target, midVal)) {
+      if (this.isSorted(firstVal, midVal)) {
+        if (this.partitionHasTarget(firstVal, target, midVal)) {
           end = mid;
         }
         // continue search in the other partition
         start = mid;
       }
-      if (this.isSorted(midVal, endVal)) {
-        if (this.targetInPartition(midVal, target, endVal)) {
+      if (this.isSorted(midVal, lastVal)) {
+        if (this.partitionHasTarget(midVal, target, lastVal)) {
           start = mid;
         }
         end = mid;
@@ -63,15 +65,45 @@ final class SearchInRotatedSortedArrayII {
     return false;
   }
 
-  private boolean canBinarySearch(int startVal, int midVal) {
-    return startVal != midVal;
+  private boolean partitionCanBinarySearch(int firstVal, int lastVal) {
+    return firstVal != lastVal;
   }
 
   private boolean isSorted(int firstVal, int lastVal) {
     return firstVal < lastVal;
   }
 
-  private boolean targetInPartition(int firstVal, int target, int lastVal) {
+  private boolean partitionHasTarget(int firstVal, int target, int lastVal) {
     return firstVal < target && target < lastVal;
+  }
+
+  public static void main(String[] args) throws Exception {
+    SearchInRotatedSortedArrayII SearchInRotatedSortedArrayII = new SearchInRotatedSortedArrayII();
+    int[] array = new int[] { 4, 5, 6, 6, 7, 0, 1, 2, 4, 4 };
+    int[] targets = new int[] { 1, 4, 8 };
+    // NOTE: the method must be public to make .getMethod work
+    String[] testMethodNames = new String[] { "search" };
+
+    for (int target : targets) {
+      for (String methodName : testMethodNames) {
+        java.lang.reflect.Method method = SearchInRotatedSortedArrayII
+          .getClass()
+          .getMethod(methodName, int[].class, int.class);
+        boolean found = (boolean) method.invoke(
+          SearchInRotatedSortedArrayII,
+          array,
+          target
+        );
+
+        System.out.println(
+          String.format(
+            "Method Name: %s\nInput: %s, Output: %s",
+            methodName,
+            Arrays.toString(array) + " Target: " + target,
+            found
+          )
+        );
+      }
+    }
   }
 }
