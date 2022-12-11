@@ -23,18 +23,19 @@ final class Pow {
   // when n % 2 == 1, mutiply the answer by current_product because / will remove one
   // do current_product = base * base n times
   public double myPow(double base, int power) {
-    if (power < 0) {
+    long currentPower = power; // -power may overflow
+    if (currentPower < 0) {
       base = 1 / base;
-      power = -power;
+      currentPower = -currentPower;
     }
     double result = 1;
     double current_product = base;
-    while (power > 0) {
-      if (power % 2 == 1) {
+    while (currentPower > 0) {
+      if (currentPower % 2 == 1) {
         result = result * current_product;
       }
       current_product = current_product * current_product;
-      power = power / 2;
+      currentPower = currentPower / 2;
     }
 
     return result;
@@ -43,7 +44,8 @@ final class Pow {
   public static void main(String[] args) throws Exception {
     Pow Pow = new Pow();
     double[] bases = new double[] { 2.0000, 2.1000 };
-    int power = 10;
+    // int power = 10;
+    int power = -2;
     // NOTE: the method must be public to make .getMethod work
     String[] testMethodNames = new String[] { "myPow" };
 
