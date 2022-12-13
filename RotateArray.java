@@ -1,5 +1,7 @@
 // Array, Math, Two Pointers
 // Amazon 10 Apple 7 Microsoft 3 Yahoo 3 Adobe 2 Facebook 2
+// https://leetcode.com/problems/rotate-array/description/
+
 // Given an array, rotate the array to the right by k steps, where k is non-negative.
 
 // Example 1:
