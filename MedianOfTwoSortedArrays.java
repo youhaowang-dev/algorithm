@@ -83,12 +83,71 @@ final class MedianOfTwoSortedArrays {
     }
   }
 
+  public double findMedianSortedArrays2(int[] nums1, int[] nums2) {
+    // make sure first array is shorter
+    if (nums1.length > nums2.length) {
+      int[] nums2Ref = nums2;
+      nums2 = nums1;
+      nums1 = nums2Ref;
+    }
+    int shortLength = nums1.length;
+    int longLength = nums2.length;
+    // define the partition left and right count; even: left = right, odd: left = right+1
+    // because we include the median to left for odd cases, + 1 is needed to include it in the left part
+    // + 1 does not affect the even cases, so the following relationship works for both even and odd
+    int totalLeft = (shortLength + longLength + 1) / 2;
+    // short array parition index = total element count from 0 to index-1; [0, index-1][[index, end]
+    // long array partition index = total element count from 0 to index-1; [0, index-1][[index, end]
+    // long partition index + short partition index = long left count + short left count = half
+
+    // find a position in nums1 where nums1[partition left max] < nums2[partition right min] && nums2[partition left max] < nums1[partition right min]
+    int shortPartitionStart = 0;
+    int shortPartitionEnd = shortLength;
+    while (shortPartitionStart < shortPartitionEnd) {
+      // + 1 to avoid shortPartition - 1 out of bound; also prevent infinite loop
+      int shortPartition = (shortPartitionStart + shortPartitionEnd + 1) / 2;
+      int longPartition = totalLeft - shortPartition;
+      // check the inverse of the valid cases
+      if (nums1[shortPartition - 1] > nums2[longPartition]) {
+        shortPartitionEnd = shortPartition - 1;
+      } else {
+        shortPartitionStart = shortPartition;
+      }
+    }
+
+    int shortPartition = shortPartitionStart;
+    int longPartition = totalLeft - shortPartition;
+    int nums1LeftMax = shortPartition == 0
+      ? Integer.MIN_VALUE
+      : nums1[shortPartition - 1];
+    int nums1RightMin = shortPartition == shortLength
+      ? Integer.MAX_VALUE
+      : nums1[shortPartition];
+    int nums2LeftMax = longPartition == 0
+      ? Integer.MIN_VALUE
+      : nums2[longPartition - 1];
+    int nums2RightMin = longPartition == longLength
+      ? Integer.MAX_VALUE
+      : nums2[longPartition];
+
+    if ((shortLength + longLength) % 2 == 1) {
+      return (double) Math.max(nums1LeftMax, nums2LeftMax);
+    } else {
+      int leftMax = Math.max(nums1LeftMax, nums2LeftMax);
+      int rightMin = Math.min(nums1RightMin, nums2RightMin);
+      return (leftMax + rightMin) * 0.5;
+    }
+  }
+
   public static void main(String[] args) throws Exception {
     MedianOfTwoSortedArrays MedianOfTwoSortedArrays = new MedianOfTwoSortedArrays();
     int[] array1 = new int[] { 1, 2, 3, 4 };
     int[] array2 = new int[] { 5, 6, 7, 8 };
     // NOTE: the method must be public to make .getMethod work
-    String[] testMethodNames = new String[] { "findMedianSortedArrays" };
+    String[] testMethodNames = new String[] {
+      "findMedianSortedArrays",
+      "findMedianSortedArrays2",
+    };
 
     for (String methodName : testMethodNames) {
       System.out.println("methodName: " + methodName);
