@@ -26,7 +26,13 @@ final class MedianOfTwoSortedArrays {
     int totalLength = nums1.length + nums2.length;
     int kthLargest = totalLength / 2 + 1;
     if (totalLength % 2 == 1) {
-      return this.findKthLargestSortedArrays(nums1, 0, nums2, 0, kthLargest);
+      return (double) this.findKthLargestSortedArrays(
+          nums1,
+          0,
+          nums2,
+          0,
+          kthLargest
+        );
     } else {
       return (
         (
@@ -38,6 +44,8 @@ final class MedianOfTwoSortedArrays {
     }
   }
 
+  // binary search
+  // start will increase and k will decrease
   private int findKthLargestSortedArrays(
     int[] A,
     int aStart,
@@ -45,23 +53,27 @@ final class MedianOfTwoSortedArrays {
     int bStart,
     int k
   ) {
+    // when one of the array is exhausted
     if (aStart >= A.length) {
       return B[bStart + k - 1];
     }
     if (bStart >= B.length) {
       return A[aStart + k - 1];
     }
+    // when k is exhausted
     if (k == 1) {
       return Math.min(A[aStart], B[bStart]);
     }
-    int aMid = aStart + k / 2 - 1;
-    int bMid = bStart + k / 2 - 1;
+    int halfK = k / 2;
+    int aMid = aStart + halfK - 1;
+    int bMid = bStart + halfK - 1;
+    // max val for if check
     int aVal = aMid >= A.length ? Integer.MAX_VALUE : A[aMid];
     int bVal = bMid >= B.length ? Integer.MAX_VALUE : B[bMid];
     if (aVal <= bVal) {
-      return findKthLargestSortedArrays(A, aMid + 1, B, bStart, k - k / 2);
+      return findKthLargestSortedArrays(A, aMid + 1, B, bStart, k - halfK);
     } else {
-      return findKthLargestSortedArrays(A, aStart, B, bMid + 1, k - k / 2);
+      return findKthLargestSortedArrays(A, aStart, B, bMid + 1, k - halfK);
     }
   }
 
