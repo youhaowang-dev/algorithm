@@ -115,8 +115,10 @@ final class MedianOfTwoSortedArrays {
       }
     }
 
+    // update the partion one more time
     int shortPartition = shortPartitionStart;
     int longPartition = totalLeft - shortPartition;
+    // get the 4 numbers that are needed for median
     int nums1LeftMax = shortPartition == 0
       ? Integer.MIN_VALUE
       : nums1[shortPartition - 1];
