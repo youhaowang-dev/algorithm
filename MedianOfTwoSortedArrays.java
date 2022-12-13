@@ -53,10 +53,10 @@ final class MedianOfTwoSortedArrays {
 
   // drop nums1[0...k/2-1] or nums2[0...k/2-1] based on nums1 and nums2 values of k/2-1
   public int getKthElement(int[] nums1, int[] nums2, int k) {
-    int length1 = nums1.length, length2 = nums2.length;
-    int index1 = 0, index2 = 0;
-    int kthElement = 0;
-
+    int length1 = nums1.length;
+    int length2 = nums2.length;
+    int index1 = 0;
+    int index2 = 0;
     while (true) {
       // edge cases; exit conditions
       if (index1 == length1) {
@@ -71,15 +71,14 @@ final class MedianOfTwoSortedArrays {
 
       // binary search
       int half = k / 2;
-      int newIndex1 = Math.min(index1 + half, length1) - 1;
-      int newIndex2 = Math.min(index2 + half, length2) - 1;
-      int pivot1 = nums1[newIndex1], pivot2 = nums2[newIndex2];
-      if (pivot1 <= pivot2) {
-        k -= (newIndex1 - index1 + 1);
-        index1 = newIndex1 + 1;
+      int pivot1 = Math.min(index1 + half, length1) - 1;
+      int pivot2 = Math.min(index2 + half, length2) - 1;
+      if (nums1[pivot1] <= nums2[pivot2]) {
+        k -= (pivot1 - index1 + 1);
+        index1 = pivot1 + 1;
       } else {
-        k -= (newIndex2 - index2 + 1);
-        index2 = newIndex2 + 1;
+        k -= (pivot2 - index2 + 1);
+        index2 = pivot2 + 1;
       }
     }
   }
