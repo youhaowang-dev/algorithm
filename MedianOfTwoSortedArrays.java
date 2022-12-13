@@ -18,8 +18,51 @@ import java.util.*;
 
 final class MedianOfTwoSortedArrays {
 
+  // find median => find median index(s) => find kth largest number for the index(s) => calculate median
+  // [1,2,3,4,5] => find 3 => 3 = length/2 + 1 => k = length / 2 + 1
+  // [1,2,3,4] => find 2,3 => 2 = length/2, 3 = length/2 + 1 =>  k = length / 2 + 1, k = length / 2 = k - 1
   public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-    return 0.1;
+    // validation
+    int totalLength = nums1.length + nums2.length;
+    int kthLargest = totalLength / 2 + 1;
+    if (totalLength % 2 == 1) {
+      return this.findKthLargestSortedArrays(nums1, 0, nums2, 0, kthLargest);
+    } else {
+      return (
+        (
+          this.findKthLargestSortedArrays(nums1, 0, nums2, 0, kthLargest) +
+          this.findKthLargestSortedArrays(nums1, 0, nums2, 0, kthLargest - 1)
+        ) /
+        2.0
+      );
+    }
+  }
+
+  private int findKthLargestSortedArrays(
+    int[] A,
+    int aStart,
+    int[] B,
+    int bStart,
+    int k
+  ) {
+    if (aStart >= A.length) {
+      return B[bStart + k - 1];
+    }
+    if (bStart >= B.length) {
+      return A[aStart + k - 1];
+    }
+    if (k == 1) {
+      return Math.min(A[aStart], B[bStart]);
+    }
+    int aMid = aStart + k / 2 - 1;
+    int bMid = bStart + k / 2 - 1;
+    int aVal = aMid >= A.length ? Integer.MAX_VALUE : A[aMid];
+    int bVal = bMid >= B.length ? Integer.MAX_VALUE : B[bMid];
+    if (aVal <= bVal) {
+      return findKthLargestSortedArrays(A, aMid + 1, B, bStart, k - k / 2);
+    } else {
+      return findKthLargestSortedArrays(A, aStart, B, bMid + 1, k - k / 2);
+    }
   }
 
   public static void main(String[] args) throws Exception {
@@ -39,7 +82,7 @@ final class MedianOfTwoSortedArrays {
       double result = (double) method.invoke(
         MedianOfTwoSortedArrays,
         array1,
-        array1
+        array2
       );
 
       System.out.println("result: " + result);
