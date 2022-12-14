@@ -3,14 +3,50 @@
 // https://leetcode.com/problems/binary-tree-inorder-traversal/
 // Given the root of a binary tree, return the inorder traversal of its nodes' values.
 
-// inorder = root -> left subtree -> right subtree
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+// inorder = left subtree -> root -> right subtree
 import java.util.*;
 
 class BinaryTreeInorderTraversal {
 
-  public List<Integer> inorderTraversalRecursion(TreeNode root) {}
+  public List<Integer> inorderTraversalRecursion(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+    this.recursionHelp(root, result);
 
-  public List<Integer> inorderTraversalDivideConquer(TreeNode root) {}
+    return result;
+  }
 
-  public List<Integer> inorderTraversalIterative(TreeNode root) {}
+  private void recursionHelp(TreeNode root, List<Integer> result) {
+    if (root == null) {
+      return;
+    }
+
+    // left-root-right
+    this.recursionHelp(root.left, result);
+    result.add(root.val);
+    this.recursionHelp(root.right, result);
+  }
+
+  public List<Integer> inorderTraversalDivideConquer(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+  }
+
+  public List<Integer> inorderTraversalIterative(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+  }
 }
