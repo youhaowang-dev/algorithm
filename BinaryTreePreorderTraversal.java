@@ -40,6 +40,19 @@ class BinaryTreePreorderTraversal {
 
   public List<Integer> preorderTraversalDivideConquer(TreeNode root) {
     List<Integer> result = new ArrayList<>();
+    if (root == null) {
+      return result;
+    }
+
+    List<Integer> leftResults = this.preorderTraversalDivideConquer(root.left);
+    List<Integer> rightResults =
+      this.preorderTraversalDivideConquer(root.right);
+
+    result.add(root.val);
+    result.addAll(leftResults);
+    result.addAll(rightResults);
+
+    return result;
   }
 
   public List<Integer> preorderTraversalIterative(TreeNode root) {
