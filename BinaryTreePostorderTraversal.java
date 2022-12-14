@@ -19,10 +19,24 @@
 
 import java.util.*;
 
+// left-right-root
 class BinaryTreePostorderTraversal {
 
-  public List<Integer> postorderTraversal(TreeNode root) {
+  public List<Integer> postorderTraversalRecursion(TreeNode root) {
     List<Integer> result = new ArrayList<>();
+    this.recursionHelper(root, result);
+
+    return result;
+  }
+
+  private void recursionHelper(TreeNode root, List<Integer> result) {
+    if (root == null) {
+      return;
+    }
+
+    this.recursionHelper(root.left, result);
+    this.recursionHelper(root.right, result);
+    result.add(root.val);
   }
 
   public List<Integer> postorderTraversal(TreeNode root) {
