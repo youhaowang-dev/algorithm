@@ -57,5 +57,30 @@ class BinaryTreePreorderTraversal {
 
   public List<Integer> preorderTraversalIterative(TreeNode root) {
     List<Integer> result = new ArrayList<>();
+    if (root == null) {
+      return result;
+    }
+
+    Stack<TreeNode> stack = new Stack<>();
+    this.addLeftsAndPushRights(root, result, stack);
+    while (!stack.isEmpty()) {
+      TreeNode currentRoot = stack.pop();
+      this.addLeftsAndPushRights(currentRoot, result, stack);
+    }
+
+    return result;
+  }
+
+  private void addLeftsAndPushRights(
+    TreeNode node,
+    List<Integer> result,
+    Stack<TreeNode> stack
+  ) {
+    while (node != null) {
+      // root is not null, because root-left-right order, add it now
+      result.add(node.val);
+      stack.push(node.right);
+      node = node.left;
+    }
   }
 }
