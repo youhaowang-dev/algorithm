@@ -39,8 +39,21 @@ class BinaryTreePostorderTraversal {
     result.add(root.val);
   }
 
-  public List<Integer> postorderTraversal(TreeNode root) {
+  public List<Integer> postorderTraversalDivideConquer(TreeNode root) {
     List<Integer> result = new ArrayList<>();
+    if (root == null) {
+      return result;
+    }
+
+    List<Integer> leftResults = this.postorderTraversalDivideConquer(root.left);
+    List<Integer> rightResults =
+      this.postorderTraversalDivideConquer(root.right);
+
+    result.addAll(leftResults);
+    result.addAll(rightResults);
+    result.add(root.val);
+
+    return result;
   }
 
   public List<Integer> postorderTraversal(TreeNode root) {
