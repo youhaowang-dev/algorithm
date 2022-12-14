@@ -57,7 +57,31 @@ class BinaryTreeInorderTraversal {
     return result;
   }
 
+  // while left is available, keep pushing into stack
+  // when left is not available, pop a node and keep pushing the lefts of the node.right
   public List<Integer> inorderTraversalIterative(TreeNode root) {
     List<Integer> result = new ArrayList<>();
+    Stack<TreeNode> stack = new Stack<>();
+
+    if (root == null) {
+      return result;
+    }
+
+    this.pushAllLeft(root, stack);
+    while (!stack.isEmpty()) {
+      TreeNode currentRoot = stack.pop();
+      // poping means left is null, so not adding left
+      result.add(currentRoot.val);
+      this.pushAllLeft(currentRoot.right, stack);
+    }
+
+    return result;
+  }
+
+  private void pushAllLeft(TreeNode node, Stack stack) {
+    while (node != null) {
+      stack.add(node);
+      node = node.left; // move to next left
+    }
   }
 }
