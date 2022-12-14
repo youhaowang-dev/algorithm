@@ -72,5 +72,7 @@ class BinaryTreeIterativeTraversal {
         current = current.right;
       }
     }
+
+    return result;
   }
 }
