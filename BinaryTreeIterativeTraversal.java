@@ -31,14 +31,30 @@ class BinaryTreeIterativeTraversal {
       } else {
         stack.push(current);
         result.add(current.val); // root-left-right, so add before going to left subtree
-        current = current.left;
+        current = current.left; // go to left subtree
       }
     }
 
     return result;
   }
 
-  public List<Integer> inorderTraversal(TreeNode root) {}
+  public List<Integer> inorderTraversal(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+    Stack<TreeNode> stack = new Stack<>();
+    TreeNode current = root;
+    while (!stack.isEmpty() || current != null) {
+      if (current == null) {
+        TreeNode node = stack.pop();
+        result.add(node.val); // left subtree is done, add now; left-root-right
+        current = node.right; // go to right subtree
+      } else {
+        stack.push(current);
+        current = current.left; // go to left subtree
+      }
+    }
+
+    return result;
+  }
 
   public List<Integer> postorderTraversal(TreeNode root) {}
 }
