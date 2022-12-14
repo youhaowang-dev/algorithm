@@ -56,7 +56,27 @@ class BinaryTreePostorderTraversal {
     return result;
   }
 
-  public List<Integer> postorderTraversal(TreeNode root) {
-    List<Integer> result = new ArrayList<>();
+  // linked list and append root at the head
+  public List<Integer> postorderTraversalIterative(TreeNode root) {
+    LinkedList<Integer> result = new LinkedList<>();
+    if (root == null) {
+      return result;
+    }
+
+    Stack<TreeNode> stack = new Stack<>();
+    stack.push(root);
+
+    while (!stack.isEmpty()) {
+      TreeNode currentRoot = stack.pop();
+      result.addFirst(currentRoot.val);
+      if (currentRoot.left != null) {
+        stack.push(currentRoot.left);
+      }
+      if (currentRoot.right != null) {
+        stack.push(currentRoot.right);
+      }
+    }
+
+    return result;
   }
 }
