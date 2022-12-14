@@ -44,6 +44,17 @@ class BinaryTreeInorderTraversal {
 
   public List<Integer> inorderTraversalDivideConquer(TreeNode root) {
     List<Integer> result = new ArrayList<>();
+    if (root == null) {
+      return result;
+    }
+
+    List<Integer> leftResults = this.inorderTraversalDivideConquer(root.left);
+    List<Integer> rightResults = this.inorderTraversalDivideConquer(root.right);
+    result.addAll(leftResults);
+    result.add(root.val);
+    result.addAll(rightResults);
+
+    return result;
   }
 
   public List<Integer> inorderTraversalIterative(TreeNode root) {
