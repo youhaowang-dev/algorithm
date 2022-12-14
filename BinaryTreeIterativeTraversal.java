@@ -1,4 +1,4 @@
-// summary of iterative solutions for preorder, inorder, and postorder
+// summary of iterative solutions for preorder, inorder, and postorder(not very important)
 
 /**
  * Definition for a binary tree node.
@@ -56,8 +56,47 @@ class BinaryTreeIterativeTraversal {
     return result;
   }
 
+  // https://leetcode.com/problems/binary-tree-postorder-traversal/solutions/45551/preorder-inorder-and-postorder-iteratively-summarization/comments/44991
+  // "The key point is when you pop a node from stack, you ensure you have already explored its children."
+  // Important, when you pop a node, ensure its children are traversed.
+  public List<Integer> postorderTraversal(TreeNode root) {
+    Stack<TreeNode> stack = new Stack();
+    List<Integer> result = new ArrayList<Integer>();
+    TreeNode cur = root;
+
+    while (!stack.empty() || cur != null) {
+      while (!this.isLeaf(cur)) {
+        stack.push(cur);
+        cur = cur.left;
+      }
+
+      if (cur != null) {
+        result.add(cur.val);
+      }
+
+      while (!stack.empty() && cur == stack.peek().right) {
+        TreeNode node = stack.pop();
+        result.add(node.val);
+        cur = node;
+      }
+
+      if (stack.empty()) {
+        cur = null;
+      } else {
+        cur = stack.peek().right;
+      }
+    }
+
+    return result;
+  }
+
+  private boolean isLeaf(TreeNode r) {
+    if (r == null) return true;
+    return r.left == null && r.right == null;
+  }
+
   // https://leetcode.com/problems/binary-tree-postorder-traversal/solutions/45551/preorder-inorder-and-postorder-iteratively-summarization/
-  // this is a trick and may not work for all situations
+  // this is a trick because we are not visiting the node in postorder and may not work for all situations
   public List<Integer> postorderTraversalTrick(TreeNode root) {
     LinkedList<Integer> result = new LinkedList<>();
     Stack<TreeNode> stack = new Stack<>();
