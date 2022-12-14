@@ -56,5 +56,21 @@ class BinaryTreeIterativeTraversal {
     return result;
   }
 
-  public List<Integer> postorderTraversal(TreeNode root) {}
+  // https://leetcode.com/problems/binary-tree-postorder-traversal/solutions/45551/preorder-inorder-and-postorder-iteratively-summarization/
+  // this is a trick and may not work for all situations
+  public List<Integer> postorderTraversalTrick(TreeNode root) {
+    LinkedList<Integer> result = new LinkedList<>();
+    Stack<TreeNode> stack = new Stack<>();
+    TreeNode current = root;
+    while (!stack.isEmpty() || current != null) {
+      if (current == null) {
+        TreeNode node = stack.pop();
+        current = node.left;
+      } else {
+        stack.push(current);
+        result.addFirst(current.val);
+        current = current.right;
+      }
+    }
+  }
 }
