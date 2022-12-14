@@ -22,6 +22,20 @@ class BinaryTreeIterativeTraversal {
 
   public List<Integer> preorderTraversal(TreeNode root) {
     List<Integer> result = new ArrayList<>();
+    Stack<TreeNode> stack = new Stack<>();
+    TreeNode current = root;
+    while (!stack.isEmpty() || current != null) {
+      if (current == null) {
+        TreeNode node = stack.pop();
+        current = node.right; // go to right subtree
+      } else {
+        stack.push(current);
+        result.add(current.val); // root-left-right, so add before going to left subtree
+        current = current.left;
+      }
+    }
+
+    return result;
   }
 
   public List<Integer> inorderTraversal(TreeNode root) {}
