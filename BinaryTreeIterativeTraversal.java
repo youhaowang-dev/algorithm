@@ -62,28 +62,32 @@ class BinaryTreeIterativeTraversal {
   public List<Integer> postorderTraversal(TreeNode root) {
     Stack<TreeNode> stack = new Stack();
     List<Integer> result = new ArrayList<Integer>();
-    TreeNode cur = root;
+    TreeNode current = root;
 
-    while (!stack.empty() || cur != null) {
-      while (!this.isLeaf(cur)) {
-        stack.push(cur);
-        cur = cur.left;
+    while (!stack.empty() || current != null) {
+      while (!this.isLeaf(current)) {
+        stack.push(current);
+        current = current.left;
       }
 
-      if (cur != null) {
-        result.add(cur.val);
+      if (current != null) {
+        result.add(current.val);
       }
 
-      while (!stack.empty() && cur == stack.peek().right) {
+      // if the current node is the right child of the stack top
+      // if yes it means the current subtree is done and this stack top can be poped
+      // if not it means the current subtree is not done, so we need to check stack top.right
+      // https://www.youtube.com/watch?v=xLQKdq0Ffjg
+      while (!stack.empty() && current == stack.peek().right) {
         TreeNode node = stack.pop();
         result.add(node.val);
-        cur = node;
+        current = node;
       }
 
       if (stack.empty()) {
-        cur = null;
+        current = null; // we will exit while loop after this
       } else {
-        cur = stack.peek().right;
+        current = stack.peek().right;
       }
     }
 
