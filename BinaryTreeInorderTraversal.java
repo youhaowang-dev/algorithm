@@ -67,18 +67,18 @@ class BinaryTreeInorderTraversal {
       return result;
     }
 
-    this.pushAllLeft(root, stack);
+    this.pushLefts(root, stack);
     while (!stack.isEmpty()) {
       TreeNode currentRoot = stack.pop();
       // poping means left is null, so not adding left
       result.add(currentRoot.val);
-      this.pushAllLeft(currentRoot.right, stack);
+      this.pushLefts(currentRoot.right, stack);
     }
 
     return result;
   }
 
-  private void pushAllLeft(TreeNode node, Stack stack) {
+  private void pushLefts(TreeNode node, Stack stack) {
     while (node != null) {
       stack.add(node);
       node = node.left; // move to next left
