@@ -17,6 +17,8 @@
  *     TreeNode(int x) { val = x; }
  * }
  */
+
+// p and q may not be in the tree
 class LowestCommonAncestorOfABinaryTreeII {
 
   public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {}
