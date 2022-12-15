@@ -20,7 +20,33 @@
 
 class LowestCommonAncestorOfABinaryTree {
 
-  // find two paths from root to the given two nodes
-  // compare the paths in reverse order, find the node before first difference
-  public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {}
+  // search LCA in subtrees
+  // if found both, return current root
+  // if found one, return the one
+  // if found none, return null
+  public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    if (root == null) {
+      return null;
+    }
+    if (root == p || root == q) {
+      return root;
+    }
+
+    // divide
+    TreeNode ancestor1 = this.lowestCommonAncestor(root.left, p, q);
+    TreeNode ancestor2 = this.lowestCommonAncestor(root.right, p, q);
+
+    // conquer(merge subtree results)
+    if (ancestor1 != null && ancestor2 != null) {
+      return root;
+    }
+    if (ancestor1 != null) {
+      return ancestor1;
+    }
+    if (ancestor2 != null) {
+      return ancestor2;
+    }
+
+    return null;
+  }
 }
