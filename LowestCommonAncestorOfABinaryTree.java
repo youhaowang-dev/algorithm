@@ -20,6 +20,38 @@
 
 class LowestCommonAncestorOfABinaryTree {
 
+  public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    Map<TreeNode, TreeNode> childToParent = new HashMap<>();
+    this.buildChildToParent(root, childToParent);
+
+    Set<TreeNode> visited = new HashSet<>();
+    while (p != null) {
+      visited.add(p);
+      p = childToParent.get(p);
+    }
+    while (q != null) {
+      if (visited.contains(q)) {
+        return q;
+      }
+      q = childToParent.get(q);
+    }
+    return null;
+  }
+
+  private void buildChildToParent(
+    TreeNode root,
+    Map<TreeNode, TreeNode> childToParent
+  ) {
+    if (root.left != null) {
+      childToParent.put(root.left, root);
+      this.buildChildToParent(root.left, childToParent);
+    }
+    if (root.right != null) {
+      childToParent.put(root.right, root);
+      this.buildChildToParent(root.right, childToParent);
+    }
+  }
+
   // search LCA in subtrees
   // if found both, return current root
   // if found one, return the one
