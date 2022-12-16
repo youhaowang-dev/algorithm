@@ -68,6 +68,9 @@ class PathSumII {
           result
         );
     }
+
+    // We need to pop the node once we are done processing ALL of it's subtrees.
+    pathNodeValues.remove(pathNodeValues.size() - 1);
   }
 
   private boolean isLeaf(TreeNode node) {
