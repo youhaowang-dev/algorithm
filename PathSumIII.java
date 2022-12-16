@@ -23,5 +23,31 @@
 
 class PathSumIII {
 
+  // There is just one thing that is particular for the binary tree. There are two ways to go forward -
+  // to the left and to the right. To keep parent->child direction, we shouldn't blend prefix sums from the left and right subtrees in one hashmap.
   public int pathSum(TreeNode root, int targetSum) {}
+
+  public int pathSum(TreeNode root, int targetSum) {
+    if (root == null) {
+      return 0;
+    }
+
+    return (
+      this.helper(root, targetSum) +
+      this.pathSum(root.left, targetSum) +
+      this.pathSum(root.right, targetSum)
+    );
+  }
+
+  private int helper(TreeNode node, int targetSum) {
+    if (node == null) {
+      return 0;
+    }
+
+    return (
+      (node.val == targetSum ? 1 : 0) +
+      this.helper(node.left, targetSum - node.val) +
+      this.helper(node.right, targetSum - node.val)
+    );
+  }
 }
