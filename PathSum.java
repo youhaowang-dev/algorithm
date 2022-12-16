@@ -24,6 +24,49 @@
 // only check root-leaf
 class PathSum {
 
+  private class TreeNodeWithSum {
+
+    TreeNode node;
+    int sum;
+
+    public TreeNodeWithSum(TreeNode node, int sum) {
+      this.node = node;
+      this.sum = sum;
+    }
+  }
+
+  // bfs
+  public boolean hasPathSum(TreeNode root, int targetSum) {
+    if (root == null) {
+      return false;
+    }
+
+    Queue<TreeNodeWithSum> queue = new LinkedList<>();
+    queue.offer(new TreeNodeWithSum(root, root.val));
+    while (!queue.isEmpty()) {
+      TreeNodeWithSum nodeWithSum = queue.poll();
+      TreeNode node = nodeWithSum.node;
+      int sum = nodeWithSum.sum;
+      if (this.isLeaf(node) && sum == targetSum) {
+        return true;
+      }
+
+      if (node.left != null) {
+        queue.offer(new TreeNodeWithSum(node.left, sum + node.left.val));
+      }
+
+      if (node.right != null) {
+        queue.offer(new TreeNodeWithSum(node.right, sum + node.right.val));
+      }
+    }
+
+    return false;
+  }
+
+  private boolean isLeaf(TreeNode node) {
+    return node.left == null && node.right == null;
+  }
+
   public boolean hasPathSum(TreeNode root, int targetSum) {
     if (root == null) {
       return false;
