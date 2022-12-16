@@ -39,7 +39,9 @@ class BinaryTreeMaximumPathSum {
   }
 
   // max(root to any) = max(left root to any, right root to any) + root.val
-  // max(any to any) = max(any to any, max left root to any + max right root to any + root.val)
+  // max(any to any) = max(max subtree any to any, pass root any to any)
+  //      max subtree any to any = max(left subtree any to any, right subtree any to any)
+  //      pass root any to any = max(0, left subtree any to any) + max(0, right subtree any to any) + root.val
   // val can be negative, so is the max left/right/total, so max(0, ...) is needed
   public int maxPathSum(TreeNode root) {
     return this.getMaxPathSum(root).anyToAny;
@@ -58,14 +60,12 @@ class BinaryTreeMaximumPathSum {
     // merge
     int maxRootToAny =
       Math.max(0, Math.max(leftVals.rootToAny, rightVals.rootToAny)) + root.val;
-    int derivedAnyToAny =
+    int maxSubtreeAnyToAny = Math.max(leftVals.anyToAny, rightVals.anyToAny);
+    int passRootAnyToAny =
       Math.max(0, leftVals.rootToAny) +
       Math.max(0, rightVals.rootToAny) +
       root.val;
-    int maxAnyToAny = Math.max(
-      derivedAnyToAny,
-      Math.max(leftVals.anyToAny, rightVals.anyToAny)
-    );
+    int maxAnyToAny = Math.max(maxSubtreeAnyToAny, passRootAnyToAny);
 
     return new PathVals(maxRootToAny, maxAnyToAny);
   }
