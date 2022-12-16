@@ -24,5 +24,53 @@
 
 class PathSumII {
 
-  public List<List<Integer>> pathSum(TreeNode root, int targetSum) {}
+  // bfs will cost too much space because each node will need to maintain a list
+  // as a result, dfs is better for this question
+  public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+    List<List<Integer>> result = new ArrayList<>();
+    List<Integer> pathNodeValues = new ArrayList<>();
+    this.searchSum(root, targetSum, pathNodeValues, result);
+
+    return result;
+  }
+
+  // dfs
+  private void searchSum(
+    TreeNode root,
+    int targetSum,
+    List<Integer> pathNodeValues,
+    List<List<Integer>> result
+  ) {
+    if (root == null) {
+      return;
+    }
+
+    pathNodeValues.add(root.val);
+
+    if (this.isLeaf(root) && targetSum == root.val) {
+      result.add(new ArrayList<>(pathNodeValues));
+    }
+
+    if (root.left != null) {
+      this.searchSum(
+          root.left,
+          targetSum - root.left.val,
+          pathNodeValues,
+          result
+        );
+    }
+
+    if (root.right != null) {
+      this.searchSum(
+          root.right,
+          targetSum - root.right.val,
+          pathNodeValues,
+          result
+        );
+    }
+  }
+
+  private boolean isLeaf(TreeNode node) {
+    return node.left == null && node.right == null;
+  }
 }
