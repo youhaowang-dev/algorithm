@@ -23,9 +23,48 @@
 
 class PathSumIII {
 
+  private int count = 0;
+
   // There is just one thing that is particular for the binary tree. There are two ways to go forward -
   // to the left and to the right. To keep parent->child direction, we shouldn't blend prefix sums from the left and right subtrees in one hashmap.
-  public int pathSum(TreeNode root, int targetSum) {}
+  public int pathSum(TreeNode root, int target) {
+    HashMap<Long, Integer> prefixSumToCount = new HashMap();
+    this.preorder(root, target, 0, prefixSumToCount);
+    return this.count;
+  }
+
+  public void preorder(
+    TreeNode node,
+    int target,
+    long currentSum,
+    HashMap<Long, Integer> prefixSumToCount
+  ) {
+    if (node == null) {
+      return;
+    }
+
+    currentSum += node.val;
+
+    if (currentSum == target) {
+      this.count++;
+    }
+
+    long previousTargetSum = currentSum - target;
+    if (prefixSumToCount.containsKey(previousTargetSum)) {
+      this.count += prefixSumToCount.get(previousTargetSum);
+    }
+
+    prefixSumToCount.put(
+      currentSum,
+      prefixSumToCount.getOrDefault(currentSum, 0) + 1
+    );
+
+    this.preorder(node.left, target, currentSum, prefixSumToCount);
+    this.preorder(node.right, target, currentSum, prefixSumToCount);
+
+    // reset the prefix sum count to the previous count as the current subtree is done
+    prefixSumToCount.put(currentSum, prefixSumToCount.get(currentSum) - 1);
+  }
 
   public int pathSum(TreeNode root, int targetSum) {
     if (root == null) {
