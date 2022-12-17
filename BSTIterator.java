@@ -27,11 +27,37 @@
  */
 class BSTIterator {
 
-  public BSTIterator(TreeNode root) {}
+  private TreeNode current;
+  private Stack<TreeNode> stack;
 
-  public int next() {}
+  public BSTIterator(TreeNode root) {
+    this.current = root;
+    this.stack = new Stack<TreeNode>();
+    this.pushLefts();
+  }
 
-  public boolean hasNext() {}
+  public int next() {
+    if (!this.stack.isEmpty()) {
+      TreeNode node = this.stack.pop();
+      this.current = node.right;
+      this.pushLefts();
+
+      return node.val;
+    }
+
+    return Integer.MIN_VALUE;
+  }
+
+  private void pushLefts() {
+    while (this.current != null) {
+      this.stack.push(this.current);
+      this.current = this.current.left;
+    }
+  }
+
+  public boolean hasNext() {
+    return !this.stack.isEmpty() || this.current != null;
+  }
 }
 /**
  * Your BSTIterator object will be instantiated and called as such:
