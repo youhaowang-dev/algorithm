@@ -23,6 +23,30 @@
 class InsertIntoABinarySearchTree {
 
   public TreeNode insertIntoBST(TreeNode root, int val) {
+    TreeNode current = root;
+    while (current != null) {
+      if (current.val < val) {
+        if (current.right == null) {
+          current.right = new TreeNode(val);
+          return root;
+        } else {
+          current = current.right;
+        }
+      } else {
+        if (current.val > val) {
+          if (current.left == null) {
+            current.left = new TreeNode(val);
+          } else {
+            current = current.left;
+          }
+        }
+      }
+    }
+
+    return new TreeNode(val);
+  }
+
+  public TreeNode insertIntoBST(TreeNode root, int val) {
     if (root == null) {
       return new TreeNode(val);
     }
