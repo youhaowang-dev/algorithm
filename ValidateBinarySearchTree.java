@@ -29,5 +29,37 @@ class ValidateBinarySearchTree {
 
   // Not only the right child should be larger than the node but all the elements in the right subtree.
   // so we need to compare more than two nodes.
-  public boolean isValidBST(TreeNode root) {}
+  public boolean isValidBST(TreeNode root) {
+    List<Integer> inorderValues = this.getInorderList(root);
+    for (int i = 1; i < inorderValues.size(); i++) {
+      if (inorderValues.get(i - 1) >= inorderValues.get(i)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private List<Integer> getInorderList(TreeNode root) {
+    List<Integer> list = new ArrayList<>();
+    if (root == null) {
+      return list;
+    }
+
+    Stack<TreeNode> stack = new Stack<>();
+    TreeNode current = root;
+    while (!stack.isEmpty() || current != null) {
+      if (current != null) {
+        stack.push(current);
+        current = current.left;
+      } else {
+        // unable to push lefts into stack and stack is not empty
+        TreeNode node = stack.pop();
+        list.add(node.val);
+        current = node.right;
+      }
+    }
+
+    return list;
+  }
 }
