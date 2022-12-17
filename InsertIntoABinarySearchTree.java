@@ -36,6 +36,7 @@ class InsertIntoABinarySearchTree {
         if (current.val > val) {
           if (current.left == null) {
             current.left = new TreeNode(val);
+            return root;
           } else {
             current = current.left;
           }
