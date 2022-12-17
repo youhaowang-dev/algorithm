@@ -13,6 +13,11 @@
 //     public Node right;
 //     public Node parent;
 // }
+
+// Successor and Predecessor
+// Successor = "after node", i.e. the next node in the inorder traversal, or the smallest node after the current one.
+
+// Predecessor = "before node", i.e. the previous node in the inorder traversal, or the largest node before the current one.
 class InorderSuccessorInBSTII {
 
   public Node inorderSuccessor(Node node) {}
