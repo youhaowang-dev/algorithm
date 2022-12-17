@@ -20,5 +20,37 @@
 // Predecessor = "before node", i.e. the previous node in the inorder traversal, or the largest node before the current one.
 class InorderSuccessorInBSTII {
 
-  public Node inorderSuccessor(Node node) {}
+  // There are two possible situations here :
+  // Node has a right child, so the min node of the right subtree is the successor.
+  // Node has no right child, so the successor is in the upper tree.
+  //       find the first parent node where its left is the current pointer, the parent is the successor
+  public Node inorderSuccessor(Node node) {
+    if (node == null) {
+      return null;
+    }
+
+    if (node.right != null) {
+      Node minNode = node.right;
+      while (minNode.left != null) {
+        minNode = minNode.left;
+      }
+
+      return minNode;
+    }
+
+    Node successor = null;
+    Node current = node;
+    while (current != null) {
+      Node parent = current.parent;
+      if (parent == null) {
+        return null;
+      }
+      if (parent.left == current) {
+        return parent;
+      }
+      current = parent;
+    }
+
+    return successor;
+  }
 }
