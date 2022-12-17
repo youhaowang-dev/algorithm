@@ -22,5 +22,17 @@
  */
 class InsertIntoABinarySearchTree {
 
-  public TreeNode insertIntoBST(TreeNode root, int val) {}
+  public TreeNode insertIntoBST(TreeNode root, int val) {
+    if (root == null) {
+      return new TreeNode(val);
+    }
+
+    if (root.val > val) {
+      root.left = this.insertIntoBST(root.left, val);
+    } else {
+      root.right = this.insertIntoBST(root.right, val);
+    }
+
+    return root;
+  }
 }
