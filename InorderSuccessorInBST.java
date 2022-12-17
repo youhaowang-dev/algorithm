@@ -16,5 +16,29 @@
  */
 class InorderSuccessorInBST {
 
-  public TreeNode inorderSuccessor(TreeNode root, TreeNode p) {}
+  // tree is BST, so we can do binary search for a node where its value is greater than target
+  // and it should be as small as possible
+  public TreeNode inorderSuccessor(TreeNode root, TreeNode target) {
+    TreeNode successor = null;
+    TreeNode current = root;
+    int targetVal = target.val;
+    while (current != null) {
+      int currentVal = current.val;
+      if (targetVal == currentVal) {
+        current = current.right; // depend on tree definition
+      }
+
+      if (targetVal > currentVal) {
+        current = current.right;
+      }
+
+      if (targetVal < currentVal) {
+        // current might be the node we are looking for, so record it
+        successor = current;
+        current = current.left;
+      }
+    }
+
+    return successor;
+  }
 }
