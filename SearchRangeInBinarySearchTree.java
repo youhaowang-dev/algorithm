@@ -26,68 +26,34 @@ public class Solution {
     if (root == null) {
       return result;
     }
-    TreeNode start = this.getResultStart(root, k1);
-    // get all elements <= k2
-    InorderIterator iterator = new InorderIterator(root);
-    if (start)
+
+    this.inorderTraversal(root, k1, k2, result);
+
+    return result;
   }
 
-  // binary search a node >= k1
-  private TreeNode getResultStart(TreeNode root, int target) {
-    TreeNode current = root;
-    TreeNode greaterOrEqualNode = null;
-    while (current != null) {
-      if (current.val == target) {
-        return current;
-      }
-
-      if (current.val > target) {
-        greaterOrEqualNode = current;
-        current = current.left;
-      }
-
-      if (current.val < target) {
-        current = current.right;
-      }
-    }
-  }
-
-  private class InorderIterator {
-
-    TreeNode current;
-    Stack<TreeNode> stack;
-
-    public InorderIterator(TreeNode root) {
-      this.current = root;
-      this.stack = new Stack<TreeNode>();
-      this.pushLefts();
+  private void inorderTraversal(
+    TreeNode root,
+    int k1,
+    int k2,
+    List<Integer> result
+  ) {
+    if (root == null) {
+      return;
     }
 
-    public boolean hasNext() {
-      return !this.stack.isEmpty() || this.current != null;
+    int rootVal = root.val;
+
+    if (k1 > rootVal) {
+      this.inorderTraversal(root.right, k1, k2, result);
     }
-
-    public TreeNode getNext() {
-      if (!this.hasNext()) {
-        return null;
-      }
-
-      if (!this.stack.isEmpty()) {
-        TreeNode node = this.stack.pop();
-        this.current = node;
-        this.pushLefts();
-
-        return node;
-      }
-
-      return null; // should not reach this line
+    if (k1 <= rootVal && rootVal <= k2) {
+      this.inorderTraversal(root.left, k1, k2, result);
+      result.add(rootVal);
+      this.inorderTraversal(root.right, k1, k2, result);
     }
-
-    private void pushLefts() {
-      while (this.current != null) {
-        this.stack.push(this.current);
-        this.current = this.current.left;
-      }
+    if (rootVal > k2) {
+      this.inorderTraversal(root.left, k1, k2, result);
     }
   }
 }
