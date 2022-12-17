@@ -27,5 +27,7 @@
 
 class ValidateBinarySearchTree {
 
+  // Not only the right child should be larger than the node but all the elements in the right subtree.
+  // so we need to compare more than two nodes.
   public boolean isValidBST(TreeNode root) {}
 }
