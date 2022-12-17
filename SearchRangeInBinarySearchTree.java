@@ -38,6 +38,33 @@ public class Solution {
     int k2,
     List<Integer> result
   ) {
+    TreeNode current = root;
+    Stack<TreeNode> stack = new Stack<>();
+
+    while (!stack.isEmpty() || current != null) {
+      if (current == null) {
+        TreeNode node = stack.pop();
+        if (this.inRange(node, k1, k2)) {
+          result.add(node.val);
+        }
+        current = node.right;
+      } else {
+        stack.push(current);
+        current = current.left;
+      }
+    }
+  }
+
+  private boolean inRange(TreeNode node, int k1, int k2) {
+    return k1 <= node.val && node.val <= k2;
+  }
+
+  private void inorderTraversal(
+    TreeNode root,
+    int k1,
+    int k2,
+    List<Integer> result
+  ) {
     if (root == null) {
       return;
     }
