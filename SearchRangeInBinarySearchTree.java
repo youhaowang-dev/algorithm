@@ -22,7 +22,34 @@ public class Solution {
    * @return: return: Return all keys that k1<=key<=k2 in ascending order
    */
   public List<Integer> searchRange(TreeNode root, int k1, int k2) {
-    // write your code here
+    List<Integer> result = new ArrayList<>();
+    if (root == null) {
+      return result;
+    }
+    TreeNode start = this.getResultStart(root, k1);
+    // get all elements <= k2
+    InorderIterator iterator = new InorderIterator(root);
+    if (start)
+  }
+
+  // binary search a node >= k1
+  private TreeNode getResultStart(TreeNode root, int target) {
+    TreeNode current = root;
+    TreeNode greaterOrEqualNode = null;
+    while (current != null) {
+      if (current.val == target) {
+        return current;
+      }
+
+      if (current.val > target) {
+        greaterOrEqualNode = current;
+        current = current.left;
+      }
+
+      if (current.val < target) {
+        current = current.right;
+      }
+    }
   }
 
   private class InorderIterator {
@@ -56,6 +83,11 @@ public class Solution {
       return null; // should not reach this line
     }
 
-    private void pushLefts() {}
+    private void pushLefts() {
+      while (this.current != null) {
+        this.stack.push(this.current);
+        this.current = this.current.left;
+      }
+    }
   }
 }
