@@ -26,5 +26,58 @@
  */
 class DeleteNodeInABST {
 
-  public TreeNode deleteNode(TreeNode root, int key) {}
+  // first we need to find the node
+  // Then there are three possible situations here :
+  // if node is leaf, just delete it
+  // else node has right, the node can be replaced by next inorder node, then we need to delete the inorder node in the subtree.
+  //          This replace & delete should be done recursively.
+  // else node has left, the node can be replaced by previous inorder node, then we need to delete the inorder node in th
+  //          This replace & delete should be done recursively.
+  public TreeNode deleteNode(TreeNode root, int key) {
+    if (root == null) {
+      return null;
+    }
+
+    if (key > root.val) {
+      root.right = this.deleteNode(root.right, key);
+    }
+
+    if (key < root.val) {
+      root.left = this.deleteNode(root.left, key);
+    }
+
+    if (key == root.val) {
+      if (root.left == null && root.right == null) {
+        return null;
+      } else if (root.left != null) {
+        TreeNode leftSubtreeMax = this.getSubtreeMax(root.left);
+        root.val = leftSubtreeMax.val;
+        root.left = this.deleteNode(root.left, root.val);
+      } else if (root.right != null) {
+        TreeNode rightSubtreeMin = this.getSubtreeMin(root.right);
+        root.val = rightSubtreeMin.val;
+        root.right = this.deleteNode(root.right, root.val);
+      }
+    }
+
+    return root;
+  }
+
+  private TreeNode getSubtreeMax(TreeNode node) {
+    TreeNode max = node;
+    while (max.right != null) {
+      max = max.right;
+    }
+
+    return max;
+  }
+
+  private TreeNode getSubtreeMin(TreeNode node) {
+    TreeNode min = node;
+    while (min.left != null) {
+      min = min.left;
+    }
+
+    return min;
+  }
 }
