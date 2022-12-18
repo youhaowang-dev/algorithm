@@ -23,8 +23,12 @@
 
 class Triangle {
 
-  // divide and conquer with memoization
+  // dp
+  // state: the min path sum from 0,0 to row,col
+  public int minimumTotal(List<List<Integer>> triangle) {}
 
+  // divide and conquer with memoization
+  // The memoization table ensures that minPath is only called once for each cell. As there are n^2 cells, we get a total time complexity of O(n^2)).
   public int minimumTotal(List<List<Integer>> triangle) {
     Map<Integer, Integer> indexHashToSum = new HashMap<>();
     return this.findMinSumMemoized(triangle, 0, 0, indexHashToSum);
