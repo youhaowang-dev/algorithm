@@ -23,6 +23,26 @@
 
 class Triangle {
 
+  // divide and conquer
+  public int minimumTotal(List<List<Integer>> triangle) {
+    return this.findMinSum(triangle, 0, 0);
+  }
+
+  private int findMinSum(List<List<Integer>> triangle, int row, int col) {
+    if (row == triangle.size()) {
+      return 0;
+    }
+
+    return (
+      triangle.get(row).get(col) +
+      Math.min(
+        this.findMinSum(triangle, row + 1, col),
+        this.findMinSum(triangle, row + 1, col + 1)
+      )
+    );
+  }
+
+  // traversal
   public int minimumTotal(List<List<Integer>> triangle) {
     return this.traverse(triangle, 0, 0, 0);
   }
