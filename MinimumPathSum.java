@@ -44,4 +44,30 @@ class MinimumPathSum {
 
     return minPathSums[rowCount - 1][colCount - 1];
   }
+
+  // Brute Force
+  // cost(i,j)=grid[i][j]+min(cost(i+1,j),cost(i,j+1))
+  // Time complexity : O(2^(m+n)) For every move, we have atmost 2 options.
+  // Space complexity : O(m+n). Recursion of depth m+n.
+  public int minPathSum(int[][] grid) {
+    return this.calculateSum(grid, 0, 0);
+  }
+
+  private int calculateSum(int[][] grid, int row, int col) {
+    if (row == grid.length || col == grid[0].length) {
+      return Integer.MAX_VALUE;
+    }
+
+    if (row == grid.length - 1 && col == grid[0].length - 1) {
+      return grid[row][col];
+    }
+
+    return (
+      grid[row][col] +
+      Math.min(
+        this.calculateSum(grid, row + 1, col),
+        this.calculateSum(grid, row, col + 1)
+      )
+    );
+  }
 }
