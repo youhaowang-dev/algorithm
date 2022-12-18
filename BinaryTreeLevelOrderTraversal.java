@@ -55,4 +55,45 @@ class BinaryTreeLevelOrderTraversal {
       queue.offer(node.right);
     }
   }
+
+  // dfs
+  public List<List<Integer>> levelOrder(TreeNode root) {
+    List<List<Integer>> result = new ArrayList<>();
+    if (root == null) {
+      return result;
+    }
+
+    int maxLevel = 0; // limit the dfs depth
+    while (true) {
+      List<Integer> levelResult = new ArrayList<>();
+      this.dfs(root, levelResult, 0, maxLevel);
+      if (levelResult.size() == 0) {
+        break;
+      }
+
+      result.add(levelResult);
+      maxLevel++;
+    }
+
+    return result;
+  }
+
+  private void dfs(
+    TreeNode root,
+    List<Integer> result,
+    int currentLevel,
+    int maxLevel
+  ) {
+    if (root == null || currentLevel > maxLevel) {
+      return;
+    }
+
+    if (currentLevel == maxLevel) {
+      result.add(root.val);
+      return;
+    }
+
+    this.dfs(root.left, result, currentLevel + 1, maxLevel);
+    this.dfs(root.right, result, currentLevel + 1, maxLevel);
+  }
 }
