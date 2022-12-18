@@ -15,7 +15,9 @@ class MinimumPathSum {
   // state: minPathSums[row][col] is the min path sum from 0,0 to row,col
   // function(row, col) = min(function(row - 1, col), function(row, col - 1))
   public int minPathSum(int[][] grid) {
-    if (grid.length == 0 || grid[0].length == 0) {
+    if (
+      grid == null || grid.length == 0 || grid[0] == null || grid[0].length == 0
+    ) {
       return 0;
     }
 
