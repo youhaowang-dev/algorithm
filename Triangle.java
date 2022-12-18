@@ -25,7 +25,45 @@ class Triangle {
 
   // dp
   // state: the min path sum from 0,0 to row,col
-  public int minimumTotal(List<List<Integer>> triangle) {}
+  public int minimumTotal(List<List<Integer>> triangle) {
+    int rowCount = triangle.size();
+    int colCount = triangle.size(); // this is the input triangle criteria  // triangle.get(triangle.size() - 1).size();
+    int[][] minPathSums = new int[rowCount][colCount];
+    minPathSums[0][0] = triangle.get(0).get(0);
+
+    // init triangle leftmost[i][0] and rightmost[i][i] as they dont need Math.min
+    for (int i = 1; i < rowCount; i++) {
+      int prevSumRow = i - 1;
+      int prevLeftmostSumCol = 0;
+      int prevRightmostSumCol = i - 1;
+      minPathSums[i][0] =
+        triangle.get(i).get(0) + minPathSums[prevSumRow][prevLeftmostSumCol];
+      minPathSums[i][i] =
+        triangle.get(i).get(i) + minPathSums[prevSumRow][prevRightmostSumCol];
+    }
+
+    for (int row = 1; row < rowCount; row++) {
+      for (int col = 1; col < row; col++) { // col < row is for the triangle boundary
+        // current = min(prev1, prev2) + triangle val
+        int prevRow = row - 1;
+        int prevCol1 = col;
+        int prevCol2 = col - 1;
+        int prevMinSum = Math.min(
+          minPathSums[prevRow][prevCol1],
+          minPathSums[prevRow][prevCol2]
+        );
+        minPathSums[row][col] = triangle.get(row).get(col) + prevMinSum;
+      }
+    }
+
+    int minPathSum = Integer.MAX_VALUE;
+    // find the min sum in the last row
+    for (int num : minPathSums[rowCount - 1]) {
+      minPathSum = Math.min(minPathSum, num);
+    }
+
+    return minPathSum;
+  }
 
   // divide and conquer with memoization
   // The memoization table ensures that minPath is only called once for each cell. As there are n^2 cells, we get a total time complexity of O(n^2)).
