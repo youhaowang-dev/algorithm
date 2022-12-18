@@ -23,6 +23,49 @@
 
 class Triangle {
 
+  // divide and conquer with memoization
+
+  public int minimumTotal(List<List<Integer>> triangle) {
+    Map<Integer, Integer> indexHashToSum = new HashMap<>();
+    return this.findMinSumMemoized(triangle, 0, 0, indexHashToSum);
+  }
+
+  private int findMinSumMemoized(
+    List<List<Integer>> triangle,
+    int row,
+    int col,
+    Map<Integer, Integer> indexHashToSum
+  ) {
+    if (row == triangle.size()) {
+      return 0;
+    }
+
+    int indexHash = this.getIndexHash(row, col, triangle);
+
+    if (indexHashToSum.containsKey(indexHash)) {
+      return indexHashToSum.get(indexHash);
+    }
+
+    int minSum =
+      (
+        triangle.get(row).get(col) +
+        Math.min(
+          this.findMinSumMemoized(triangle, row + 1, col, indexHashToSum),
+          this.findMinSumMemoized(triangle, row + 1, col + 1, indexHashToSum)
+        )
+      );
+
+    indexHashToSum.put(indexHash, minSum);
+
+    return minSum;
+  }
+
+  private int getIndexHash(int row, int col, List<List<Integer>> triangle) {
+    int lastRowLength = triangle.get(triangle.size() - 1).size();
+
+    return row + col * lastRowLength;
+  }
+
   // divide and conquer
   public int minimumTotal(List<List<Integer>> triangle) {
     return this.findMinSum(triangle, 0, 0);
