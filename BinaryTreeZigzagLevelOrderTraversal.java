@@ -18,7 +18,80 @@
  *     }
  * }
  */
+
+// IMPORTANT: do not try to reverse during the traversal because tree left right will not make it work
+// only reverse the level value results before adding to the master list
 class BinaryTreeZigzagLevelOrderTraversal {
 
-  public List<List<Integer>> zigzagLevelOrder(TreeNode root) {}
+  enum Direction {
+    TO_RIGHT,
+    TO_LEFT,
+  }
+
+  public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+    List<List<Integer>> result = new ArrayList<>();
+    if (root == null) {
+      return result;
+    }
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    Direction direction = Direction.TO_RIGHT;
+
+    while (!queue.isEmpty()) {
+      List<TreeNode> nodes = this.getCurrentLevelNodes(queue);
+      this.addCurrentLevelValues(nodes, result, direction);
+      this.setNextLevelNodes(queue, nodes);
+      direction = this.getNextDirection(direction);
+    }
+
+    return result;
+  }
+
+  private List<TreeNode> getCurrentLevelNodes(Queue<TreeNode> queue) {
+    List<TreeNode> nodes = new ArrayList<>();
+    while (!queue.isEmpty()) {
+      nodes.add(queue.poll());
+    }
+
+    return nodes;
+  }
+
+  private void addCurrentLevelValues(
+    List<TreeNode> nodes,
+    List<List<Integer>> result,
+    Direction direction
+  ) {
+    List<Integer> levelResult = new ArrayList<>();
+    for (TreeNode node : nodes) {
+      levelResult.add(node.val);
+    }
+    if (direction == Direction.TO_LEFT) {
+      Collections.reverse(levelResult);
+    }
+    result.add(levelResult);
+  }
+
+  private void setNextLevelNodes(Queue<TreeNode> queue, List<TreeNode> nodes) {
+    for (TreeNode node : nodes) {
+      if (node.left != null) {
+        queue.offer(node.left);
+      }
+      if (node.right != null) {
+        queue.offer(node.right);
+      }
+    }
+  }
+
+  private Direction getNextDirection(Direction direction) {
+    if (direction == Direction.TO_RIGHT) {
+      return Direction.TO_LEFT;
+    }
+
+    if (direction == Direction.TO_LEFT) {
+      return Direction.TO_RIGHT;
+    }
+
+    // throw new Exception("unhandled direction");
+    return null;
+  }
 }
