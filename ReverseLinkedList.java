@@ -28,5 +28,18 @@
  */
 class ReverseLinkedList {
 
-  public ListNode reverseList(ListNode head) {}
+  public ListNode reverseList(ListNode head) {
+    ListNode prev = null;
+    ListNode current = head;
+
+    while (current != null) {
+      ListNode nextRefCopy = current.next;
+      current.next = prev;
+      prev = current;
+      current = nextRefCopy;
+    }
+
+    // current == null, so prev is the new head
+    return prev;
+  }
 }
