@@ -51,9 +51,10 @@ class ReverseLinkedListII {
       rightNode = rightNodeNextRef;
     }
     ListNode reversedStart = leftNode;
+    ListNode afterRight = rightNode;
 
     beforeLeft.next = reversedStart;
-    reversedEnd.next = rightNode;
+    reversedEnd.next = afterRight;
 
     return beforeHead.next;
   }
