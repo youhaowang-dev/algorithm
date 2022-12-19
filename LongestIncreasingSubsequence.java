@@ -19,5 +19,28 @@
 
 class LongestIncreasingSubsequence {
 
-  public int lengthOfLIS(int[] nums) {}
+  // brute force
+  // https://leetcode.com/problems/longest-increasing-subsequence/solutions/1326552/optimization-from-brute-force-to-dynamic-programming-explained/
+  // If the current element is greater than the previous element, then we can either pick it or dont pick it because
+  // we may get a smaller element somewhere ahead which is greater than previous and picking that would be optimal. So we try both options.
+  // If the current element is smaller or equal to previous element, it can't be picked.
+  public int lengthOfLIS(int[] nums) {
+    return this.getMaxLength(nums, 0, Integer.MIN_VALUE);
+  }
+
+  private int getMaxLength(int[] nums, int index, int prevPickedValue) {
+    if (index >= nums.length) {
+      // cant pick any more elements
+      return 0;
+    }
+    // branch 1: skip the current element
+    int skipCurrent = this.getMaxLength(nums, index + 1, prevPickedValue);
+    // branch 2: pick current element if it is greater than previous picked element
+    int pickCurrent = 0;
+    if (nums[index] > prevPickedValue) {
+      pickCurrent = 1 + this.getMaxLength(nums, index + 1, nums[index]);
+    }
+
+    return Math.max(pickCurrent, skipCurrent);
+  }
 }
