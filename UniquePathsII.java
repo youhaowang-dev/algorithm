@@ -19,5 +19,55 @@
 
 class UniquePathsII {
 
-  public int uniquePathsWithObstacles(int[][] grid) {}
+  private class GridType {
+
+    static int SPACE = 0; // static needed for reference
+    static int WALL = 1; // static needed for reference
+  }
+
+  // dp
+  // function(row, col) = function(row - 1, col) + function(row, col - 1) if current grid is not a wall
+  public int uniquePathsWithObstacles(int[][] grid) {
+    if (grid[0][0] == 1) {
+      return 0;
+    }
+
+    int rowCount = grid.length;
+    int colCount = grid[0].length;
+    int[][] pathSums = new int[rowCount][colCount];
+    pathSums[0][0] = 1;
+    // once there is a wall, the following first col and row values will be 0
+    for (int row = 1; row < rowCount; row++) {
+      int prevPathSum = pathSums[row - 1][0];
+      int gridVal = grid[row][0];
+      if (gridVal == GridType.SPACE && prevPathSum != 0) {
+        pathSums[row][0] = 1;
+      } else {
+        pathSums[row][0] = 0;
+      }
+    }
+    for (int col = 1; col < colCount; col++) {
+      int prevPathSum = pathSums[0][col - 1];
+      int gridVal = grid[0][col];
+      if (gridVal == GridType.SPACE && prevPathSum != 0) {
+        pathSums[0][col] = 1;
+      } else {
+        pathSums[0][col] = 0;
+      }
+    }
+
+    for (int row = 1; row < rowCount; row++) {
+      for (int col = 1; col < colCount; col++) {
+        int gridVal = grid[row][col];
+        if (gridVal == GridType.SPACE) {
+          pathSums[row][col] = pathSums[row - 1][col] + pathSums[row][col - 1];
+        }
+        if (gridVal == GridType.WALL) {
+          pathSums[row][col] = 0;
+        }
+      }
+    }
+
+    return pathSums[rowCount - 1][colCount - 1];
+  }
 }
