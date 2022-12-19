@@ -17,5 +17,24 @@
 
 class JumpGame {
 
-  public boolean canJump(int[] nums) {}
+  // brute force
+  // Time complexity : O(2^n). There are 2^n (upper bound) ways of jumping from the first position to the last, where nnn is the length of array nums
+  public boolean canJump(int[] nums) {
+    return this.canJumpFrom(nums, 0);
+  }
+
+  private boolean canJumpFrom(int[] nums, int index) {
+    if (index == nums.length - 1) {
+      return true;
+    }
+
+    int nextIndexMax = Math.min(index + nums[index], nums.length - 1);
+    for (int nextIndex = index + 1; nextIndex < nextIndexMax + 1; nextIndex++) {
+      if (this.canJumpFrom(nums, nextIndex)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }
