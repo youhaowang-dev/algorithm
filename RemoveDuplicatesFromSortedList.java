@@ -24,5 +24,25 @@
  */
 class RemoveDuplicatesFromSortedList {
 
-  public ListNode deleteDuplicates(ListNode head) {}
+  public ListNode deleteDuplicates(ListNode head) {
+    ListNode beforeHead = new ListNode(Integer.MIN_VALUE); // do not use 0 as 0 can be in input
+    beforeHead.next = head;
+
+    ListNode prev = beforeHead;
+    ListNode current = head;
+    while (current != null) {
+      if (prev.val == current.val) {
+        // delete current
+        prev.next = current.next;
+        // update pointers
+        current = prev.next;
+      } else {
+        // move pointers forward
+        current = current.next;
+        prev = prev.next;
+      }
+    }
+
+    return beforeHead.next;
+  }
 }
