@@ -22,5 +22,39 @@
  */
 class ReverseLinkedListII {
 
-  public ListNode reverseBetween(ListNode head, int left, int right) {}
+  public ListNode reverseBetween(ListNode head, int left, int right) {
+    if (left >= right || head == null) {
+      return head;
+    }
+
+    ListNode beforeHead = new ListNode(Integer.MIN_VALUE);
+    beforeHead.next = head;
+
+    ListNode beforeLeft = beforeHead; // IMPORTANT: not = head
+    for (int i = 1; i < left; i++) {
+      if (beforeLeft == null) {
+        return null;
+      }
+      beforeLeft = beforeLeft.next;
+    }
+    ListNode reversedEnd = beforeLeft.next;
+
+    ListNode leftNode = beforeLeft.next;
+    ListNode rightNode = leftNode.next;
+    for (int i = left; i < right; i++) {
+      if (rightNode == null) {
+        return null;
+      }
+      ListNode rightNodeNextRef = rightNode.next;
+      rightNode.next = leftNode;
+      leftNode = rightNode;
+      rightNode = rightNodeNextRef;
+    }
+    ListNode reversedStart = leftNode;
+
+    beforeLeft.next = reversedStart;
+    reversedEnd.next = rightNode;
+
+    return beforeHead.next;
+  }
 }
