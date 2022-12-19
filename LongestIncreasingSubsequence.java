@@ -19,11 +19,45 @@
 
 class LongestIncreasingSubsequence {
 
+  // dp
+  // longest(index) = max(longest(prev index) + 1) if it is an increasing sequence
+  // https://www.jiuzhang.com/solutions/longest-increasing-subsequence/
+  public int lengthOfLIS(int[] nums) {
+    if (nums == null || nums.length == 0) {
+      return 0;
+    }
+    int length = nums.length;
+
+    int[] longestSubseq = new int[length]; // the longest subsequence from 0 to index
+
+    for (int i = 0; i < length; i++) {
+      longestSubseq[i] = 1;
+    }
+
+    for (int index = 0; index < length; index++) {
+      for (int prev = 0; prev < index; prev++) {
+        boolean isIncreasing = nums[prev] < nums[index];
+        boolean isLonger = longestSubseq[prev] + 1 > longestSubseq[index];
+        if (isIncreasing && isLonger) {
+          longestSubseq[index] = longestSubseq[prev] + 1;
+        }
+      }
+    }
+
+    int longest = 0;
+    for (int subseqLength : longestSubseq) {
+      longest = Math.max(longest, subseqLength);
+    }
+
+    return longest;
+  }
+
   // brute force
   // https://leetcode.com/problems/longest-increasing-subsequence/solutions/1326552/optimization-from-brute-force-to-dynamic-programming-explained/
   // If the current element is greater than the previous element, then we can either pick it or dont pick it because
   // we may get a smaller element somewhere ahead which is greater than previous and picking that would be optimal. So we try both options.
   // If the current element is smaller or equal to previous element, it can't be picked.
+  // O(2^n)
   public int lengthOfLIS(int[] nums) {
     return this.getMaxLength(nums, 0, Integer.MIN_VALUE);
   }
