@@ -21,6 +21,40 @@
 
 class JumpGameII {
 
+  // brute force with memoization
+  public int jump(int[] nums) {
+    Map<Integer, Integer> indexToMinJump = new HashMap<>();
+    return jumpHelperMemoized(nums, 0, indexToMinJump);
+  }
+
+  private int jumpHelperMemoized(
+    int[] nums,
+    int index,
+    Map<Integer, Integer> indexToMinJump
+  ) {
+    if (index >= nums.length - 1) {
+      return 0;
+    }
+
+    if (indexToMinJump.containsKey(index)) {
+      return indexToMinJump.get(index);
+    }
+
+    int minSteps = nums.length;
+    int maxJump = nums[index];
+    for (int jump = 1; jump <= maxJump; jump++) {
+      minSteps =
+        Math.min(
+          minSteps,
+          1 + this.jumpHelperMemoized(nums, index + jump, indexToMinJump)
+        );
+    }
+
+    indexToMinJump.put(index, minSteps);
+
+    return minSteps;
+  }
+
   // brute force try all the moves
   // O(2^n)
   public int jump(int[] nums) {
