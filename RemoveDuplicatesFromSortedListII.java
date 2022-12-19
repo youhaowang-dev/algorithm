@@ -20,5 +20,28 @@
  */
 class RemoveDuplicatesFromSortedListII {
 
-  public ListNode deleteDuplicates(ListNode head) {}
+  public ListNode deleteDuplicates(ListNode head) {
+    ListNode beforeHead = new ListNode(Integer.MIN_VALUE);
+    beforeHead.next = head; // donot forget
+
+    ListNode prev = beforeHead;
+    ListNode current = head;
+    while (current != null) {
+      // detect duplicate
+      if (current.next != null && current.val == current.next.val) {
+        int duplicatedVal = current.val;
+        // find the first non-duplicate node
+        while (current != null && current.val == duplicatedVal) {
+          current = current.next;
+        }
+        // currrent == null or current.val != duplicate skip all the duplicate nodes
+        prev.next = current;
+      } else {
+        prev = current;
+        current = current.next;
+      }
+    }
+
+    return beforeHead.next;
+  }
 }
