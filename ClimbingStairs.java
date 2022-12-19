@@ -23,6 +23,25 @@
 
 class ClimbingStairs {
 
+  // dp
+  // function(i,n)=function(i+1,n)+climbStairs(i+2,n)
+  public int climbStairs(int n) {
+    if (n == 1) {
+      return 1;
+    }
+    if (n == 2) {
+      return 2;
+    }
+    int[] wayCount = new int[n];
+    wayCount[0] = 1;
+    wayCount[1] = 2;
+    for (int i = 2; i < n; i++) {
+      wayCount[i] = wayCount[i - 1] + wayCount[i - 2];
+    }
+
+    return wayCount[n - 1];
+  }
+
   // brute force
   // function(i,n)=function(i+1,n)+climbStairs(i+2,n)
   // O(2^n)
