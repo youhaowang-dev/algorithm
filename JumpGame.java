@@ -17,6 +17,26 @@
 
 class JumpGame {
 
+  // dp
+  // function(index) = OR(function(next possible index))
+  // OR: next possible index can be 0,1,4,7, then the f[i] = (f[0] || f[1] || f[4] || f[7])
+  public boolean canJump(int[] nums) {
+    boolean[] indexToCanJump = new boolean[nums.length];
+    indexToCanJump[0] = true;
+    for (int index = 1; index < nums.length; index++) {
+      for (int prevIndex = 0; prevIndex < index; prevIndex++) {
+        boolean prevCanJumpToCurrent = (prevIndex + nums[prevIndex] >= index);
+        boolean canJumpToPrev = indexToCanJump[prevIndex];
+        if (canJumpToPrev && prevCanJumpToCurrent) {
+          indexToCanJump[index] = true;
+          // break;
+        }
+      }
+    }
+
+    return indexToCanJump[nums.length - 1];
+  }
+
   // brute force
   // Time complexity : O(2^n). There are 2^n (upper bound) ways of jumping from the first position to the last, where nnn is the length of array nums
   public boolean canJump(int[] nums) {
