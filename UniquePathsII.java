@@ -70,4 +70,28 @@ class UniquePathsII {
 
     return pathSums[rowCount - 1][colCount - 1];
   }
+
+  // brute force
+  public int uniquePathsWithObstacles(int[][] grid) {
+    return this.getPathCount(grid, 0, 0);
+  }
+
+  private int getPathCount(int[][] grid, int row, int col) {
+    if (row == grid.length || col == grid[0].length) {
+      return 0;
+    }
+
+    if (grid[row][col] == GridType.WALL) {
+      return 0;
+    }
+
+    if (row == grid.length - 1 && col == grid[0].length - 1) {
+      return 1;
+    }
+
+    int countFromRight = this.getPathCount(grid, row, col + 1);
+    int countFromDown = this.getPathCount(grid, row + 1, col);
+
+    return countFromRight + countFromDown;
+  }
 }
