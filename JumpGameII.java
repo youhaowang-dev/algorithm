@@ -21,6 +21,24 @@
 
 class JumpGameII {
 
+  // dp
+  // minJump(index) = MIN(1 + prev index jumps) if prev index can jump to index
+  public int jump(int[] nums) {
+    int[] minJumps = new int[nums.length];
+    minJumps[0] = 0;
+    for (int index = 1; index < nums.length; index++) {
+      minJumps[index] = Integer.MAX_VALUE;
+      for (int prevIndex = 0; prevIndex < index; prevIndex++) {
+        boolean canJumpToCurrent = prevIndex + nums[prevIndex] >= index;
+        if (canJumpToCurrent) {
+          minJumps[index] = Math.min(minJumps[index], 1 + minJumps[prevIndex]);
+        }
+      }
+    }
+
+    return minJumps[nums.length - 1];
+  }
+
   // brute force with memoization
   public int jump(int[] nums) {
     Map<Integer, Integer> indexToMinJump = new HashMap<>();
