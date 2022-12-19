@@ -1,0 +1,11 @@
+// Math, Dynamic Programming, Combinatorics
+// Amazon 16 Google 10 Adobe 6 Apple 5 Bloomberg 4 Yahoo 3 Facebook 2 TikTok 2 Cruise Automation 2 Trilogy 2 Microsoft 11 Goldman Sachs 2 Expedia 2 Infosys 2 ByteDance 4 Salesforce 3 Zillow 3 Oracle 3 Walmart Global Tech 2 VMware 2 Uber 2 Wish 2 Morgan Stanley 2 Zoho 2 Intuit 2
+// There is a robot on an m x n grid. The robot is initially located at the top-left corner (i.e., grid[0][0]). The robot tries to move to the bottom-right corner (i.e., grid[m - 1][n - 1]). The robot can only move either down or right at any point in time.
+
+// Given the two integers m and n, return the number of possible unique paths that the robot can take to reach the bottom-right corner.
+
+// The test cases are generated so that the answer will be less than or equal to 2 * 109.
+class UniquePaths {
+
+  public int uniquePaths(int m, int n) {}
+}
