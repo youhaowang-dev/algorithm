@@ -18,6 +18,8 @@ class UniquePaths {
   // dp
   // state: row,col is the unique path count from 0,0 to row,col
   // function(row, col) = function(row - 1, col) + function(row, col - 1)
+  // The robot can only move either down or right. Hence any cell in the first row can only be reached from the cell left to it.
+  // And, any cell in the first column can only be reached from the cell above it.
   public int uniquePaths(int m, int n) {
     int[][] uniquePathCount = new int[m][n];
     uniquePathCount[0][0] = 1;
