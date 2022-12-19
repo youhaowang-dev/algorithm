@@ -25,5 +25,64 @@
  */
 class SortList {
 
-  public ListNode sortList(ListNode head) {}
+  // The problem is to sort the linked list in O(nlogn) time and using only constant extra space.
+  // If we look at various sorting algorithms, Merge Sort is one of the efficient sorting algorithms that
+  // is popularly used for sorting the linked list. The merge sort algorithm runs in O(nlogn) time in all the cases.
+  // Let's discuss approaches to sort linked list using merge sort.
+  public ListNode sortList(ListNode head) {
+    if (head == null || head.next == null) {
+      return head;
+    }
+
+    ListNode mid = this.getMid(head);
+    ListNode leftList = this.sortList(head);
+    ListNode rightList = this.sortList(mid);
+    return this.merge(leftList, rightList);
+  }
+
+  private ListNode getMid(ListNode node) {
+    // two pointers and one speed is the 2x of the other
+    ListNode slow = node;
+    ListNode fast = node;
+    ListNode prevSlow = null;
+    while (fast != null && fast.next != null) {
+      prevSlow = slow;
+      slow = slow.next;
+      fast = fast.next.next;
+    }
+    if (prevSlow != null) {
+      // IMPORTANT: must detach the mid from the rest of the list
+      // so the partition actually happens, otherwise the later
+      // getMid calls will still treat the list end as the end instead
+      // of the partition end
+      prevSlow.next = null;
+    }
+
+    ListNode mid = slow;
+    return mid;
+  }
+
+  private ListNode merge(ListNode list1, ListNode list2) {
+    ListNode beforeHead = new ListNode(Integer.MIN_VALUE);
+    ListNode last = beforeHead; // merged list insert position
+    while (list1 != null && list2 != null) {
+      if (list1.val < list2.val) {
+        last.next = list1;
+        list1 = list1.next;
+      } else {
+        last.next = list2;
+        list2 = list2.next;
+      }
+      last = last.next;
+    }
+    // connect the leftovers
+    if (list1 != null) {
+      last.next = list1;
+    }
+    if (list2 != null) {
+      last.next = list2;
+    }
+
+    return beforeHead.next;
+  }
 }
