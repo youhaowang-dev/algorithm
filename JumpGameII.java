@@ -21,5 +21,22 @@
 
 class JumpGameII {
 
-  public int jump(int[] nums) {}
+  // brute force try all the moves
+  // O(2^n)
+  public int jump(int[] nums) {
+    return jumpHelper(nums, 0);
+  }
+
+  private int jumpHelper(int[] nums, int index) {
+    if (index >= nums.length - 1) {
+      return 0;
+    }
+
+    int minSteps = nums.length; // Integer.MAX_VALUE will overflow in stack calls, so use the max possible steps, the array length
+    for (int jump = 1; jump <= nums[index]; jump++) {
+      minSteps = Math.min(minSteps, 1 + this.jumpHelper(nums, index + jump));
+    }
+
+    return minSteps;
+  }
 }
