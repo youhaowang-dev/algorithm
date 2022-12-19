@@ -15,6 +15,29 @@
 // 3. Down -> Right -> Down
 class UniquePaths {
 
+  // dp
+  // state: row,col is the unique path count from 0,0 to row,col
+  // function(row, col) = function(row - 1, col) + function(row, col - 1)
+  public int uniquePaths(int m, int n) {
+    int[][] uniquePathCount = new int[m][n];
+    uniquePathCount[0][0] = 1;
+    for (int row = 1; row < m; row++) {
+      uniquePathCount[row][0] = 1;
+    }
+    for (int col = 1; col < n; col++) {
+      uniquePathCount[0][col] = 1;
+    }
+
+    for (int row = 1; row < m; row++) {
+      for (int col = 1; col < n; col++) {
+        uniquePathCount[row][col] =
+          uniquePathCount[row - 1][col] + uniquePathCount[row][col - 1];
+      }
+    }
+
+    return uniquePathCount[m - 1][n - 1];
+  }
+
   // brute force
   // 2^(m+n) complexity
   // the first row and the first col has only one path(cannot move from top or left), so this can be used as the exit condition
