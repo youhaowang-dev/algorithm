@@ -25,5 +25,32 @@
  */
 class PartitionList {
 
-  public ListNode partition(ListNode head, int x) {}
+  // two head nodes for two lists
+  // merge them after processing all node
+  public ListNode partition(ListNode head, int x) {
+    ListNode smallHead = new ListNode(Integer.MIN_VALUE);
+    smallHead.next = head; // or (..., head)
+    ListNode bigHead = new ListNode(Integer.MIN_VALUE);
+
+    // pointers for inserted node
+    ListNode small = smallHead;
+    ListNode big = bigHead;
+    ListNode current = head;
+    while (current != null) {
+      if (current.val >= x) {
+        big.next = current;
+        big = big.next;
+      }
+      if (current.val < x) {
+        small.next = current;
+        small = small.next;
+      }
+      current = current.next;
+    }
+    // connect 3 lists
+    small.next = bigHead.next;
+    big.next = null;
+
+    return smallHead.next;
+  }
 }
