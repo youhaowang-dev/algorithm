@@ -22,5 +22,55 @@
  */
 class RotateList {
 
-  public ListNode rotateRight(ListNode head, int k) {}
+  // find the node, connect and disconnect
+  // new end = length - (rotate % length) - 1
+  public ListNode rotateRight(ListNode head, int rotation) {
+    if (head == null || head.next == null || rotation == 0) {
+      return head;
+    }
+
+    ListNode target = this.getTargetNode(head, rotation);
+    if (target.next == null) {
+      return head;
+    }
+    ListNode tail = this.getTail(head);
+
+    ListNode newTail = target;
+    ListNode newHead = target.next;
+    target.next = null;
+    tail.next = head;
+
+    return newHead;
+  }
+
+  private ListNode getTargetNode(ListNode head, int rotation) {
+    int length = this.getLength(head);
+    int kth = length - rotation % length; // count from 1
+
+    ListNode kthNode = head;
+    for (int i = 1; i < kth; i++) {
+      kthNode = kthNode.next;
+    }
+
+    return kthNode;
+  }
+
+  private ListNode getTail(ListNode head) {
+    while (head.next != null) {
+      head = head.next;
+    }
+
+    return head;
+  }
+
+  private int getLength(ListNode head) {
+    int length = 0;
+
+    while (head != null) {
+      length++;
+      head = head.next;
+    }
+
+    return length;
+  }
 }
