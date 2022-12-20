@@ -40,5 +40,58 @@ class Node {
 
 class ConvertBinarySearchTreeToSortedDoublyLinkedList {
 
-  public Node treeToDoublyList(Node root) {}
+  private class InorderIterator {
+
+    private Stack<Node> stack;
+    private Node current;
+
+    public InorderIterator(Node node) {
+      this.current = node;
+      this.stack = new Stack<Node>();
+      this.pushLefts();
+    }
+
+    public boolean hasNext() {
+      return !this.stack.isEmpty();
+    }
+
+    public Node getNext() {
+      if (!this.hasNext()) {
+        return null;
+      }
+
+      Node node = this.stack.pop();
+      this.current = node.right;
+      this.pushLefts();
+
+      return node;
+    }
+
+    private void pushLefts() {
+      while (this.current != null) {
+        this.stack.push(this.current);
+        this.current = this.current.left;
+      }
+    }
+  }
+
+  public Node treeToDoublyList(Node root) {
+    if (root == null) {
+      return null;
+    }
+
+    InorderIterator iterator = new InorderIterator(root);
+    Node first = iterator.getNext();
+    Node current = first;
+    while (iterator.hasNext()) {
+      Node nextNode = iterator.getNext();
+      current.right = nextNode;
+      nextNode.left = current;
+      current = nextNode;
+    }
+    current.right = first;
+    first.left = current;
+
+    return first;
+  }
 }
