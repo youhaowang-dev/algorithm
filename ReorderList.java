@@ -67,16 +67,37 @@ class ReorderList {
   }
 
   public void merge(ListNode first, ListNode second) {
-    ListNode firstNext;
-    ListNode secondNext;
+    int index = 0;
+    ListNode current = new ListNode(0);
     while (first != null && second != null) {
-      firstNext = first.next;
-      first.next = second;
-      first = firstNext; // update first so second can connect to the correct first
-
-      secondNext = second.next;
-      second.next = first;
-      second = secondNext;
+      if (index % 2 == 0) {
+        current.next = first;
+        first = first.next;
+      } else {
+        current.next = second;
+        second = second.next;
+      }
+      current = current.next;
+      index++;
+    }
+    if (first != null) {
+      current.next = first;
+    }
+    if (second != null) {
+      current.next = second;
     }
   }
+  // public void merge(ListNode first, ListNode second) {
+  //   ListNode firstNext;
+  //   ListNode secondNext;
+  //   while (first != null && second != null) {
+  //     firstNext = first.next;
+  //     first.next = second;
+  //     first = firstNext; // update first so second can connect to the correct first
+
+  //     secondNext = second.next;
+  //     second.next = first;
+  //     second = secondNext;
+  //   }
+  // }
 }
