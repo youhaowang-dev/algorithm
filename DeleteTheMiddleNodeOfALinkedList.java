@@ -43,5 +43,32 @@
  */
 class DeleteTheMiddleNodeOfALinkedList {
 
-  public ListNode deleteMiddle(ListNode head) {}
+  public ListNode deleteMiddle(ListNode head) {
+    if (head == null || head.next == null) {
+      return null;
+    }
+
+    ListNode premid = this.findPreMid(head);
+    // check pre mid null
+    if (premid == null) {
+      return null;
+    }
+
+    premid.next = premid.next.next;
+
+    return head;
+  }
+
+  private ListNode findPreMid(ListNode head) {
+    ListNode premid = null;
+    ListNode slow = head;
+    ListNode fast = head;
+    while (fast != null && fast.next != null) {
+      premid = slow;
+      slow = slow.next;
+      fast = fast.next.next;
+    }
+
+    return premid;
+  }
 }
