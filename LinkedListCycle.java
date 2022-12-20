@@ -21,5 +21,31 @@
  */
 public class LinkedListCycle {
 
-  public boolean hasCycle(ListNode head) {}
+  public boolean hasCycle(ListNode head) {
+    ListNode slow = head;
+    ListNode fast = head;
+    while (fast != null && fast.next != null) {
+      slow = slow.next;
+      fast = fast.next.next;
+      if (slow == fast) {
+        // because pointers are init to the same value, the check can only be after the move
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  public boolean hasCycle(ListNode head) {
+    Set<ListNode> visited = new HashSet<>();
+    while (head != null) {
+      if (visited.contains(head)) {
+        return true;
+      }
+      visited.add(head);
+      head = head.next;
+    }
+
+    return false;
+  }
 }
