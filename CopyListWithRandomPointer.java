@@ -33,5 +33,42 @@ class Node {
 
 class CopyListWithRandomPointer {
 
-  public Node copyRandomList(Node head) {}
+  // like doing a list traversal but in two ways
+  // regular next and random next
+  // connect the next and random during traversal and
+  public Node copyRandomList(Node head) {
+    if (head == null) {
+      return null;
+    }
+
+    // init
+    Node oldNode = head;
+    Node newNode = new Node(oldNode.val);
+    HashMap<Node, Node> oldToNew = new HashMap<>();
+    oldToNew.put(oldNode, newNode);
+
+    while (oldNode != null) {
+      // connect
+      newNode.next = this.getNewNode(oldToNew, oldNode.next);
+      newNode.random = this.getNewNode(oldToNew, oldNode.random);
+
+      newNode = newNode.next;
+      oldNode = oldNode.next;
+    }
+    return oldToNew.get(head);
+  }
+
+  // create copy when needed
+  private Node getNewNode(HashMap<Node, Node> oldToNew, Node node) {
+    if (node == null) {
+      return null;
+    }
+
+    if (!oldToNew.containsKey(node)) {
+      Node copy = new Node(node.val, null, null);
+      oldToNew.put(node, copy);
+    }
+
+    return oldToNew.get(node);
+  }
 }
