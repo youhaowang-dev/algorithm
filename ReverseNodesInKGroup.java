@@ -27,5 +27,58 @@
  */
 class ReverseNodesInKGroup {
 
-  public ListNode reverseKGroup(ListNode head, int k) {}
+  public ListNode reverseKGroup(ListNode head, int k) {
+    ListNode prevRevTail = null;
+    ListNode firstRevHead = null;
+    ListNode current = head;
+    ListNode reverseStart = head;
+    while (current != null) {
+      int count = 0;
+      while (count < k && current != null) {
+        current = current.next;
+        count += 1;
+      }
+      if (count == k) {
+        // current stops at the next reverseStart
+        ListNode revHead = this.reverse(reverseStart, k);
+
+        if (firstRevHead == null) {
+          // if is for init
+          firstRevHead = revHead;
+        }
+
+        if (prevRevTail != null) {
+          // if is for init
+          // connect tail of prev reversed  with head of current reversed
+          prevRevTail.next = revHead;
+        }
+
+        prevRevTail = reverseStart;
+        reverseStart = current;
+      }
+    }
+
+    // attach the final, possibly un-reversed portion
+    if (prevRevTail != null) {
+      prevRevTail.next = reverseStart;
+    }
+
+    return firstRevHead != null ? firstRevHead : head;
+  }
+
+  // Reverse k nodes
+  public ListNode reverse(ListNode head, int k) {
+    ListNode prev = null;
+    ListNode current = head;
+    while (k > 0) {
+      ListNode nextCurrent = current.next;
+      current.next = prev;
+      prev = current;
+      current = nextCurrent;
+
+      k--;
+    }
+
+    return prev;
+  }
 }
