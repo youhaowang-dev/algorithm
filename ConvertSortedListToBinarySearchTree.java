@@ -39,6 +39,10 @@
  */
 class ConvertSortedListToBinarySearchTree {
 
+  // Time Complexity: O(nlogn)
+  // logn subproblems, each problem does one findMid
+  // findMin complexity: O(n) -> O(n/2) -> ...
+  // logn * (n + n/2 + n/4 + ...) = logn * 2n ===> O(nlogn)
   public TreeNode sortedListToBST(ListNode head) {
     if (head == null) {
       return null;
@@ -73,5 +77,51 @@ class ConvertSortedListToBinarySearchTree {
     }
 
     return slow;
+  }
+
+  // build BST in inorder traversal
+  // NOTE: global variable is used
+  private ListNode head;
+
+  private int getListLength(ListNode head) {
+    ListNode ptr = head;
+    int length = 0;
+    while (head != null) {
+      head = head.next;
+      length += 1;
+    }
+
+    return length;
+  }
+
+  private TreeNode convertListToBST(int l, int r) {
+    if (l > r) {
+      return null;
+    }
+
+    int mid = (l + r) / 2;
+
+    // First step of simulated inorder traversal. Recursively form
+    // the left half
+    TreeNode left = this.convertListToBST(l, mid - 1);
+
+    // Once left half is traversed, process the current node
+    TreeNode node = new TreeNode(this.head.val);
+    node.left = left;
+
+    // Maintain the invariance mentioned in the algorithm
+    this.head = this.head.next;
+
+    // Recurse on the right hand side and form BST out of them
+    node.right = this.convertListToBST(mid + 1, r);
+    return node;
+  }
+
+  public TreeNode sortedListToBST(ListNode head) {
+    int size = this.getListLength(head);
+
+    this.head = head;
+
+    return this.convertListToBST(0, size - 1);
   }
 }
