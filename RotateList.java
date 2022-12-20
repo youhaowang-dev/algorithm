@@ -22,6 +22,60 @@
  */
 class RotateList {
 
+  // close the linked list into a ring
+  // find the node and detach it
+  public ListNode rotateRight(ListNode head, int rotation) {
+    if (head == null || head.next == null || rotation == 0) {
+      return head;
+    }
+    ListNode last = this.getLastNode(head);
+    ListNode newTail = this.getNewTail(head, rotation);
+
+    if (last == newTail) {
+      return head;
+    }
+    ListNode newHead = newTail.next;
+
+    // these steps should be after the searches as seaches are depending on the original list(non-ring & non-broken)
+    // form a ring
+    last.next = head;
+    // detach
+    newTail.next = null;
+
+    return newHead;
+  }
+
+  private ListNode getLastNode(ListNode head) {
+    while (head.next != null) {
+      head = head.next;
+    }
+
+    return head;
+  }
+
+  // 1,2,3 rotate 5 => rotate 2 => 2,3,1 => 1st element => length 3 - rotate 2
+  private ListNode getNewTail(ListNode head, int rotation) {
+    int length = this.getListLength(head);
+
+    int kth = length - rotation % length; // count from 1
+    ListNode target = head; // 1st
+    for (int k = 1; k < kth; k++) {
+      target = target.next;
+    }
+
+    return target;
+  }
+
+  private int getListLength(ListNode head) {
+    int length = 0;
+    while (head != null) {
+      length++;
+      head = head.next;
+    }
+
+    return length;
+  }
+
   // find the node, connect and disconnect
   // new end = length - (rotate % length) - 1
   public ListNode rotateRight(ListNode head, int rotation) {
