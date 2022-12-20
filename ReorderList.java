@@ -29,5 +29,54 @@
  */
 class ReorderList {
 
-  public void reorderList(ListNode head) {}
+  // find mid
+  // reverse the second half
+  // merge
+  public void reorderList(ListNode head) {
+    if (head == null) {
+      return;
+    }
+    ListNode mid = this.getMid(head);
+    ListNode midNext = mid.next;
+    mid.next = null;
+    ListNode reversedHead = this.reverse(midNext);
+    this.merge(head, reversedHead);
+  }
+
+  public ListNode getMid(ListNode head) {
+    ListNode slow = head;
+    ListNode fast = head;
+    while (fast.next != null && fast.next.next != null) {
+      slow = slow.next;
+      fast = fast.next.next;
+    }
+
+    return slow;
+  }
+
+  public ListNode reverse(ListNode head) {
+    ListNode prev = null;
+    ListNode curr = head;
+    while (curr != null) {
+      ListNode nextTemp = curr.next;
+      curr.next = prev;
+      prev = curr;
+      curr = nextTemp;
+    }
+    return prev;
+  }
+
+  public void merge(ListNode first, ListNode second) {
+    ListNode firstNext;
+    ListNode secondNext;
+    while (first != null && second != null) {
+      firstNext = first.next;
+      first.next = second;
+      first = firstNext; // update first so second can connect to the correct first
+
+      secondNext = second.next;
+      second.next = first;
+      second = secondNext;
+    }
+  }
 }
