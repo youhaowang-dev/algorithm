@@ -38,5 +38,55 @@
  */
 class MergeKSortedLists {
 
-  public ListNode mergeKLists(ListNode[] lists) {}
+  private class ListMinIterator {
+
+    PriorityQueue<ListNode> minHeap;
+
+    public ListMinIterator(ListNode[] lists) {
+      this.minHeap = new PriorityQueue<>((a, b) -> a.val - b.val);
+
+      for (ListNode list : lists) {
+        if (list != null) {
+          this.minHeap.offer(list);
+        }
+      }
+    }
+
+    public ListNode getNext() {
+      if (!this.hasNext()) {
+        return null;
+      }
+
+      ListNode node = this.minHeap.poll();
+
+      if (node.next != null) {
+        this.minHeap.offer(node.next);
+      }
+
+      return node;
+    }
+
+    public boolean hasNext() {
+      return !this.minHeap.isEmpty();
+    }
+  }
+
+  // min heap
+  // O(Nlogk)
+  public ListNode mergeKLists(ListNode[] lists) {
+    ListNode beforeHead = new ListNode(0);
+    ListMinIterator iterator = new ListMinIterator(lists);
+
+    ListNode current = beforeHead;
+    while (iterator.hasNext()) {
+      ListNode next = iterator.getNext();
+      current.next = next;
+      current = current.next;
+    }
+
+    return beforeHead.next;
+  }
+  // space optimized solution
+  // Convert merge k lists problem to merge 2 lists (k-1) times.
+  // time O(kN) space O(1)
 }
