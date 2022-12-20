@@ -44,7 +44,7 @@ class CopyListWithRandomPointer {
     // init
     Node oldNode = head;
     Node newNode = new Node(oldNode.val);
-    HashMap<Node, Node> oldToNew = new HashMap<>();
+    HashMap<Node, Node> oldToNew = new HashMap<>(); // helps the random thing
     oldToNew.put(oldNode, newNode);
 
     while (oldNode != null) {
@@ -70,5 +70,54 @@ class CopyListWithRandomPointer {
     }
 
     return oldToNew.get(node);
+  }
+
+  // O(1) space but will modify input
+  // Inserting the cloned node just next to the original node.
+  // If A->B->C is the original linked list,
+  // Linked list after weaving cloned nodes would be A->A'->B->B'->C->C'
+  public Node copyRandomList(Node head) {
+    if (head == null) {
+      return null;
+    }
+
+    this.doubleNodes(head);
+    this.linkRandoms(head);
+
+    // separate node and copy
+    // aa'bb'cc' => abc and a'b'c'
+    Node oldHead = head;
+    Node newHead = head.next;
+    Node head_old = head.next;
+    while (oldHead != null) {
+      oldHead.next = oldHead.next.next;
+      newHead.next = (newHead.next != null) ? newHead.next.next : null;
+      oldHead = oldHead.next;
+      newHead = newHead.next;
+    }
+    return head_old;
+  }
+
+  // abc => aa'bb'cc'
+  private void doubleNodes(Node current) {
+    while (current != null) {
+      Node newNode = new Node(current.val);
+
+      newNode.next = current.next;
+      current.next = newNode;
+      current = newNode.next;
+    }
+  }
+
+  private void linkRandoms(Node current) {
+    while (current != null) {
+      if (current.random == null) {
+        current.next.random = null;
+      } else {
+        // connect copy to copy
+        current.next.random = current.random.next;
+      }
+      current = current.next.next;
+    }
   }
 }
