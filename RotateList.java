@@ -76,6 +76,41 @@ class RotateList {
     return length;
   }
 
+  public ListNode rotateRight(ListNode head, int n) {
+    if (head == null) {
+      return null;
+    }
+
+    int length = this.getListLength(head);
+    n = n % length;
+
+    ListNode beforeHead = new ListNode(0);
+    beforeHead.next = head;
+    head = beforeHead;
+
+    //    1 2 3 rotate 1
+    //  s f
+    //  s   f
+    //      s   f
+
+    ListNode slow = beforeHead;
+    ListNode fast = head;
+    // fast will be n steps more than slow
+    for (int i = 0; i < n; i++) {
+      fast = fast.next;
+    }
+    // so slow will stop at the rotate position
+    while (fast.next != null) {
+      slow = slow.next;
+      fast = fast.next;
+    }
+
+    fast.next = beforeHead.next;
+    beforeHead.next = slow.next;
+    slow.next = null;
+    return beforeHead.next;
+  }
+
   // find the node, connect and disconnect
   // new end = length - (rotate % length) - 1
   public ListNode rotateRight(ListNode head, int rotation) {
