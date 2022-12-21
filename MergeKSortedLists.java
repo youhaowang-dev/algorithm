@@ -86,7 +86,57 @@ class MergeKSortedLists {
 
     return beforeHead.next;
   }
-  // space optimized solution
+
+  // for space optimized solution
   // Convert merge k lists problem to merge 2 lists (k-1) times.
   // time O(kN) space O(1)
+
+  // divide and conquer
+  // like a merge sort
+  // Time complexity : O(Nlog⁡k) where k is the number of linked lists.
+  // We can merge two sorted linked list in O(n) time where nnn is the total number of nodes in two lists.
+  public ListNode mergeKLists(ListNode[] lists) {
+    if (lists == null || lists.length == 0) {
+      return null;
+    }
+    return this.mergeHelper(lists, 0, lists.length - 1);
+  }
+
+  private ListNode mergeHelper(ListNode[] lists, int start, int end) {
+    // [0,7] => [0,3][4,7] => [0,1][2,2][4,5][6,7] => [0,0][1,1][2,2][4,4][5,5][6,6][7,7]
+    // partition end result
+    if (start == end) {
+      System.out.println(start + ":" + end);
+      return lists[start];
+    }
+
+    int mid = start - (start - end) / 2;
+    ListNode left = this.mergeHelper(lists, start, mid);
+    ListNode right = this.mergeHelper(lists, mid + 1, end);
+
+    return this.mergeTwoLists(left, right);
+  }
+
+  private ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+    ListNode beforeHead = new ListNode(0);
+    ListNode tail = beforeHead;
+    while (list1 != null && list2 != null) {
+      if (list1.val < list2.val) {
+        tail.next = list1;
+        list1 = list1.next;
+      } else {
+        tail.next = list2;
+        list2 = list2.next;
+      }
+      tail = tail.next;
+    }
+    if (list1 != null) {
+      tail.next = list1;
+    }
+    if (list2 != null) {
+      tail.next = list2;
+    }
+
+    return beforeHead.next;
+  }
 }
