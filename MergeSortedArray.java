@@ -107,7 +107,7 @@ final class MergeSortedArray {
       n
     );
     int insertPosition = nums1.length - 1;
-    System.out.println("iterator.hasNextMax()" + iterator.hasNextMax());
+
     while (insertPosition >= 0 && iterator.hasNextMax()) {
       nums1[insertPosition] = iterator.getNextMax();
       insertPosition--;
