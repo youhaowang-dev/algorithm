@@ -25,6 +25,7 @@ class KthLargestElementInAnArray {
 
   private int partition(int[] nums, int targetIndex, int start, int end) {
     if (start >= end) {
+      // this means the target partition has been sorted, so the targetIndex will point to the target value
       return nums[targetIndex];
     }
 
@@ -45,14 +46,17 @@ class KthLargestElementInAnArray {
       }
     }
 
+    // now three partitions can exist and k can be in one of them
+    // start - left: unsorted
+    // left - right: sorted and pivot in this range; exit condition
+    // right - end: unsorted
     if (targetIndex <= right) {
+      // sort next partition
       return this.partition(nums, targetIndex, start, right);
-    }
-    if (targetIndex >= left) {
+    } else {
+      // sort next partition
       return this.partition(nums, targetIndex, left, end);
     }
-
-    return nums[targetIndex];
   }
 
   private void swap(int[] nums, int left, int right) {
