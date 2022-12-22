@@ -6,15 +6,31 @@
 
 class MaximumSubarray {
 
-  // between 0 to i, find the minSum, so the maxSum=max(maxSum, currentSum - minSum)
+  // same prefixSum but space optimized
+  // currentSum can be a variable instead of using an array for all prefixSums
   public int maxSubArray(int[] nums) {
-    int[] prefixSum = this.getPrefixSum(nums);
-
+    int prefixSum = 0;
     int maxSum = Integer.MIN_VALUE;
-    int minSum = Integer.MAX_VALUE;
-    for (int currentSum : prefixSum) {
-      maxSum = Math.max(maxSum, currentSum - minSum);
-      minSum = Math.min(minSum, currentSum);
+    int minPrefixSum = 0;
+    for (int i = 0; i < nums.length; i++) {
+      prefixSum = prefixSum + nums[i];
+      maxSum = Math.max(maxSum, prefixSum - minPrefixSum);
+      minPrefixSum = Math.min(minPrefixSum, prefixSum);
+    }
+
+    return maxSum;
+  }
+
+  // between 0 to i, find the minPrefixSum, so the maxSum=max(maxSum, currentSum - minPrefixSum)
+  public int maxSubArray(int[] nums) {
+    int maxSum = Integer.MIN_VALUE;
+    int minPrefixSum = 0;
+
+    int[] prefixSum = this.getPrefixSum(nums);
+    // need to skip the 0 as it is not part of the input
+    for (int i = 1; i < prefixSum.length; i++) {
+      maxSum = Math.max(maxSum, prefixSum[i] - minPrefixSum);
+      minPrefixSum = Math.min(minPrefixSum, prefixSum[i]);
     }
 
     return maxSum;
