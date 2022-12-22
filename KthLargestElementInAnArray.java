@@ -12,6 +12,55 @@ import java.util.*; // write an assumption for this in interview
 
 class KthLargestElementInAnArray {
 
+  // quick select
+  // time complexity: O(n) where partition costs n + n/2 + n/4 + ... +  = 2n
+  // The worst case is that partitioning always results in very skewed partition sizes.
+  // Consider what would happen if the first partitioning only removed one item. And the second only removed one, etc.
+  // The result would be: N + (N-1) + (N-2) ... Which is (n^2 + n)/2), or O(n^2).
+  public int findKthLargest(int[] nums, int k) {
+    // kth largest index = length - k
+
+    return this.partition(nums, nums.length - k, 0, nums.length - 1);
+  }
+
+  private int partition(int[] nums, int targetIndex, int start, int end) {
+    if (start >= end) {
+      return nums[targetIndex];
+    }
+
+    int left = start;
+    int right = end;
+    int pivot = nums[(start + end) / 2];
+    while (left <= right) {
+      while (left <= right && nums[left] < pivot) {
+        left++;
+      }
+      while (left <= right && nums[right] > pivot) {
+        right--;
+      }
+      if (left <= right) {
+        this.swap(nums, left, right);
+        left++;
+        right--;
+      }
+    }
+
+    if (targetIndex <= right) {
+      return this.partition(nums, targetIndex, start, right);
+    }
+    if (targetIndex >= left) {
+      return this.partition(nums, targetIndex, left, end);
+    }
+
+    return nums[targetIndex];
+  }
+
+  private void swap(int[] nums, int left, int right) {
+    int leftCopy = nums[left];
+    nums[left] = nums[right];
+    nums[right] = leftCopy;
+  }
+
   public int findKthLargestByQuickSort(int[] nums, int k) {
     (new QuickSort()).quickSort(nums, 0, nums.length - 1);
 
@@ -55,7 +104,8 @@ class KthLargestElementInAnArray {
   // since the pivot index is at the sorted position
   // we can compare the index with the index of the kth largest,
   // so we can pick the left or right to continue the partition and find the partition_index==kthlargest_index
-  // time complexity: nlog(n) for log(n) partitions and each partition has a linear search
+  // time complexity: O(n) where partition costs n + n/2 + n/4 + ... +  = 2n
+
   // space complexity: log(n) stack space
   public int findKthLargestByQuickSelect(int[] nums, int k) {
     if (nums.length < k) {
