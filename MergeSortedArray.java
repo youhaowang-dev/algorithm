@@ -31,6 +31,89 @@ import java.util.*;
 
 final class MergeSortedArray {
 
+  private class SortedArraysIterator {
+
+    int[] arr1;
+    int last1;
+    int[] arr2;
+    int last2;
+
+    public SortedArraysIterator(
+      int[] arr1,
+      int length1,
+      int[] arr2,
+      int length2
+    ) {
+      this.arr1 = arr1;
+      this.last1 = length1 - 1;
+      this.arr2 = arr2;
+      this.last2 = length2 - 1;
+    }
+
+    public int getNextMax() {
+      if (!this.hasNextMax()) {
+        return Integer.MAX_VALUE;
+      }
+
+      if (this.list1HasNext() && this.list2HasNext()) {
+        if (this.arr1[last1] < this.arr2[last2]) {
+          int num = this.arr2[last2];
+          last2--;
+
+          return num;
+        } else {
+          int num = this.arr1[last1];
+          last1--;
+
+          return num;
+        }
+      }
+
+      if (this.list1HasNext()) {
+        int num = this.arr1[last1];
+        last1--;
+
+        return num;
+      }
+
+      if (this.list2HasNext()) {
+        int num = this.arr2[last2];
+        last2--;
+
+        return num;
+      }
+
+      return Integer.MAX_VALUE;
+    }
+
+    public boolean hasNextMax() {
+      return this.list1HasNext() || this.list2HasNext();
+    }
+
+    private boolean list1HasNext() {
+      return this.last1 >= 0;
+    }
+
+    private boolean list2HasNext() {
+      return this.last2 >= 0;
+    }
+  }
+
+  public void merge(int[] nums1, int m, int[] nums2, int n) {
+    SortedArraysIterator iterator = new SortedArraysIterator(
+      nums1,
+      m,
+      nums2,
+      n
+    );
+    int insertPosition = nums1.length - 1;
+
+    while (insertPosition >= 0 && iterator.hasNextMax()) {
+      nums1[insertPosition] = iterator.getNextMax();
+      insertPosition--;
+    }
+  }
+
   // merge backward to avoid O(n) inserts
   public void merge(int[] nums1, int m, int[] nums2, int n) {
     int nums1Position = m - 1;

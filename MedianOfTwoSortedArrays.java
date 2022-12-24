@@ -18,9 +18,15 @@ import java.util.*;
 
 final class MedianOfTwoSortedArrays {
 
+  // brute force
+  // merge two arrays and find the median
+  // O(m+n)
+
+  // drop the unwanted part where target is not in
   // find median => find median index(s) => find kth largest number for the index(s) => calculate median
+  //    *** k counts from 1 ***
   // [1,2,3,4,5] => find 3 => 3 = length/2 + 1 => k = length / 2 + 1
-  // [1,2,3,4] => find 2,3 => 2 = length/2, 3 = length/2 + 1 =>  k = length / 2 + 1, k = length / 2 = k - 1
+  // [1,2,3,4] => find 2,3 => 2 = length/2, 3 = length/2 + 1 => k1 = length / 2, k2 = length / 2 + 1
 
   // https://www.lintcode.com/problem/65/solution/56866
   // 因此我们可以归纳出三种情况：
@@ -36,49 +42,51 @@ final class MedianOfTwoSortedArrays {
     int length1 = nums1.length, length2 = nums2.length;
     int totalLength = length1 + length2;
     if (totalLength % 2 == 1) {
-      int midIndex = totalLength / 2;
-      double median = getKthElement(nums1, nums2, midIndex + 1);
-      return median;
+      return (double) this.getKthElement(nums1, nums2, totalLength / 2 + 1);
     } else {
-      int midIndex1 = totalLength / 2 - 1, midIndex2 = totalLength / 2;
-      double median =
-        (
-          getKthElement(nums1, nums2, midIndex1 + 1) +
-          getKthElement(nums1, nums2, midIndex2 + 1)
-        ) /
-        2.0;
-      return median;
+      int left = this.getKthElement(nums1, nums2, totalLength / 2);
+      int right = this.getKthElement(nums1, nums2, totalLength / 2 + 1);
+      return (left + right) / 2.0;
     }
   }
 
-  // drop nums1[0...k/2-1] or nums2[0...k/2-1] based on nums1 and nums2 values of k/2-1
+  // binary search
+  // drop left part of nums1 or nums2
+  //      nums1[0...k/2-1] or nums2[0...k/2-1] based on nums1 and nums2 values of k/2-1
+  // 1234 => kth 3 => find 3 => find index 2 => 2 = 0(index) + 3(kth) - 1
   public int getKthElement(int[] nums1, int[] nums2, int k) {
     int length1 = nums1.length;
     int length2 = nums2.length;
     int index1 = 0;
     int index2 = 0;
     while (true) {
-      // edge cases; exit conditions
+      // all nums1 are dropped
       if (index1 == length1) {
         return nums2[index2 + k - 1];
       }
+      // all nums2 are dropped
       if (index2 == length2) {
         return nums1[index1 + k - 1];
       }
+      // return min when k is the smallest(1)
       if (k == 1) {
         return Math.min(nums1[index1], nums2[index2]);
       }
 
       // binary search
-      int half = k / 2;
-      int pivot1 = Math.min(index1 + half, length1) - 1;
-      int pivot2 = Math.min(index2 + half, length2) - 1;
+      int halfK = k / 2;
+      int pivot1 = Math.min(index1 + halfK, length1) - 1;
+      int pivot2 = Math.min(index2 + halfK, length2) - 1;
       if (nums1[pivot1] <= nums2[pivot2]) {
-        k -= (pivot1 - index1 + 1);
-        index1 = pivot1 + 1;
+        // left part of nums1 does NOT have kth; drop [index1, pivot1]
+        int droppedCount = pivot1 - index1 + 1;
+        k = k - droppedCount;
+        index1 = pivot1 + 1; // move to next part that may have kth
       } else {
-        k -= (pivot2 - index2 + 1);
-        index2 = pivot2 + 1;
+        // left part of nums2 does NOT have kth; drop [index2, pivot2]
+        int droppedCount = pivot2 - index2 + 1;
+        k = k - droppedCount;
+        index2 = pivot2 + 1; // move to next part that may have kth
       }
     }
   }

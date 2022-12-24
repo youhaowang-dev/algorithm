@@ -3,6 +3,38 @@ import java.util.Arrays;
 
 public final class QuickSort {
 
+  public void quickSort(int[] nums, int start, int end) {
+    if (start >= end) {
+      return;
+    }
+
+    int left = start;
+    int right = end;
+    int pivot = nums[(start + end) / 2];
+    while (left <= right) {
+      while (left <= right && pivot > nums[left]) {
+        left++;
+      }
+      while (left <= right && pivot < nums[right]) {
+        right--;
+      }
+      if (left <= right) {
+        this.swap(nums, left, right);
+        left++;
+        right--;
+      }
+    }
+
+    this.quickSort(nums, start, right);
+    this.quickSort(nums, left, end);
+  }
+
+  private void swap(int[] nums, int left, int right) {
+    int leftCopy = nums[left];
+    nums[left] = nums[right];
+    nums[right] = leftCopy;
+  }
+
   // time complexity: O(nlog(n)) on average, O(n^2) the worst case
   // do O(n) linear scan in log(n) partitions
   // space complexity: O(log(n)) stack space cost where the recursion tree height is log(n)
