@@ -61,8 +61,13 @@ class MaxStack {
     this.stack = new Stack<>();
     // [value, sequentialID]
     this.maxHeap =
-      new PriorityQueue<>((a, b) -> b[0] - a[0] == 0 ? b[1] - a[1] : b[0] - a[0]
-      );
+      new PriorityQueue<>((a, b) -> {
+        if (b[0] - a[0] == 0) {
+          return b[1] - a[1];
+        } else {
+          return b[0] - a[0];
+        }
+      });
     this.removed = new HashSet<>();
     this.sequentialID = 0;
   }
