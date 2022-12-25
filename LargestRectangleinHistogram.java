@@ -34,30 +34,29 @@ class LargestRectangleinHistogram {
   // stack to save the increasing heights only, calculate the max area when poping a height
   // increase heights means increasing area; otherwise no need to calculate until increasing ends or the array ends
   public int largestRectangleArea(int[] heights) {
-    // saves the increasing indexes of heights; heights[i]>heights[i−1]
     Stack<Integer> index = new Stack<>();
-    int outBoundIndex = -1; // as a start indicator
+    int outBoundIndex = -1; // for init, and edge cases
     index.push(outBoundIndex);
-    int length = heights.length;
-    int maxArea = 0;
+    int maxArea = Integer.MIN_VALUE;
 
-    for (int i = 0; i < length; i++) {
+    // scan the heights and only keep the indexes of increasing heights
+    for (int i = 0; i < heights.length; i++) {
       while (
         index.peek() != outBoundIndex && heights[i] <= heights[index.peek()]
       ) {
-        // next height is smaller, calculate area now
-        int height = heights[index.pop()];
+        // pop the small height and calculate area
+        int height = heights[index.pop()]; // it is already the small height, so no need to min
         int width = i - index.peek() - 1;
         maxArea = Math.max(maxArea, height * width);
       }
-      // heights[i]>heights[i−1]
       index.push(i);
     }
-
-    // IMPORTANT: array can be incremental, so we need to calculate the areas until stack empty
+    // continue process all the increasing heights
+    // for increasing heights, the max is always the height * widthToLastHighestIndex
+    int lastHighestIndex = heights.length; // assume right bound is Integer.MAX_VALUE
     while (index.peek() != outBoundIndex) {
-      int height = heights[index.pop()];
-      int width = length - index.peek() - 1;
+      int height = heights[index.pop()]; // smaller than Integer.MAX_VALUE
+      int width = lastHighestIndex - index.peek() - 1;
       maxArea = Math.max(maxArea, height * width);
     }
 
