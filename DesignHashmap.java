@@ -21,7 +21,8 @@
 // There are two main issues that we should tackle, in order to design an efficient hashmap data structure: 1). hash function design and 2). collision handling.
 class MyHashMap {
 
-  private int size = 911; // prime
+  private int size = 911; // prime to reduce hashing conflict chance
+  // LinkedList is for hashing conflict
   private ArrayList<LinkedList<Pair>> hashToPairs;
 
   // key value pair
