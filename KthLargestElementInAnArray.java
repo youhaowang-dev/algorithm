@@ -83,25 +83,25 @@ class KthLargestElementInAnArray {
     //   }
     // };
 
-    // PriorityQueue<Integer> topKNums = new PriorityQueue<Integer>(
+    // PriorityQueue<Integer> minHeap = new PriorityQueue<Integer>(
     //   maxHeapComparator
     // );
 
-    // Queue<Integer> topKNums = new PriorityQueue<Integer>((num1, num2) -> {
+    // Queue<Integer> minHeap = new PriorityQueue<Integer>((num1, num2) -> {
     //   return num1 - num2;
     // });
 
-    Queue<Integer> topKNums = new PriorityQueue<Integer>((num1, num2) ->
+    Queue<Integer> minHeap = new PriorityQueue<Integer>((num1, num2) ->
       num1 - num2
     );
     for (int num : nums) {
-      topKNums.add(num);
-      if (topKNums.size() > k) {
-        topKNums.poll();
+      minHeap.add(num);
+      if (minHeap.size() > k) {
+        minHeap.poll();
       }
     }
 
-    return topKNums.peek();
+    return minHeap.peek();
   }
 
   // use to partition of quick sort
