@@ -64,6 +64,7 @@ class Rehashing {
     int newCapacity = 2 * hashTable.length;
     ListNode[] newTable = new ListNode[newCapacity];
     for (int i = 0; i < hashTable.length; i++) {
+      // process all nodes in the bucket
       while (hashTable[i] != null) {
         int oldVal = hashTable[i].val;
         // this is for negative number
@@ -78,7 +79,7 @@ class Rehashing {
           }
           head.next = new ListNode(oldVal);
         }
-        hashTable[i] = hashTable[i].next;
+        hashTable[i] = hashTable[i].next; // next node in the bucket
       }
     }
 
