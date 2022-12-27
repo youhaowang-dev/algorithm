@@ -17,6 +17,10 @@ class KthLargestElementInAnArray {
   // The worst case is that partitioning always results in very skewed partition sizes.
   // Consider what would happen if the first partitioning only removed one item. And the second only removed one, etc.
   // The result would be: N + (N-1) + (N-2) ... Which is (n^2 + n)/2), or O(n^2).
+
+  // Quickselect is a textbook algorthm typically used to solve the problems "find kth something":
+  // kth smallest, kth largest, kth most frequent, kth less frequent, etc.
+  // Like quicksort, quickselect was developed by Tony Hoare, and also known as Hoare's selection algorithm.
   public int findKthLargest(int[] nums, int k) {
     // kth largest index = length - k
 
