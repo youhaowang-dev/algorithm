@@ -22,35 +22,35 @@
 class CourseSchedule {
 
   public boolean canFinish(int numCourses, int[][] prerequisites) {
-    Map<Integer, List<Integer>> courseToPres = new HashMap();
-    for (int i = 0; i < numCourses; i++) {
-      courseToPres.putIfAbsent(i, new ArrayList());
+    Map<Integer, List<Integer>> preToCourses = new HashMap<>();
+    for (int course = 0;  < numCourses; course++) {
+      preToCourses.putIfAbsent(course, new ArrayList());
     }
 
     int[] indegrees = new int[numCourses];
-    for (int[] courseToPre : prerequisites) {
-      int course = courseToPre[0];
-      int pre = courseToPre[1];
-      courseToPres.get(course).add(pre);
-      indegrees[pre]++;
+    for (int[] coursePrePair : prerequisites) {
+      int course = coursePrePair[0];
+      int pre = coursePrePair[1];
+      preToCourses.get(pre).add(course);
+      indegrees[course]++;
     }
 
     Queue<Integer> queue = new LinkedList<Integer>();
-    for (int i = 0; i < numCourses; i++) {
-      if (indegrees[i] == 0) {
-        queue.offer(i);
+    for (int course = 0; course < numCourses; course++) {
+      if (indegrees[course] == 0) {
+        queue.offer(course);
       }
     }
 
     int count = 0;
     while (!queue.isEmpty()) {
-      int course = queue.poll();
+      int pre = queue.poll();
       count++;
-      List<Integer> pres = courseToPres.get(course);
-      for (int pre : pres) {
-        indegrees[pre]--;
-        if (indegrees[pre] == 0) {
-          queue.offer(pre);
+      List<Integer> courses = preToCourses.get(pre);
+      for (int course : courses) {
+        indegrees[course]--;
+        if (indegrees[course] == 0) {
+          queue.offer(course);
         }
       }
     }
