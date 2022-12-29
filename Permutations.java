@@ -21,7 +21,7 @@ class Permutations {
       return null;
     }
 
-    Deque<Integer> list = new ArrayDeque<>(); // the permutation state
+    List<Integer> list = new ArrayList<>(); // the permutation state
     boolean[] used = new boolean[nums.length]; // for avoid contains O(n)
     this.permuteHelper(nums, list, used, result);
 
@@ -32,7 +32,7 @@ class Permutations {
   // [1,2,3] !=[1,3,2]
   private void permuteHelper(
     int[] nums,
-    Deque<Integer> list,
+    List<Integer> list,
     boolean[] used,
     List<List<Integer>> result
   ) {
@@ -48,7 +48,7 @@ class Permutations {
       list.add(nums[i]);
       used[i] = true;
       this.permuteHelper(nums, list, used, result);
-      list.removeLast();
+      list.remove(list.size() - 1);
       used[i] = false;
     }
   }
