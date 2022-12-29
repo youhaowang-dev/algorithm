@@ -42,7 +42,7 @@ class Permutations {
     }
 
     for (int i = 0; i < nums.length; i++) {
-      if (list.contains(nums[i])) {
+      if (used[i]) {
         continue;
       }
       list.add(nums[i]);
