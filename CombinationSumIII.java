@@ -29,6 +29,7 @@
 class CombinationSumIII {
 
   // time complexity O(9^k) as we evaluate part of all the subsets
+  // space O(k) for maintaining the state list and recursion tree depth can be max k
   public List<List<Integer>> combinationSum3(int targetSize, int target) {
     List<List<Integer>> result = new ArrayList<>();
     List<Integer> list = new ArrayList<>(); // nums state
