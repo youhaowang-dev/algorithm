@@ -13,6 +13,8 @@
 // Output: [["a"]]
 class PalindromePartitioning {
 
+  // time O(n2^n) for substring costs O(n) and every possible split can be picked or not
+  // space O(n) for max recursion depth can be n
   public List<List<String>> partition(String s) {
     List<List<String>> result = new ArrayList<>();
     if (s == null || s.length() == 0) {
