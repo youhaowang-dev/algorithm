@@ -24,7 +24,7 @@ class Subsets {
     List<List<Integer>> result = new ArrayList<>();
     // sort is optional for input has no dup, so no need to dedup
     // Arrays.sort(nums);
-    Deque<Integer> subset = new ArrayDeque<>(); // state in dfs
+    List<Integer> subset = new ArrayList<>(); // state in dfs
     this.subsetsHelper(nums, 0, subset, result);
 
     return result;
@@ -34,14 +34,14 @@ class Subsets {
   private void subsetsHelper(
     int[] nums,
     int startIndex, // this is needed for subset is unordered, so each number should only be picked once
-    Deque<Integer> subset,
+    List<Integer> subset,
     List<List<Integer>> result
   ) {
     result.add(new ArrayList<Integer>(subset));
     for (int i = startIndex; i < nums.length; i++) {
-      subset.addLast(nums[i]);
+      subset.add(nums[i]);
       this.subsetsHelper(nums, i + 1, subset, result);
-      subset.removeLast();
+      subset.remove(subset.size() - 1);
     }
   }
 }

@@ -20,6 +20,33 @@ class SubsetsII {
   // space O(n * 2^n) This is exactly the number of solutions for subsets multiplied by the number N of elements to keep for each subset.
   // For a given number, it could be present or absent (i.e. binary choice) in a subset solution.
   // As as result, for N numbers, we would have in total 2^N choices (solutions).
+  public List<List<Integer>> subsetsWithDup(int[] nums) {
+    List<List<Integer>> result = new ArrayList<>();
+    // sort is need for dedup
+    Arrays.sort(nums);
+
+    List<Integer> subset = new ArrayList<>();
+    this.subsetsHelper(nums, 0, subset, result);
+
+    return result;
+  }
+
+  private void subsetsHelper(
+    int[] nums,
+    int start,
+    List<Integer> subset,
+    List<List<Integer>> result
+  ) {
+    result.add(new ArrayList<Integer>(subset));
+    for (int i = start; i < nums.length; i++) {
+      if (i > start && nums[i] == nums[i - 1]) {
+        continue;
+      }
+      subset.add(nums[i]);
+      this.subsetsHelper(nums, i + 1, subset, result);
+      subset.remove(subset.size() - 1);
+    }
+  }
 
   // use set to dedup
   public List<List<Integer>> subsetsWithDup(int[] nums) {
@@ -30,7 +57,7 @@ class SubsetsII {
     // So avoid this we sort here first. Making the list {1,2,2}. So in the backtrack we will get {1,2} and {1,2}. But set will discard the second {1,2}.
     Arrays.sort(nums);
 
-    Deque<Integer> subset = new ArrayDeque<>();
+    List<Integer> subset = new ArrayList<>();
     Set<List<Integer>> resultSet = new HashSet<>();
     this.subsetsHelper(nums, 0, subset, resultSet);
 
@@ -40,44 +67,15 @@ class SubsetsII {
   private void subsetsHelper(
     int[] nums,
     int startIndex, // this is needed for subset is unordered, so each number should only be picked once
-    Deque<Integer> subset,
+    List<Integer> subset,
     Set<List<Integer>> resultSet
   ) {
     resultSet.add(new ArrayList<Integer>(subset));
 
     for (int i = startIndex; i < nums.length; i++) {
-      subset.addLast(nums[i]);
+      subset.add(nums[i]);
       this.subsetsHelper(nums, i + 1, subset, resultSet);
-      subset.removeLast();
-    }
-  }
-
-  // not using set to dedup
-  public List<List<Integer>> subsetsWithDup(int[] nums) {
-    List<List<Integer>> result = new ArrayList<>();
-    // sort is need for dedup
-    Arrays.sort(nums);
-
-    Deque<Integer> subset = new ArrayDeque<>();
-    this.subsetsHelper(nums, 0, subset, result);
-
-    return result;
-  }
-
-  private void subsetsHelper(
-    int[] nums,
-    int start,
-    Deque<Integer> subset,
-    List<List<Integer>> result
-  ) {
-    result.add(new ArrayList<Integer>(subset));
-    for (int i = start; i < nums.length; i++) {
-      if (i != start && nums[i] == nums[i - 1]) {
-        continue;
-      }
-      subset.addLast(nums[i]);
-      this.subsetsHelper(nums, i + 1, subset, result);
-      subset.removeLast();
+      subset.remove(subset.size() - 1);
     }
   }
 }
