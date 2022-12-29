@@ -16,6 +16,10 @@
 // Output: [[],[0]]
 class Subsets {
 
+  // time O(n * 2^n) generate all subsets and then copy them into output list
+  // space O(n * 2^n) This is exactly the number of solutions for subsets multiplied by the number N of elements to keep for each subset.
+  // For a given number, it could be present or absent (i.e. binary choice) in a subset solution.
+  // As as result, for N numbers, we would have in total 2^N choices (solutions).
   public List<List<Integer>> subsets(int[] nums) {
     List<List<Integer>> result = new ArrayList<>();
     // sort is optional for input has no dup, so no need to dedup
