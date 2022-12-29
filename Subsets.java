@@ -33,7 +33,7 @@ class Subsets {
   // dfs
   private void subsetsHelper(
     int[] nums,
-    int startIndex,
+    int startIndex, // this is needed for subset is unordered, so each number should only be picked once
     Deque<Integer> subset,
     List<List<Integer>> result
   ) {

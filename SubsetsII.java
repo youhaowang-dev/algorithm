@@ -39,13 +39,13 @@ class SubsetsII {
 
   private void subsetsHelper(
     int[] nums,
-    int start,
+    int startIndex, // this is needed for subset is unordered, so each number should only be picked once
     Deque<Integer> subset,
     Set<List<Integer>> resultSet
   ) {
     resultSet.add(new ArrayList<Integer>(subset));
 
-    for (int i = start; i < nums.length; i++) {
+    for (int i = startIndex; i < nums.length; i++) {
       subset.addLast(nums[i]);
       this.subsetsHelper(nums, i + 1, subset, resultSet);
       subset.removeLast();
