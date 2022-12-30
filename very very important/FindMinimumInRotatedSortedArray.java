@@ -1,7 +1,7 @@
-// tag: Array, Binary Search, Divide and Conquer
+// Array, Binary Search, Divide and Conquer
 // Amazon 7 Microsoft 3 Apple 3 Bloomberg 2 Facebook 2 Atlassian 2
-// source: https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
-// description: Suppose an array of length n sorted in ascending order is rotated between 1 and n times.
+// https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/
+// Suppose an array of length n sorted in ascrighting order is rotated between 1 and n times.
 //              For example, the array nums = [0,1,2,4,5,6,7] might become:
 //              [4,5,6,7,0,1,2] if it was rotated 4 times.
 //              [0,1,2,4,5,6,7] if it was rotated 7 times.
@@ -14,29 +14,33 @@
 //          Input: nums = [11,13,15,17], Output: 11
 final class FindMinimumInRotatedSortedArray {
 
-  // binary search by abandoning part of the array
+  // binary search by dropping the unwanted part(the part without the target)
+  // 4,5,6,1,2,3
+  // l   m     r => mid > right drop [l, m]
+  //   l   m  r  => mid < right drop [m+1, r]
   public int findMin(int[] nums) {
     if (nums.length == 1) {
       return nums[0];
     }
 
-    int start = 0; // partition start
-    int end = nums.length - 1; // partition end
-    while (start + 1 < end) {
-      int mid = start - (start - end) / 2;
+    int left = 0;
+    int right = nums.length - 1;
+    while (left + 1 < right) {
+      int mid = left - (left - right) / 2;
       int midNum = nums[mid];
-      int lastNum = nums[end];
-      if (midNum > lastNum) {
+      int rightNum = nums[right];
+      if (midNum > rightNum) {
         // target in right side
-        start = mid;
+        left = mid;
       }
-      if (midNum < lastNum) {
+      if (midNum < rightNum) {
         // target in left side
-        end = mid;
+        right = mid;
       }
+      // midNum == rightNum, let /2 do its work
     }
 
-    return Math.min(nums[start], nums[end]);
+    return Math.min(nums[left], nums[right]);
   }
 
   public static void main(String[] args) throws Exception {
