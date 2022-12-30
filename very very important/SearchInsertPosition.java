@@ -1,4 +1,4 @@
-// tag: Array, Binary Search
+// Array, Binary Search
 // Apple 9 Google 4 Amazon 4 Microsoft 4 Adobe 3 Yahoo 2
 // source: https://leetcode.com/problems/search-insert-position/description/
 // description: Given a sorted array of distinct integers and a target value,
@@ -16,49 +16,54 @@ final class SearchInsertPosition {
       return 0;
     }
 
-    int start = 0;
-    int end = nums.length - 1;
-    while (start + 1 < end) {
-      int mid = start - (start - end) / 2;
+    int left = 0;
+    int right = nums.length - 1;
+    while (left + 1 < right) {
+      int mid = left - (left - right) / 2;
       int midNum = nums[mid];
       if (midNum == target) {
         return mid;
       }
       if (midNum > target) {
-        end = mid;
+        right = mid;
       }
       if (midNum < target) {
-        start = mid;
+        left = mid;
       }
     }
 
-    if (start == end) {
-      if (nums[start] == target) {
-        return start;
+    // exit conditions: left == right or left + 1 == right
+    // [1] => left == right
+    // [1,2] => left == right
+    // [1,2,3] => 0,2 => 0,1 or 1,0 => left + 1 == right
+
+    if (left == right) {
+      if (nums[left] == target) {
+        return left;
       }
-      if (nums[start] > target) {
-        return start;
+      if (nums[left] > target) {
+        return left;
       }
-      if (nums[start] < target) {
-        return start + 1;
+      if (nums[left] < target) {
+        return left + 1;
       }
     }
 
-    if (start < end) { // or start + 1 == end
-      if (target < nums[start]) {
-        return start;
+    if (left < right) { // or left + 1 == right
+      if (target < nums[left]) {
+        return left;
       }
-      if (target == nums[start]) {
-        return start;
+      if (target == nums[left]) {
+        return left;
       }
-      if (target > nums[start] && target < nums[end]) {
-        return end;
+      if (target > nums[left] && target < nums[right]) {
+        return right;
       }
-      if (target == nums[end]) {
-        return end;
+      if (target == nums[right]) {
+        return right;
       }
-      if (target > nums[end]) {
-        return end + 1;
+      if (target > nums[right]) {
+        return right + 1;
       }
     }
 
