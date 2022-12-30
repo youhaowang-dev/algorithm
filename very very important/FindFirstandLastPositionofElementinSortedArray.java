@@ -94,4 +94,70 @@ class FindFirstandLastPositionofElementinSortedArray {
 
     return -1;
   }
+
+  enum SearchType {
+    FIND_FIRST,
+    FIND_LAST,
+  }
+
+  public int[] searchRange(int[] nums, int target) {
+    if (nums.length == 0) {
+      return new int[] { -1, -1 };
+    }
+    int first = this.findPosition(nums, target, SearchType.FIND_FIRST);
+    int last = this.findPosition(nums, target, SearchType.FIND_LAST);
+    if (first == -1 || last == -1) {
+      return new int[] { -1, -1 };
+    }
+    return new int[] { first, last };
+  }
+
+  private int findPosition(int[] nums, int target, SearchType searchType) {
+    if (nums == null || nums.length == 0) {
+      return -1;
+    }
+
+    int left = 0;
+    int right = nums.length - 1;
+    while (left + 1 < right) {
+      int mid = left + (right - left) / 2;
+      int midVal = nums[mid];
+      if (midVal == target) {
+        // 1,1,1,1,1
+        // l   m   r
+        if (searchType == SearchType.FIND_FIRST) {
+          right = mid;
+        }
+        if (searchType == SearchType.FIND_LAST) {
+          left = mid;
+        }
+      }
+      if (midVal < target) {
+        left = mid;
+      }
+      if (midVal > target) {
+        right = mid;
+      }
+    }
+
+    // left==right or left+1==right
+    if (searchType == SearchType.FIND_FIRST) {
+      if (nums[left] == target) {
+        return left;
+      }
+      if (nums[right] == target) {
+        return right;
+      }
+    }
+    if (searchType == SearchType.FIND_LAST) {
+      if (nums[right] == target) {
+        return right;
+      }
+      if (nums[left] == target) {
+        return left;
+      }
+    }
+
+    return -1;
+  }
 }
