@@ -1,6 +1,7 @@
-// tag: Array, Binary Search, Divide and Conquer, Matrix
-// Microsoft 6 Amazon 6 Adobe 5 Bloomberg 3 Apple 2 Zillow 2
-// description: Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties:
+// Array, Binary Search, Divide and Conquer, Matrix
+// Amazon 6 Microsoft 5 Bloomberg 3 Adobe 3 Zillow 2 Apple 3 Oracle 3 Google 2 PayTM 2 Facebook 7 ByteDance 7 Goldman Sachs 3 Paypal 2 Salesforce 2 Uber 2 Nvidia 2
+// https://leetcode.com/problems/search-a-2d-matrix-ii/
+// Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties:
 //              Integers in each row are sorted in ascending from left to right.
 //              Integers in each column are sorted in ascending from top to bottom.
 // Input: matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5, Output: true
@@ -9,8 +10,11 @@ import java.util.*;
 
 final class SearchA2DMatrixII {
 
+  // Because the rows and columns of the matrix are sorted (from left-to-right and top-to-bottom, respectively),
+  // we can prune O(m) or O(n) elements when looking at any particular value.
+
   // pick top-right or the bottom-left corner as the "middle" values
-  // move rowIndex and columnIndex based on comparision
+  // move rowIndex and colIndex based on comparision
   // O(rowCount + columnCount)
   // https://leetcode.com/problems/search-a-2d-matrix-ii/solutions/127690/search-a-2d-matrix-ii/
   // This would work equally well with a pointer initialized to the top-right.
@@ -22,15 +26,15 @@ final class SearchA2DMatrixII {
 
     // start position at bottom left corner, can only go up or go right
     int rowIndex = matrix.length - 1; // move up to become smaller
-    int columnIndex = 0; // move right to become larger
+    int colIndex = 0; // move right to become larger
     // >= <= because we still need to search in the first row or the last column
-    while (rowIndex >= 0 && columnIndex <= matrix[0].length - 1) {
-      int value = matrix[rowIndex][columnIndex];
-      if (value > target) {
+    while (rowIndex >= 0 && colIndex <= matrix[0].length - 1) {
+      int value = matrix[rowIndex][colIndex];
+      if (value > target) { // all values of the row right side are greater than target
         rowIndex--;
       }
-      if (value < target) {
-        columnIndex++;
+      if (value < target) { // check the values on the right side of the row
+        colIndex++;
       }
       if (value == target) {
         return true;

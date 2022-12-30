@@ -1,7 +1,7 @@
-// tag: Array, Binary Search, Matrix
+// Array, Binary Search, Matrix
 // Amazon 17 Apple 8 Bloomberg 5 Microsoft 3 Google 3 Adobe 3 Visa 2 Walmart Global Tech 2
-// source: https://leetcode.com/problems/search-a-2d-matrix/
-// description: Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties:
+// https://leetcode.com/problems/search-a-2d-matrix/
+// Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties:
 //              Integers in each row are sorted from left to right.
 //              The first integer of each row is greater than the last integer of the previous row.
 // Input: matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3, Output: true
@@ -10,6 +10,10 @@ import java.util.*;
 
 final class SearchA2DMatrix {
 
+  // brute force linear search each row and its cols
+  // time O(rowCount * colCount)
+
+  // binary search time O(log(rowCount * colCount))
   // given the matrix properties
   // binary search can be used on the sorted array
   // need to take care of 1D => 2D conversion
@@ -17,37 +21,28 @@ final class SearchA2DMatrix {
     if (matrix.length == 0 || matrix[0].length == 0) {
       return false;
     }
-    int start = 0;
-    int end = matrix.length * matrix[0].length - 1;
-    while (start + 1 < end) {
-      int mid = start - (start - end) / 2;
+    int totalLength = matrix.length * matrix[0].length;
+    int left = 0;
+    int right = totalLength - 1;
+    while (left + 1 < right) {
+      int mid = left - (left - right) / 2;
       int midVal = this.getValue(matrix, mid);
       if (midVal == target) {
         return true;
       }
       if (midVal < target) {
-        start = mid;
+        left = mid;
       }
       if (midVal > target) {
-        end = mid;
+        right = mid;
       }
-      // System.out.println(
-      //   Arrays.toString(
-      //     new Object[] {
-      //       "target: " + target,
-      //       "mid: " + mid,
-      //       "midVal: " + midVal,
-      //       "start: " + start,
-      //       "end: " + end,
-      //     }
-      //   )
-      // );
     }
 
-    if (this.getValue(matrix, start) == target) {
+    // left == right or left+1 == right
+    if (this.getValue(matrix, left) == target) {
       return true;
     }
-    if (this.getValue(matrix, end) == target) {
+    if (this.getValue(matrix, right) == target) {
       return true;
     }
 
@@ -56,8 +51,8 @@ final class SearchA2DMatrix {
 
   // get matrix value by using 1D index
   // given [[1,2,3],[4,5,6],[7,8,9]]
-  // index = 3 => rowIndex = 1, columnIndex = 0 => rowIndex = index / columnCount = 3/3 = 1, columnIndex = index % columnCount = 3%3=0
-  // index = 5 => expect value = 6, expect rowIndex = 1 = 5 / 3, columnIndex = 2 = 5 % 3
+  // index = 3 => rowIndex = 1, colIndex = 0 => rowIndex = index / colCount = 3/3 = 1, colIndex = index % colCount = 3%3=0
+  // index = 5 => expect value = 6, expect rowIndex = 1 = 5 / 3, colIndex = 2 = 5 % 3
   private int getValue(int[][] matrix, int index) {
     if (
       matrix.length == 0 ||
@@ -68,11 +63,11 @@ final class SearchA2DMatrix {
       return Integer.MAX_VALUE;
     }
 
-    int columnCount = matrix[0].length;
-    int rowIndex = index / columnCount;
-    int columnIndex = index % columnCount;
+    int colCount = matrix[0].length;
+    int rowIndex = index / colCount;
+    int colIndex = index % colCount;
 
-    return matrix[rowIndex][columnIndex];
+    return matrix[rowIndex][colIndex];
   }
 
   public static void main(String[] args) throws Exception {
