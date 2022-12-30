@@ -34,6 +34,7 @@ class WordLadder {
     Queue<String> queue = new LinkedList<>();
     queue.offer(beginWord);
 
+    // track strings that are already added inside our queue
     Set<String> visited = new HashSet<>();
     visited.add(beginWord);
 
