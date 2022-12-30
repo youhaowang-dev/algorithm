@@ -60,10 +60,10 @@ final class SearchInsertPosition {
     // [start,left][right, end]
     if (left + 1 == right) {
       // check left first as we want smaller position if possible; left is smaller
-      if (target < leftNum) {
+      if (leftNum > target) {
         return left;
       }
-      if (target > leftNum && target < rightNum) {
+      if (leftNum < target && target < rightNum) {
         return right;
       }
       if (target > rightNum) {
