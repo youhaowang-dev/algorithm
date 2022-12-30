@@ -1,6 +1,6 @@
-// tag: Array, Binary Search
-// LinkedIn 5 Facebook 3 Adobe 3 Apple 2 TikTok 2 Amazon 3
-// source: https://leetcode.com/problems/search-in-rotated-sorted-array-ii/description/
+// Array, Binary Search
+// Amazon 3 LinkedIn 5 Facebook 3 Adobe 3 Apple 2 Microsoft 3 Google 2 TikTok 2
+// https://leetcode.com/problems/search-in-rotated-sorted-array-ii/description/
 
 // This problem is similar to Search in Rotated Sorted Array, but nums may contain duplicates. Would this affect the runtime complexity? How and why?
 
