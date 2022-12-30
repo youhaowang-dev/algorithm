@@ -16,7 +16,7 @@ final class FindMinimumInRotatedSortedArray {
 
   // binary search by dropping the unwanted part(the part without the target)
   // 4,5,6,1,2,3
-  // l   m     r => mid > right drop [l, m]
+  // l   m     r => mid > right drop [l, m-1]
   //   l   m  r  => mid < right drop [m+1, r]
   public int findMin(int[] nums) {
     if (nums.length == 1) {
