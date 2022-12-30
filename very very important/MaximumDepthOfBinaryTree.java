@@ -23,6 +23,7 @@
  */
 class MaximumDepthOfBinaryTree {
 
+  // depth = 1 + max(left subtree depth, right subtree depth) recursively
   public int maxDepth(TreeNode root) {
     // exit
     if (root == null) {
