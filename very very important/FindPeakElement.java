@@ -1,6 +1,6 @@
-// tag: Array, Binary Search
-// Facebook 17 Google 5 Uber 5 Amazon 4 Bloomberg 2 Apple 2 Microsoft 2 Adobe 2
-// source: https://leetcode.com/problems/find-peak-element/
+// Array, Binary Search
+// Facebook 17 Google 5 Uber 5 Amazon 4 Bloomberg 2 Apple 2 Microsoft 2 Adobe 2 Roblox 4 Snapchat 4 HRT 3 Bloomberg 2 TikTok 2 Walmart Global Tech 3 VMware 3 Paypal 3 Yahoo 2 IXL 2 Goldman Sachs 2
+// https://leetcode.com/problems/find-peak-element/
 // A peak element is an element that is strictly greater than its neighbors.
 
 // Given a 0-indexed integer array nums, find a peak element, and return its index.
@@ -24,28 +24,31 @@ import java.util.*;
 
 final class FindPeakElement {
 
-  // https://youtu.be/HtSuA80QTyo?t=1645
-  // based on the assumption, peak always exists, so we just need to binary search by abandoning the increasing side or decreasing side
-  // if mid value > mid+1 value, peak is at the left, move the end to mid
-  // else peak is at the right side, move the start to end
+  // based on the assumption, peak always exists, so we just need to binary search by dropping the increasing side or decreasing side
+  // if mid value > mid+1 value, peak is at the left, move the right to mid
+  // else peak is at the right side, move the left to right
   public int findPeakElement(int[] nums) {
     // TODO: validation
-    int start = 0;
-    int end = nums.length - 1;
-    while (start + 1 < end) {
-      int mid = start - (start - end) / 2;
-      if (nums[mid] > nums[mid + 1]) {
-        // mid is at a decreasing slope, so peak is on the left side
-        end = mid;
-      } else {
-        // peak always exist, so check the other side
-        start = mid;
+    int left = 0;
+    int right = nums.length - 1;
+    while (left + 1 < right) {
+      int mid = left - (left - right) / 2;
+      int midVal = nums[mid];
+      int nextMidVal = nums[mid + 1];
+      if (midVal > nextMidVal) {
+        // current range is decreasing, so peak is on the left side, drop current range
+        right = mid; // drop [mid+1, right]
       }
+      if (midVal < nextMidVal) {
+        // current range is increasing, so peak is on the right side, drop current range
+        left = mid;
+      }
+      // midVal == nextMidVal, let /2 do its work, nums[-1] = nums[n] = -∞, so anyone of them will work for case like [1,1,1,1,1]
     }
-    if (nums[start] < nums[end]) {
-      return end;
+    if (nums[left] < nums[right]) {
+      return right;
     }
-    return start;
+    return left;
   }
 
   public static void main(String[] args) throws Exception {
