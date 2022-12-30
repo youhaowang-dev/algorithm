@@ -1,7 +1,7 @@
-// tag: Array, Binary Search, Divide and Conquer
+// Array, Binary Search, Divide and Conquer
 // Amazon 21 Bloomberg 10 Microsoft 7 Apple 7 Adobe 5 Media.net 5 Facebook 4 LinkedIn 4 Uber 3 Yahoo 2 Google 2 TikTok 2
-// source: https://leetcode.com/problems/search-in-rotated-sorted-array/
-// description: There is an integer array nums sorted in ascending order (with distinct values).
+// https://leetcode.com/problems/search-in-rotated-sorted-array/
+//              There is an integer array nums sorted in ascrighting order (with distinct values).
 //              Prior to being passed to your function, nums is possibly rotated at an unknown pivot
 //              index k (1 <= k < nums.length) such that the resulting array is
 //              [nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]] (0-indexed).
@@ -22,78 +22,70 @@
 
 final class SearchInRotatedSortedArray {
 
-  // 1. find the min index by binary search
-  // 2. find the target by binary search
-  public int searchTwoPasses(int[] nums, int target) {
+  // 1. binary search the min index
+  // 2. binary search the target in the sorted part
+  public int search(int[] nums, int target) {
     if (nums.length == 0) {
       return -1;
     }
 
     int minIndex = this.findMinIndex(nums);
-    int lastVal = nums[nums.length - 1];
-    int start;
-    int end;
-    if (target == lastVal) {
+    // if min is -1, that means the array is not rotated, the following code still works
+    int rightVal = nums[nums.length - 1];
+    if (target == rightVal) {
       return nums.length - 1;
     }
 
-    if (target < lastVal) {
-      start = minIndex;
-      end = nums.length - 1;
-    } else if (target > lastVal) {
-      start = 0;
-      end = minIndex - 1;
-    } else {
-      // make jvm happy; wont use
-      start = Integer.MIN_VALUE;
-      end = Integer.MIN_VALUE;
-    }
-
-    while (start + 1 < end) {
-      int mid = start - (start - end) / 2;
+    boolean targetInLeftSide = target > rightVal;
+    int left = targetInLeftSide ? 0 : minIndex;
+    int right = targetInLeftSide ? minIndex - 1 : nums.length - 1;
+    while (left + 1 < right) {
+      int mid = left - (left - right) / 2;
       int midVal = nums[mid];
       if (midVal == target) {
         return mid;
       }
       if (midVal < target) {
-        start = mid;
+        left = mid;
       }
       if (midVal > target) {
-        end = mid;
+        right = mid;
       }
     }
 
-    if (start >= 0 && start <= nums.length - 1 && nums[start] == target) {
-      return start;
+    // if not found, index could go out of bound
+    if (left >= 0 && left <= nums.length - 1 && nums[left] == target) {
+      return left;
     }
-    if (end >= 0 && end <= nums.length - 1 && nums[end] == target) {
-      return end;
+    if (right >= 0 && right <= nums.length - 1 && nums[right] == target) {
+      return right;
     }
 
     return -1;
   }
 
   private int findMinIndex(int[] nums) {
-    int start = 0;
-    int end = nums.length - 1;
-    while (start + 1 < end) {
-      int mid = start - (start - end) / 2;
+    int left = 0;
+    int right = nums.length - 1;
+    while (left + 1 < right) {
+      int mid = left - (left - right) / 2;
       int midVal = nums[mid];
-      int lastVal = nums[end];
-      if (midVal < lastVal) {
-        end = mid;
+      int rightVal = nums[right];
+      if (midVal < rightVal) {
+        right = mid;
       }
-      if (midVal > lastVal) {
-        start = mid;
+      if (midVal > rightVal) {
+        left = mid;
       }
+      // == let /2 happen
     }
 
-    if (nums[start] < nums[end]) {
-      return start;
+    if (nums[left] < nums[right]) {
+      return left;
     }
 
-    if (nums[start] > nums[end]) {
-      return end;
+    if (nums[left] > nums[right]) {
+      return right;
     }
 
     return -1;
@@ -102,95 +94,58 @@ final class SearchInRotatedSortedArray {
   // https://leetcode.com/problems/search-in-rotated-sorted-array/solutions/216624/search-in-rotated-sorted-array/comments/1350031
   // If a sorted array is shifted, the mid splits the arrays in two sides and one side must be sorted.
   //    The other side may or may not be sorted.
-  // for sorted side, if (startVal < midVal < endVal) continue binary search in this side, otherwise abandon this side
+  // for sorted side, if (leftVal < midVal < rightVal) continue binary search in this side, otherwise abandon this side
   // the unsorted side needs no handling because we either continue binary search in the sorted side or abandon the sorted side
-  public int searchOnePass(int[] nums, int target) {
+  public int search(int[] nums, int target) {
     if (nums.length == 0) {
       return -1;
     }
-    int start = 0;
-    int end = nums.length - 1;
-    while (start + 1 < end) {
-      int mid = start - (start - end) / 2;
+    int left = 0;
+    int right = nums.length - 1;
+    while (left + 1 < right) {
+      int mid = left - (left - right) / 2;
       int midVal = nums[mid];
-      int firstVal = nums[start];
-      int lastVal = nums[end];
+      int leftVal = nums[left];
+      int rightVal = nums[right];
       if (midVal == target) {
         return mid;
       }
       // we don't use <= or >=, so handle the == cases here
-      if (firstVal == target) {
-        return start;
+      if (leftVal == target) {
+        return left;
       }
-      if (lastVal == target) {
-        return end;
+      if (rightVal == target) {
+        return right;
       }
-      if (firstVal < midVal) { // left side is sorted
-        if (firstVal < target && target < midVal) {
-          // target in left side
-          end = mid;
+      boolean leftSideIsSorted = leftVal < midVal;
+      boolean targetInLeftSide = leftVal < target && target < midVal;
+      // do not use && as it is a different condition
+      if (leftSideIsSorted) {
+        if (targetInLeftSide) {
+          right = mid;
         } else {
-          start = mid;
+          left = mid;
         }
       }
-      if (midVal < lastVal) { // right side is sorted
-        if (midVal < target && target < lastVal) {
-          // target in right side
-          start = mid;
+      boolean rightSideIsSorted = midVal < rightVal;
+      boolean targetInRightSide = midVal < target && target < rightVal;
+      if (rightSideIsSorted) {
+        if (targetInRightSide) {
+          left = mid;
         } else {
-          end = mid;
+          right = mid;
         }
       }
     }
 
-    if (nums[start] == target) {
-      return start;
+    if (nums[left] == target) {
+      return left;
     }
 
-    if (nums[end] == target) {
-      return end;
+    if (nums[right] == target) {
+      return right;
     }
 
     return -1;
-  }
-
-  public static void main(String[] args) throws Exception {
-    SearchInRotatedSortedArray SearchInRotatedSortedArray = new SearchInRotatedSortedArray();
-    int target = 2;
-    int[][] testCases = new int[][] {
-      { 0, 1, target, 4, 5, 6, 7 },
-      { 4, 5, 6, 7, 0, 1, target },
-      { 7, 0, 1, 4, 5, 6 },
-      { 0, 1 },
-      { 1 },
-      { target },
-    };
-    // NOTE: the method must be public to make .getMethod work
-    String[] testMethodNames = new String[] {
-      "searchTwoPasses",
-      "searchOnePass",
-    };
-
-    for (int[] nums : testCases) {
-      for (String methodName : testMethodNames) {
-        java.lang.reflect.Method method = SearchInRotatedSortedArray
-          .getClass()
-          .getMethod(methodName, int[].class, int.class);
-        int insertIndex = (int) method.invoke(
-          SearchInRotatedSortedArray,
-          nums,
-          target
-        );
-
-        System.out.println(
-          String.format(
-            "Method Name: %s\nInput: %s, Output: %s",
-            methodName,
-            java.util.Arrays.toString(nums) + " Target: " + target,
-            insertIndex
-          )
-        );
-      }
-    }
   }
 }
