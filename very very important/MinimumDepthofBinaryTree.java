@@ -24,10 +24,38 @@ class MinimumDepthofBinaryTree {
     return minDepth + 1;
   }
 
+  public int minDepth(TreeNode root) {
+    int depth = 0;
+    if (root == null) {
+      return depth;
+    }
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    while (!queue.isEmpty()) {
+      depth++;
+      int levelNodeCount = queue.size();
+      for (int i = 0; i < levelNodeCount; i++) {
+        TreeNode node = queue.poll();
+        if (node.left == null && node.right == null) {
+          // found min
+          return depth;
+        }
+        if (node.left != null) {
+          queue.offer(node.left);
+        }
+        if (node.right != null) {
+          queue.offer(node.right);
+        }
+      }
+    }
+
+    return depth;
+  }
+
   // iterative dfs
   // Pair is a KV Java tuple, getKey() getValue()
   public int minDepth(TreeNode root) {
-    LinkedList<Pair<TreeNode, Integer>> stack = new LinkedList<>();
+    Stack<Pair<TreeNode, Integer>> stack = new Stack<>();
     if (root == null) {
       return 0;
     } else {
@@ -39,6 +67,7 @@ class MinimumDepthofBinaryTree {
       Pair<TreeNode, Integer> current = stack.pop();
       TreeNode node = current.getKey();
       int currentDepth = current.getValue();
+      // min depth requires this check for unbalanced tree
       if (node.left == null && node.right == null) {
         minDepth = Math.min(minDepth, currentDepth);
       }
