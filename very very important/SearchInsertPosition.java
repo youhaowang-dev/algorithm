@@ -11,7 +11,7 @@
 final class SearchInsertPosition {
 
   // find the biggest number smaller than target, return its position+1
-  public int searchInsertPosition(int[] nums, int target) {
+  public int searchInsert(int[] nums, int target) {
     if (nums.length == 0) {
       return 0;
     }
@@ -37,37 +37,41 @@ final class SearchInsertPosition {
     // [1,2] => left == right
     // [1,2,3] => 0,2 => 0,1 or 1,0 => left + 1 == right
 
+    // handle equals first
+    int leftNum = nums[left];
+    int rightNum = nums[right];
+    if (leftNum == target) {
+      return left;
+    }
+    if (rightNum == target) {
+      return right;
+    }
+
+    // [start,left][left, end]
     if (left == right) {
-      if (nums[left] == target) {
+      if (leftNum > target) {
         return left;
       }
-      if (nums[left] > target) {
-        return left;
-      }
-      if (nums[left] < target) {
+      if (leftNum < target) {
         return left + 1;
       }
     }
 
-    if (left < right) { // or left + 1 == right
-      if (target < nums[left]) {
+    // [start,left][right, end]
+    if (left + 1 == right) {
+      // check left first as we want smaller position if possible; left is smaller
+      if (target < leftNum) {
         return left;
       }
-      if (target == nums[left]) {
-        return left;
-      }
-      if (target > nums[left] && target < nums[right]) {
+      if (target > leftNum && target < rightNum) {
         return right;
       }
-      if (target == nums[right]) {
-        return right;
-      }
-      if (target > nums[right]) {
+      if (target > rightNum) {
         return right + 1;
       }
     }
 
-    return Integer.MAX_VALUE; // should not reach this line; TODO: throw
+    return -1; // should not reach this line; throw?
   }
 
   public static void main(String[] args) throws Exception {
@@ -75,7 +79,7 @@ final class SearchInsertPosition {
     int[] nums = new int[] { 1, 3, 5, 6 };
     int[] testCases = new int[] { 2, 5, 7 };
     // NOTE: the method must be public to make .getMethod work
-    String[] testMethodNames = new String[] { "searchInsertPosition" };
+    String[] testMethodNames = new String[] { "searchInsert" };
 
     for (int target : testCases) {
       for (String methodName : testMethodNames) {
