@@ -37,16 +37,17 @@ class FindFirstandLastPositionofElementinSortedArray {
 
     int left = 0;
     int right = nums.length - 1;
-
+    // left+1<right guarantees no infinite loop
     while (left + 1 < right) {
-      int mid = left + (right - left) / 2;
-      if (nums[mid] == target) {
+      int mid = left + (right - left) / 2; // no overflow
+      int midVal = nums[mid];
+      if (midVal == target) {
         right = mid; // drop the right part for searching the first position
       }
-      if (nums[mid] > target) {
+      if (midVal > target) {
         right = mid;
       }
-      if (nums[mid] < target) {
+      if (midVal < target) {
         left = mid;
       }
     }
@@ -71,13 +72,14 @@ class FindFirstandLastPositionofElementinSortedArray {
     int right = nums.length - 1;
     while (left + 1 < right) {
       int mid = left + (right - left) / 2;
-      if (nums[mid] == target) {
+      int midVal = nums[mid];
+      if (midVal == target) {
         left = mid; // drop the left part for searching the last position
       }
-      if (nums[mid] > target) {
+      if (midVal > target) {
         right = mid;
       }
-      if (nums[mid] < target) {
+      if (midVal < target) {
         left = mid;
       }
     }
