@@ -18,23 +18,25 @@
 class JumpGame {
 
   // dp
-  // function(index) = OR(function(next possible index))
+  // can jump to prev index and can jump to current index
+  // canJump[i] = OR(canJump[0...j-1] && j+jump >= i)
   // OR: next possible index can be 0,1,4,7, then the f[i] = (f[0] || f[1] || f[4] || f[7])
   public boolean canJump(int[] nums) {
-    boolean[] indexToCanJump = new boolean[nums.length];
-    indexToCanJump[0] = true;
+    boolean[] canJump = new boolean[nums.length];
+    canJump[0] = true;
     for (int index = 1; index < nums.length; index++) {
       for (int prevIndex = 0; prevIndex < index; prevIndex++) {
-        boolean prevCanJumpToCurrent = (prevIndex + nums[prevIndex] >= index);
-        boolean canJumpToPrev = indexToCanJump[prevIndex];
-        if (canJumpToPrev && prevCanJumpToCurrent) {
-          indexToCanJump[index] = true;
+        int prevMaxJumpIndex = prevIndex + nums[prevIndex];
+        boolean prevCanJumpToCurrent = prevMaxJumpIndex >= index;
+        boolean somewhereCanJumpToPrev = canJump[prevIndex];
+        if (somewhereCanJumpToPrev && prevCanJumpToCurrent) {
+          canJump[index] = true;
           // break;
         }
       }
     }
 
-    return indexToCanJump[nums.length - 1];
+    return canJump[nums.length - 1];
   }
 
   // brute force

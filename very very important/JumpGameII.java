@@ -22,7 +22,7 @@
 class JumpGameII {
 
   // dp
-  // minJump(index) = MIN(1 + prev index jumps) if prev index can jump to index
+  // minJumps[i] = min(minJumps[i], 1 + minJumps[0...j] if j can jump to i)
   public int jump(int[] nums) {
     int[] minJumps = new int[nums.length];
     minJumps[0] = 0;
