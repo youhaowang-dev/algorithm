@@ -24,7 +24,7 @@
 class ClimbingStairs {
 
   // dp
-  // function(i,n)=function(i+1,n)+climbStairs(i+2,n)
+  // wayCount[i]=wayCount[i-1]+wayCount[i-2]
   public int climbStairs(int n) {
     if (n == 1) {
       return 1;
@@ -32,6 +32,7 @@ class ClimbingStairs {
     if (n == 2) {
       return 2;
     }
+
     int[] wayCount = new int[n];
     wayCount[0] = 1;
     wayCount[1] = 2;
