@@ -1,6 +1,9 @@
 // Stack, Tree, Depth-First Search, Binary Tree
 // Google 3 Adobe 2 Apple 2 Amazon 4 Bloomberg 3 Microsoft 2
 // https://leetcode.com/problems/binary-tree-preorder-traversal/
+
+// Given the root of a binary tree, return the preorder traversal of its nodes' values.
+
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
@@ -55,6 +58,7 @@ class BinaryTreePreorderTraversal {
     return result;
   }
 
+  // add lefts to results until we cannot, in the mean time push rights to stack
   public List<Integer> preorderTraversalIterative(TreeNode root) {
     List<Integer> result = new ArrayList<>();
     if (root == null) {
