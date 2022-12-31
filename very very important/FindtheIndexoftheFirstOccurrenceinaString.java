@@ -59,4 +59,60 @@ class FindtheIndexoftheFirstOccurrenceinaString {
 
     return -1;
   }
+
+  // rolling hash O(m + n)
+  private static final Integer BASE = 100007;
+
+  public int strStr(String source, String target) {
+    if (source == null || target == null) {
+      return -1;
+    }
+
+    if (
+      target.length() <= source.length() &&
+      source.substring(0, target.length()).equals(target)
+    ) {
+      return 0;
+    }
+
+    int m = target.length();
+
+    if (m == 0) {
+      return 0;
+    }
+
+    int power = 1;
+
+    for (int i = 0; i < m; i++) {
+      power = (power * 31) % BASE;
+    }
+
+    int targetCode = 0;
+
+    for (int i = 0; i < m; i++) {
+      targetCode = (targetCode * 31 + target.charAt(i)) % BASE;
+    }
+
+    int sourceCode = 0;
+
+    for (int i = 0; i < source.length(); i++) {
+      sourceCode = (sourceCode * 31 + source.charAt(i)) % BASE;
+
+      if (i <= m - 1) {
+        continue;
+      }
+
+      sourceCode = (sourceCode - power * source.charAt(i - m)) % BASE;
+
+      if (sourceCode < 0) {
+        sourceCode += BASE;
+      }
+
+      if (sourceCode == targetCode) {
+        return i - m + 1;
+      }
+    }
+
+    return -1;
+  }
 }
