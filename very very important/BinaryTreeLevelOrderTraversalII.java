@@ -22,7 +22,6 @@
 class BinaryTreeLevelOrderTraversalII {
 
   public List<List<Integer>> levelOrderBottom(TreeNode root) {
-    // note: LinkedList<List is needed for addFirst
     LinkedList<List<Integer>> result = new LinkedList<>();
     if (root == null) {
       return result;
@@ -31,10 +30,9 @@ class BinaryTreeLevelOrderTraversalII {
     Queue<TreeNode> queue = new LinkedList<>();
     queue.offer(root);
     while (!queue.isEmpty()) {
+      List<TreeNode> currentLevelNodes = this.getCurrentLevelNodes(queue);
       List<Integer> currentLevelResult = new ArrayList<>();
-      int currentLevelCount = queue.size();
-      for (int i = 0; i < currentLevelCount; i++) {
-        TreeNode node = queue.poll();
+      for (TreeNode node : currentLevelNodes) {
         currentLevelResult.add(node.val);
         if (node.left != null) {
           queue.offer(node.left);
@@ -47,5 +45,14 @@ class BinaryTreeLevelOrderTraversalII {
     }
 
     return result;
+  }
+
+  private List<TreeNode> getCurrentLevelNodes(Queue<TreeNode> queue) {
+    List<TreeNode> nodes = new ArrayList<>();
+    while (!queue.isEmpty()) {
+      nodes.add(queue.poll());
+    }
+
+    return nodes;
   }
 }
