@@ -25,25 +25,28 @@ class PathSumIII {
 
   private int count = 0;
 
+  // dfs with prefix sum
+  // time O(n) space O(n)
   // There is just one thing that is particular for the binary tree. There are two ways to go forward -
   // to the left and to the right. To keep parent->child direction, we shouldn't blend prefix sums from the left and right subtrees in one hashmap.
   public int pathSum(TreeNode root, int target) {
-    HashMap<Long, Integer> prefixSumToCount = new HashMap();
-    this.preorder(root, target, 0, prefixSumToCount);
+    Map<Long, Integer> prefixSumToCount = new HashMap();
+    this.traverse(root, target, 0, prefixSumToCount);
     return this.count;
   }
 
-  public void preorder(
+  // preorder
+  public void traverse(
     TreeNode node,
     int target,
-    long currentSum,
-    HashMap<Long, Integer> prefixSumToCount
+    long sum,
+    Map<Long, Integer> prefixSumToCount
   ) {
     if (node == null) {
       return;
     }
 
-    currentSum += node.val;
+    long currentSum = sum + node.val;
 
     if (currentSum == target) {
       this.count++;
@@ -59,13 +62,15 @@ class PathSumIII {
       prefixSumToCount.getOrDefault(currentSum, 0) + 1
     );
 
-    this.preorder(node.left, target, currentSum, prefixSumToCount);
-    this.preorder(node.right, target, currentSum, prefixSumToCount);
+    this.traverse(node.left, target, currentSum, prefixSumToCount);
+    this.traverse(node.right, target, currentSum, prefixSumToCount);
 
     // reset the prefix sum count to the previous count as the current subtree is done
     prefixSumToCount.put(currentSum, prefixSumToCount.get(currentSum) - 1);
   }
 
+  // dfs
+  // time O(n^2) every node will need to do a scan for rest of the children
   public int pathSum(TreeNode root, int targetSum) {
     if (root == null) {
       return 0;
@@ -88,5 +93,26 @@ class PathSumIII {
       this.helper(node.left, targetSum - node.val) +
       this.helper(node.right, targetSum - node.val)
     );
+  }
+
+  public int pathSum(TreeNode root, int sum) {
+    if (root == null) return 0;
+    return (
+      pathSumFrom(root, sum) +
+      pathSum(root.left, sum) +
+      pathSum(root.right, sum)
+    );
+  }
+
+  private int pathSumFrom(TreeNode node, int sum) {
+    if (node == null) {
+      return 0;
+    }
+    int currentSumCount = node.val == sum ? 1 : 0;
+    int remainSum = sum - node.val;
+    int leftSumCount = this.pathSumFrom(node.left, remainSum);
+    int rightSumCount = this.pathSumFrom(node.right, remainSum);
+
+    return currentSumCount + leftSumCount + rightSumCount;
   }
 }
