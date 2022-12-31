@@ -35,7 +35,38 @@ class LowestCommonAncestorOfABinaryTree {
       }
       q = childToParent.get(q);
     }
+
     return null;
+  }
+
+  private void buildChildToParent(
+    TreeNode root,
+    Map<TreeNode, TreeNode> childToParent
+  ) {
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    while (!queue.isEmpty()) {
+      List<TreeNode> nodes = this.getCurrentLevelNode(queue);
+      for (TreeNode node : nodes) {
+        if (node.left != null) {
+          queue.offer(node.left);
+          childToParent.put(node.left, node);
+        }
+        if (node.right != null) {
+          queue.offer(node.right);
+          childToParent.put(node.right, node);
+        }
+      }
+    }
+  }
+
+  private List<TreeNode> getCurrentLevelNode(Queue<TreeNode> queue) {
+    List<TreeNode> nodes = new ArrayList<>();
+    while (!queue.isEmpty()) {
+      nodes.add(queue.poll());
+    }
+
+    return nodes;
   }
 
   private void buildChildToParent(
@@ -57,6 +88,7 @@ class LowestCommonAncestorOfABinaryTree {
   // if found one, return the one
   // if found none, return null
   public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    // exut
     if (root == null) {
       return null;
     }
@@ -68,7 +100,7 @@ class LowestCommonAncestorOfABinaryTree {
     TreeNode ancestor1 = this.lowestCommonAncestor(root.left, p, q);
     TreeNode ancestor2 = this.lowestCommonAncestor(root.right, p, q);
 
-    // conquer(merge subtree results)
+    // merge subtree results
     if (ancestor1 != null && ancestor2 != null) {
       return root;
     }
