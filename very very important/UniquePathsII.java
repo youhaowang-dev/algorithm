@@ -72,6 +72,7 @@ class UniquePathsII {
   }
 
   // brute force
+  // 2^(m+n) complexity
   public int uniquePathsWithObstacles(int[][] grid) {
     return this.getPathCount(grid, 0, 0);
   }
