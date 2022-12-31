@@ -38,6 +38,8 @@ class MaximumDepthOfBinaryTree {
     return subtreeMaxDepth + 1;
   }
 
+  // max depth: keep going until last level
+  // min depth: min is found when left==null && right==null
   public int maxDepth(TreeNode root) {
     int depth = 0;
     if (root == null) {
