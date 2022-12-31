@@ -37,4 +37,7 @@ public class BinaryTreeMaximumPathSumII {
 
     return root.val + Math.max(0, Math.max(leftSum, rightSum));
   }
+  // dfs: iterative traverse
+  // push: sum += node.val
+  // pop: sum -= node.val
 }
