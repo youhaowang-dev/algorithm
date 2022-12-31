@@ -27,6 +27,31 @@
 
 class ValidateBinarySearchTree {
 
+  // inorder traverse values should be increasing
+  public boolean isValidBST(TreeNode root) {
+    Stack<TreeNode> stack = new Stack<>();
+    this.pushLefts(root, stack);
+
+    TreeNode prev = null;
+    while (!stack.isEmpty()) {
+      TreeNode node = stack.pop();
+      if (prev != null && prev.val >= node.val) {
+        return false;
+      }
+      prev = node;
+      this.pushLefts(node.right, stack);
+    }
+
+    return true;
+  }
+
+  private void pushLefts(TreeNode node, Stack<TreeNode> stack) {
+    while (node != null) {
+      stack.push(node);
+      node = node.left;
+    }
+  }
+
   // Not only the right child should be larger than the node but all the elements in the right subtree.
   // so we need to compare more than two nodes.
   public boolean isValidBST(TreeNode root) {
