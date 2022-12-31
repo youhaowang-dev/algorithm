@@ -31,7 +31,7 @@ class Triangle {
     int[][] minPathSums = new int[rowCount][colCount];
     minPathSums[0][0] = triangle.get(0).get(0);
 
-    // init triangle leftmost[i][0] and rightmost[i][i] as they dont need Math.min
+    // init first and last of each row as they dont need to sum with others
     for (int i = 1; i < rowCount; i++) {
       int prevSumRow = i - 1;
       int prevLeftmostSumCol = 0;
