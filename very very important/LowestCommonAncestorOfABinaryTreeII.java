@@ -44,6 +44,36 @@ class LowestCommonAncestorOfABinaryTreeII {
     TreeNode root,
     Map<TreeNode, TreeNode> childToParent
   ) {
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    while (!queue.isEmpty()) {
+      List<TreeNode> nodes = this.getCurrentLevelNode(queue);
+      for (TreeNode node : nodes) {
+        if (node.left != null) {
+          queue.offer(node.left);
+          childToParent.put(node.left, node);
+        }
+        if (node.right != null) {
+          queue.offer(node.right);
+          childToParent.put(node.right, node);
+        }
+      }
+    }
+  }
+
+  private List<TreeNode> getCurrentLevelNode(Queue<TreeNode> queue) {
+    List<TreeNode> nodes = new ArrayList<>();
+    while (!queue.isEmpty()) {
+      nodes.add(queue.poll());
+    }
+
+    return nodes;
+  }
+
+  private void buildChildToParent(
+    TreeNode root,
+    Map<TreeNode, TreeNode> childToParent
+  ) {
     if (root.left != null) {
       childToParent.put(root.left, root);
       this.buildChildToParent(root.left, childToParent);
