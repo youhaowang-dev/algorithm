@@ -62,4 +62,33 @@ class ValidateBinarySearchTree {
 
     return list;
   }
+
+  public boolean isValidBST(TreeNode root) {
+    return this.isValidBSTHelper(root, null, null);
+  }
+
+  // BST value must fullfil root in (minNode, maxNode) recursively
+  // root.left should be in (minNode, root)
+  // root.right should be in (root, maxNode)
+  private boolean isValidBSTHelper(
+    TreeNode root,
+    TreeNode minNode,
+    TreeNode maxNode
+  ) {
+    if (root == null) {
+      // able to reach leaf means valid
+      return true;
+    }
+    if (minNode != null && root.val <= minNode.val) {
+      return false;
+    }
+    if (maxNode != null && root.val >= maxNode.val) {
+      return false;
+    }
+
+    boolean leftTreeIsValid = this.isValidBSTHelper(root.left, minNode, root);
+    boolean rightTreeIsValid = this.isValidBSTHelper(root.right, root, maxNode);
+
+    return leftTreeIsValid && rightTreeIsValid;
+  }
 }
