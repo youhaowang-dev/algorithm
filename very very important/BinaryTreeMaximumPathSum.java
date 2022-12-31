@@ -27,46 +27,116 @@
 
 class BinaryTreeMaximumPathSum {
 
-  private class PathVals {
+  private class PathSums {
 
     int rootToAny;
     int anyToAny;
 
-    public PathVals(int rootToAny, int anyToAny) {
+    public PathSums(int rootToAny, int anyToAny) {
       this.rootToAny = rootToAny;
       this.anyToAny = anyToAny;
     }
   }
 
-  // max(root to any) = max(left root to any, right root to any) + root.val
-  // max(any to any) = max(max subtree any to any, pass root any to any)
-  //      max subtree any to any = max(left subtree any to any, right subtree any to any)
-  //      pass root any to any = max(0, left subtree any to any) + max(0, right subtree any to any) + root.val
-  // val can be negative, so is the max left/right/total, so max(0, ...) is needed
+  // divide and conquer: time O(n)
+  // two types of paths: rootToAny and anyToAny
+  // max(rootToAny) = root.val + max(left rootToAny, right rootToAny)
+  // max(anyToAny) = max(left anyToAny, right anyToAny, current anyToAny)
+  //      current anyToAny passes the root = root.val + max(0, left anyToAny) + max(0, right anyToAny)
+  // rootToAny/anyToAny can be negative, so max(0, rootToAny/anyToAny) is needed because we don't have to take subtree paths
+  //
   public int maxPathSum(TreeNode root) {
     return this.getMaxPathSum(root).anyToAny;
   }
 
-  private PathVals getMaxPathSum(TreeNode root) {
+  private PathSums getMaxPathSum(TreeNode root) {
     // exit
     if (root == null) {
-      return new PathVals(Integer.MIN_VALUE, Integer.MIN_VALUE);
+      return new PathSums(Integer.MIN_VALUE, Integer.MIN_VALUE);
     }
 
     // divide
-    PathVals leftVals = this.getMaxPathSum(root.left);
-    PathVals rightVals = this.getMaxPathSum(root.right);
+    PathSums leftVals = this.getMaxPathSum(root.left);
+    PathSums rightVals = this.getMaxPathSum(root.right);
 
     // merge
-    int maxRootToAny =
-      Math.max(0, Math.max(leftVals.rootToAny, rightVals.rootToAny)) + root.val;
-    int maxSubtreeAnyToAny = Math.max(leftVals.anyToAny, rightVals.anyToAny);
-    int passRootAnyToAny =
-      Math.max(0, leftVals.rootToAny) +
-      Math.max(0, rightVals.rootToAny) +
-      root.val;
-    int maxAnyToAny = Math.max(maxSubtreeAnyToAny, passRootAnyToAny);
+    int maxSubtreeRootToAny = Math.max(
+      0,
+      Math.max(leftVals.rootToAny, rightVals.rootToAny)
+    );
+    int maxCurrentRootToAny = root.val + maxSubtreeRootToAny;
 
-    return new PathVals(maxRootToAny, maxAnyToAny);
+    int maxSubtreeAnyToAny = Math.max(leftVals.anyToAny, rightVals.anyToAny);
+    int currentRootAnyToAny =
+      root.val +
+      Math.max(0, leftVals.rootToAny) +
+      Math.max(0, rightVals.rootToAny);
+    int maxCurrentAnyToAny = Math.max(maxSubtreeAnyToAny, currentRootAnyToAny);
+
+    return new PathSums(maxCurrentRootToAny, maxCurrentAnyToAny);
+  }
+
+  // brute force
+  // time complexity: O(N*N*logN)
+  Map<TreeNode, TreeNode> map;
+
+  public int maxPathSum(TreeNode root) {
+    if (root == null) return 0;
+    map = new HashMap<>();
+    map.put(root, null);
+    traverse(root); // traverse all nodes and create a map of ancestors (similar to common ancestor problem)
+    List<TreeNode> list = new ArrayList<>();
+    for (TreeNode node : map.keySet()) {
+      // System.out.println(node.val);
+      list.add(node); // converting keys to a list for bruteforcing
+    }
+    int max = Integer.MIN_VALUE;
+    for (int i = 0; i < list.size(); i++) {
+      for (int j = i; j < list.size(); j++) { // j=i as in the path there could be only 1 node.
+        max = Math.max(max, findSum(list.get(i), list.get(j)));
+      }
+    }
+    return max;
+  }
+
+  /**
+	TC: Log(N) in worst-case.
+	Idea is to find the path from both src & dest to a common ancestor. 
+	The common ancestor can be src or dest too.
+	Or src can be same as dest.
+	**/
+  public int findSum(TreeNode src, TreeNode dest) {
+    Map<TreeNode, Integer> sumMap = new HashMap<>(); // keep track of sum at each ancestor/node , starting from the src.
+    int sum = 0;
+    Set<TreeNode> visited = new HashSet<>();
+    while (src != null) {
+      sum += src.val; // this computes path sum from src to the common ancestor.
+
+      sumMap.put(src, sum);
+      visited.add(src);
+      src = map.get(src);
+    }
+    sum = 0;
+
+    //Now We just need to compute sum from dest till  common_ancetor-1
+    while (dest != null && !visited.contains(dest)) {
+      sum += dest.val;
+      dest = map.get(dest);
+    }
+
+    return dest == null ? sum : sum + sumMap.get(dest);
+  }
+
+  public void traverse(TreeNode node) {
+    if (node != null) {
+      if (node.left != null) {
+        map.put(node.left, node);
+      }
+      traverse(node.left);
+      traverse(node.right);
+      if (node.right != null) {
+        map.put(node.right, node);
+      }
+    }
   }
 }
