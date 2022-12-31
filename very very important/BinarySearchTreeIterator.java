@@ -27,20 +27,18 @@
  */
 class BSTIterator {
 
-  private TreeNode current;
   private Stack<TreeNode> stack;
 
   public BSTIterator(TreeNode root) {
     this.current = root;
     this.stack = new Stack<TreeNode>();
-    this.pushLefts();
+    this.pushLefts(root);
   }
 
   public int next() {
     if (!this.stack.isEmpty()) {
       TreeNode node = this.stack.pop();
-      this.current = node.right;
-      this.pushLefts();
+      this.pushLefts(node.right);
 
       return node.val;
     }
@@ -48,20 +46,14 @@ class BSTIterator {
     return Integer.MIN_VALUE;
   }
 
-  private void pushLefts() {
-    while (this.current != null) {
-      this.stack.push(this.current);
-      this.current = this.current.left;
+  private void pushLefts(TreeNode node) {
+    while (node != null) {
+      this.stack.push(node);
+      node = node.left;
     }
   }
 
   public boolean hasNext() {
-    return !this.stack.isEmpty() || this.current != null;
+    return !this.stack.isEmpty();
   }
 }
-/**
- * Your BSTIterator object will be instantiated and called as such:
- * BSTIterator obj = new BSTIterator(root);
- * int param_1 = obj.next();
- * boolean param_2 = obj.hasNext();
- */
