@@ -28,8 +28,8 @@ class PathSumII {
   // as a result, dfs is better for this question
   public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
     List<List<Integer>> result = new ArrayList<>();
-    List<Integer> pathNodeValues = new ArrayList<>();
-    this.searchSum(root, targetSum, pathNodeValues, result);
+    List<Integer> list = new ArrayList<>(); // traverse state in dfs
+    this.searchSum(root, targetSum, list, result);
 
     return result;
   }
@@ -38,39 +38,27 @@ class PathSumII {
   private void searchSum(
     TreeNode root,
     int targetSum,
-    List<Integer> pathNodeValues,
+    List<Integer> list,
     List<List<Integer>> result
   ) {
     if (root == null) {
       return;
     }
 
-    pathNodeValues.add(root.val);
+    list.add(root.val);
 
     if (this.isLeaf(root) && targetSum == root.val) {
-      result.add(new ArrayList<>(pathNodeValues));
+      result.add(new ArrayList<>(list));
     }
-
+    int nextTargetSum = targetSum - root.val;
     if (root.left != null) {
-      this.searchSum(
-          root.left,
-          targetSum - root.left.val,
-          pathNodeValues,
-          result
-        );
+      this.searchSum(root.left, nextTargetSum, list, result);
     }
-
     if (root.right != null) {
-      this.searchSum(
-          root.right,
-          targetSum - root.right.val,
-          pathNodeValues,
-          result
-        );
+      this.searchSum(root.right, nextTargetSum, list, result);
     }
 
-    // We need to pop the node once we are done processing ALL of it's subtrees.
-    pathNodeValues.remove(pathNodeValues.size() - 1);
+    list.remove(list.size() - 1);
   }
 
   private boolean isLeaf(TreeNode node) {
