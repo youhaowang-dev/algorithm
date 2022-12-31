@@ -24,6 +24,33 @@ import java.util.*;
 
 class BinaryTreeInorderTraversal {
 
+  // while left is available, keep pushing into stack
+  // when left is not available, pop a node and keep pushing the lefts of the node.right
+  public List<Integer> inorderTraversalIterative(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+
+    if (root == null) {
+      return result;
+    }
+
+    Stack<TreeNode> stack = new Stack<>();
+    this.pushLefts(root, stack);
+    while (!stack.isEmpty()) {
+      TreeNode currentRoot = stack.pop();
+      result.add(currentRoot.val); // added left
+      this.pushLefts(currentRoot.right, stack); // process right
+    }
+
+    return result;
+  }
+
+  private void pushLefts(TreeNode node, Stack stack) {
+    while (node != null) {
+      stack.push(node); // make sure left is poped first
+      node = node.left; // make sure left is poped first
+    }
+  }
+
   public List<Integer> inorderTraversalRecursion(TreeNode root) {
     List<Integer> result = new ArrayList<>();
     this.recursionHelp(root, result);
@@ -55,32 +82,5 @@ class BinaryTreeInorderTraversal {
     result.addAll(rightResults);
 
     return result;
-  }
-
-  // while left is available, keep pushing into stack
-  // when left is not available, pop a node and keep pushing the lefts of the node.right
-  public List<Integer> inorderTraversalIterative(TreeNode root) {
-    List<Integer> result = new ArrayList<>();
-
-    if (root == null) {
-      return result;
-    }
-
-    Stack<TreeNode> stack = new Stack<>();
-    this.pushLefts(root, stack);
-    while (!stack.isEmpty()) {
-      TreeNode currentRoot = stack.pop();
-      result.add(currentRoot.val); // 1. add left/root
-      this.pushLefts(currentRoot.right, stack); // process right subtree
-    }
-
-    return result;
-  }
-
-  private void pushLefts(TreeNode node, Stack stack) {
-    while (node != null) {
-      stack.push(node); // 2. process left subtree
-      node = node.left; // 3. continue process left subtree
-    }
   }
 }
