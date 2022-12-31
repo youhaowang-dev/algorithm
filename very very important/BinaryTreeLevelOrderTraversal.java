@@ -31,15 +31,16 @@ class BinaryTreeLevelOrderTraversal {
     queue.offer(root);
 
     while (!queue.isEmpty()) {
+      List<TreeNode> currentLevelNodes = this.getCurrentLevelNodes(queue);
       List<Integer> currentLevelResult = new ArrayList<>();
-      int currentLevelCount = queue.size();
-      for (int i = 0; i < currentLevelCount; i++) {
-        TreeNode node = queue.poll();
-        if (node == null) {
-          continue;
-        }
+      for (TreeNode node : currentLevelNodes) {
         currentLevelResult.add(node.val);
-        this.addNextLevelNodes(node, queue);
+        if (node.left != null) {
+          queue.offer(node.left);
+        }
+        if (node.right != null) {
+          queue.offer(node.right);
+        }
       }
       result.add(currentLevelResult);
     }
@@ -47,13 +48,13 @@ class BinaryTreeLevelOrderTraversal {
     return result;
   }
 
-  private void addNextLevelNodes(TreeNode node, Queue<TreeNode> queue) {
-    if (node.left != null) {
-      queue.offer(node.left);
+  private List<TreeNode> getCurrentLevelNodes(Queue<TreeNode> queue) {
+    List<TreeNode> nodes = new ArrayList<>();
+    while (!queue.isEmpty()) {
+      nodes.add(queue.poll());
     }
-    if (node.right != null) {
-      queue.offer(node.right);
-    }
+
+    return nodes;
   }
 
   // dfs
