@@ -29,28 +29,39 @@ class InorderSuccessorInBSTII {
       return null;
     }
 
+    // node has right tree, so successor is in the right tree
+    // find the smallest node by keep going left
     if (node.right != null) {
-      Node minNode = node.right;
-      while (minNode.left != null) {
-        minNode = minNode.left;
-      }
-
-      return minNode;
+      return this.getSmallestNode(node.right);
     }
 
-    Node successor = null;
-    Node current = node;
-    while (current != null) {
-      Node parent = current.parent;
+    // node has no right tree, so successor is in its parents
+    // if the parent left is the current pointer, the parent is the successor
+    Node successor = this.getParentLeftEqualsNode(node);
+
+    return successor == null ? null : successor;
+  }
+
+  private Node getParentLeftEqualsNode(Node node) {
+    while (node != null) {
+      Node parent = node.parent;
       if (parent == null) {
         return null;
       }
-      if (parent.left == current) {
+      if (parent.left == node) {
         return parent;
       }
-      current = parent;
+      node = node.parent;
     }
 
-    return successor;
+    return null;
+  }
+
+  private Node getSmallestNode(Node node) {
+    while (node.left != null) {
+      node = node.left;
+    }
+
+    return node;
   }
 }
