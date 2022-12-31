@@ -78,22 +78,22 @@ class BinaryTreeMaximumPathSum {
 
   // brute force
   // time complexity: O(N*N*logN)
-  Map<TreeNode, TreeNode> map;
-
+  // TODO: refactor code and add comments for problem solving
   public int maxPathSum(TreeNode root) {
-    if (root == null) return 0;
-    map = new HashMap<>();
+    if (root == null) {
+      return 0;
+    }
+    Map<TreeNode, TreeNode> map = new HashMap<>(); // nodeToParent
     map.put(root, null);
-    traverse(root); // traverse all nodes and create a map of ancestors (similar to common ancestor problem)
+    this.traverse(root, map); // traverse all nodes and create a map of ancestors (similar to common ancestor problem)
     List<TreeNode> list = new ArrayList<>();
     for (TreeNode node : map.keySet()) {
-      // System.out.println(node.val);
       list.add(node); // converting keys to a list for bruteforcing
     }
     int max = Integer.MIN_VALUE;
     for (int i = 0; i < list.size(); i++) {
       for (int j = i; j < list.size(); j++) { // j=i as in the path there could be only 1 node.
-        max = Math.max(max, findSum(list.get(i), list.get(j)));
+        max = Math.max(max, this.findSum(list.get(i), list.get(j), map));
       }
     }
     return max;
@@ -105,7 +105,7 @@ class BinaryTreeMaximumPathSum {
 	The common ancestor can be src or dest too.
 	Or src can be same as dest.
 	**/
-  public int findSum(TreeNode src, TreeNode dest) {
+  public int findSum(TreeNode src, TreeNode dest, Map<TreeNode, TreeNode> map) {
     Map<TreeNode, Integer> sumMap = new HashMap<>(); // keep track of sum at each ancestor/node , starting from the src.
     int sum = 0;
     Set<TreeNode> visited = new HashSet<>();
@@ -127,13 +127,13 @@ class BinaryTreeMaximumPathSum {
     return dest == null ? sum : sum + sumMap.get(dest);
   }
 
-  public void traverse(TreeNode node) {
+  public void traverse(TreeNode node, Map<TreeNode, TreeNode> map) {
     if (node != null) {
       if (node.left != null) {
         map.put(node.left, node);
       }
-      traverse(node.left);
-      traverse(node.right);
+      this.traverse(node.left, map);
+      this.traverse(node.right, map);
       if (node.right != null) {
         map.put(node.right, node);
       }
