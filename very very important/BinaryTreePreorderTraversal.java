@@ -82,9 +82,9 @@ class BinaryTreePreorderTraversal {
   ) {
     while (node != null) {
       // root is not null, because root-left-right order, add it now
-      result.add(node.val);
-      stack.push(node.right);
-      node = node.left;
+      result.add(node.val); // 1. add root
+      stack.push(node.right); // 3. process right subtree
+      node = node.left; // 2. add left in next iteration
     }
   }
 }
