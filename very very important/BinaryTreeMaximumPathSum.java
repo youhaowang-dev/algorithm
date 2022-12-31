@@ -27,6 +27,12 @@
 
 class BinaryTreeMaximumPathSum {
 
+  // divide and conquer: time O(n)
+  // two types of paths: rootToAny and anyToAny
+  // max(rootToAny) = root.val + max(left rootToAny, right rootToAny)
+  // max(anyToAny) = max(left anyToAny, right anyToAny, current anyToAny)
+  //      current anyToAny passes the root = root.val + max(0, left anyToAny) + max(0, right anyToAny)
+  // rootToAny/anyToAny can be negative, so max(0, rootToAny/anyToAny) is needed because we don't have to take subtree paths
   private class PathSums {
 
     int rootToAny;
@@ -38,13 +44,6 @@ class BinaryTreeMaximumPathSum {
     }
   }
 
-  // divide and conquer: time O(n)
-  // two types of paths: rootToAny and anyToAny
-  // max(rootToAny) = root.val + max(left rootToAny, right rootToAny)
-  // max(anyToAny) = max(left anyToAny, right anyToAny, current anyToAny)
-  //      current anyToAny passes the root = root.val + max(0, left anyToAny) + max(0, right anyToAny)
-  // rootToAny/anyToAny can be negative, so max(0, rootToAny/anyToAny) is needed because we don't have to take subtree paths
-  //
   public int maxPathSum(TreeNode root) {
     return this.getMaxPathSum(root).anyToAny;
   }
@@ -56,24 +55,47 @@ class BinaryTreeMaximumPathSum {
     }
 
     // divide
-    PathSums leftVals = this.getMaxPathSum(root.left);
-    PathSums rightVals = this.getMaxPathSum(root.right);
+    PathSums leftPathSums = this.getMaxPathSum(root.left);
+    PathSums rightPathSums = this.getMaxPathSum(root.right);
 
     // merge
+    int maxRootToAny = this.getMaxRootToAny(root, leftPathSums, rightPathSums);
+    int maxAnyToAny = this.getMaxAnyToAny(root, leftPathSums, rightPathSums);
+
+    return new PathSums(maxRootToAny, maxAnyToAny);
+  }
+
+  // max(left, right, 0)
+  private int getMaxRootToAny(
+    TreeNode root,
+    PathSums leftPathSums,
+    PathSums rightPathSums
+  ) {
     int maxSubtreeRootToAny = Math.max(
       0,
-      Math.max(leftVals.rootToAny, rightVals.rootToAny)
+      Math.max(leftPathSums.rootToAny, rightPathSums.rootToAny)
     );
-    int maxCurrentRootToAny = root.val + maxSubtreeRootToAny;
 
-    int maxSubtreeAnyToAny = Math.max(leftVals.anyToAny, rightVals.anyToAny);
-    int currentRootAnyToAny =
+    return root.val + maxSubtreeRootToAny;
+  }
+
+  // max(leftAnyToAny, rightAnyToAny, maxSumIncludeRoot)
+  // maxSumIncludeRoot = root + max(0, leftRootToAny) + max(0, rightRootToAny)
+  private int getMaxAnyToAny(
+    TreeNode root,
+    PathSums leftPathSums,
+    PathSums rightPathSums
+  ) {
+    int maxSubtreeAnyToAny = Math.max(
+      leftPathSums.anyToAny,
+      rightPathSums.anyToAny
+    );
+    int maxSumIncludeRoot =
       root.val +
-      Math.max(0, leftVals.rootToAny) +
-      Math.max(0, rightVals.rootToAny);
-    int maxCurrentAnyToAny = Math.max(maxSubtreeAnyToAny, currentRootAnyToAny);
+      Math.max(0, leftPathSums.rootToAny) +
+      Math.max(0, rightPathSums.rootToAny);
 
-    return new PathSums(maxCurrentRootToAny, maxCurrentAnyToAny);
+    return Math.max(maxSubtreeAnyToAny, maxSumIncludeRoot);
   }
 
   // brute force
