@@ -39,6 +39,93 @@
  */
 class ConvertSortedListToBinarySearchTree {
 
+  // convert list to array to allow index access
+  // time O(n) space O(n)
+  public TreeNode sortedListToBST(ListNode head) {
+    List<Integer> list = this.buildList(head);
+    return this.buildBalancedBST(list, 0, list.size() - 1);
+  }
+
+  private List<Integer> buildList(ListNode node) {
+    List<Integer> list = new ArrayList<>();
+    while (node != null) {
+      list.add(node.val);
+      node = node.next;
+    }
+
+    return list;
+  }
+
+  private TreeNode buildBalancedBST(List<Integer> list, int left, int right) {
+    if (left > right) {
+      // left == right is fine as we need to create at least one node
+      return null;
+    }
+
+    int mid = left + (right - left) / 2;
+    TreeNode root = new TreeNode(list.get(mid));
+    root.left = this.buildBalancedBST(list, left, mid - 1);
+    root.right = this.buildBalancedBST(list, mid + 1, right);
+
+    return root;
+  }
+
+  // dfs: inorder traverse and build the tree
+  // time O(n) for two passes all nodes space O(logn) for balanced tree
+  public TreeNode sortedListToBST(ListNode head) {
+    if (head == null) {
+      return null;
+    }
+    Pointer p = new Pointer(head);
+    int listLength = this.getListLength(head);
+
+    return buildBalancedBST(p, 0, listLength - 1);
+  }
+
+  private class Pointer {
+
+    ListNode p;
+
+    public Pointer(ListNode p) {
+      this.p = p;
+    }
+
+    public void moveForward() {
+      if (p != null) {
+        p = p.next;
+      }
+    }
+  }
+
+  private int getListLength(ListNode node) {
+    int length = 0;
+    while (node != null) {
+      length++;
+      node = node.next;
+    }
+
+    return length;
+  }
+
+  // https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/solutions/35502
+  // Before: Pointer is always at start of linked list.
+  // After left part finishes: Pointer is at middle, ie where the root is.
+  // Before Generating right half: Pointer is at start of the right half.
+  private TreeNode buildBalancedBST(Pointer p, int start, int end) {
+    if (start > end) {
+      return null;
+    }
+
+    int mid = (start + end) / 2;
+    TreeNode left = this.buildBalancedBST(p, start, mid - 1);
+    TreeNode root = new TreeNode(p.p.val);
+    p.moveForward();
+    root.left = left;
+    root.right = this.buildBalancedBST(p, mid + 1, end);
+
+    return root;
+  }
+
   // Time Complexity: O(nlogn)
   // logn subproblems, each problem does one findMid
   // findMin complexity: O(n) -> O(n/2) -> ...
