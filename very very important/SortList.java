@@ -25,7 +25,8 @@
  */
 class SortList {
 
-  // The problem is to sort the linked list in O(nlogn) time and O(logn) space
+  // time O(nlogn) logn partitions and each partition costs n
+  // space O(logn) stack space
   // merge sort: partition list + merge
   public ListNode sortList(ListNode head) {
     if (head == null || head.next == null) {
