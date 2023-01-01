@@ -28,18 +28,23 @@
  */
 class ReverseLinkedList {
 
+  // two pointers moves at the same speed
+  // prev will stop at the last node, current will stop at null
   public ListNode reverseList(ListNode head) {
+    if (head == null) {
+      return null;
+    }
+
     ListNode prev = null;
     ListNode current = head;
 
     while (current != null) {
-      ListNode nextRefCopy = current.next;
+      ListNode currentNext = current.next;
       current.next = prev;
       prev = current;
-      current = nextRefCopy;
+      current = currentNext;
     }
 
-    // current == null, so prev is the new head
     return prev;
   }
 }
