@@ -43,12 +43,10 @@ class ConvertBinarySearchTreeToSortedDoublyLinkedList {
   private class InorderIterator {
 
     private Stack<Node> stack;
-    private Node current;
 
     public InorderIterator(Node node) {
-      this.current = node;
       this.stack = new Stack<Node>();
-      this.pushLefts();
+      this.pushLefts(node);
     }
 
     public boolean hasNext() {
@@ -61,16 +59,15 @@ class ConvertBinarySearchTreeToSortedDoublyLinkedList {
       }
 
       Node node = this.stack.pop();
-      this.current = node.right;
-      this.pushLefts();
+      this.pushLefts(node.right);
 
       return node;
     }
 
-    private void pushLefts() {
-      while (this.current != null) {
-        this.stack.push(this.current);
-        this.current = this.current.left;
+    private void pushLefts(Node node) {
+      while (node != null) {
+        this.stack.push(node);
+        node = node.left;
       }
     }
   }
@@ -89,6 +86,7 @@ class ConvertBinarySearchTreeToSortedDoublyLinkedList {
       nextNode.left = current;
       current = nextNode;
     }
+    // make the doubly linked list circular
     current.right = first;
     first.left = current;
 
