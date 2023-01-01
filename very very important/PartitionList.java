@@ -25,7 +25,8 @@
  */
 class PartitionList {
 
-  // two head nodes for two lists
+  // reconstruct the list
+  // small/big head nodes for building small/big lists
   // merge them after processing all node
   public ListNode partition(ListNode head, int x) {
     ListNode smallHead = new ListNode(Integer.MIN_VALUE);
@@ -47,7 +48,7 @@ class PartitionList {
       }
       current = current.next;
     }
-    // connect 3 lists
+    // connect 2 lists
     small.next = bigHead.next;
     big.next = null;
 
