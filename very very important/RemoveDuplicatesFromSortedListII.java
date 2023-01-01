@@ -22,23 +22,23 @@ class RemoveDuplicatesFromSortedListII {
 
   public ListNode deleteDuplicates(ListNode head) {
     ListNode beforeHead = new ListNode(Integer.MIN_VALUE);
-    beforeHead.next = head; // donot forget
+    beforeHead.next = head;
 
-    ListNode prev = beforeHead;
-    ListNode current = head;
-    while (current != null) {
+    ListNode slow = beforeHead;
+    ListNode fast = beforeHead.next;
+    while (fast != null) {
       // detect duplicate
-      if (current.next != null && current.val == current.next.val) {
-        int duplicatedVal = current.val;
-        // find the first non-duplicate node
-        while (current != null && current.val == duplicatedVal) {
-          current = current.next;
+      if (fast.next != null && fast.next.val == fast.val) {
+        int duplicatedVal = fast.val;
+        // move fast out of duplicates
+        while (fast != null && fast.val == duplicatedVal) {
+          fast = fast.next;
         }
-        // currrent == null or current.val != duplicate skip all the duplicate nodes
-        prev.next = current;
+        // delete node(s)
+        slow.next = fast;
       } else {
-        prev = current;
-        current = current.next;
+        slow = fast;
+        fast = fast.next;
       }
     }
 
