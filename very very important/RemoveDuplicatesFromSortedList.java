@@ -24,22 +24,23 @@
  */
 class RemoveDuplicatesFromSortedList {
 
+  // two pointers slow and fast
+  // delete while fast moves forward
   public ListNode deleteDuplicates(ListNode head) {
     ListNode beforeHead = new ListNode(Integer.MIN_VALUE); // do not use 0 as 0 can be in input
     beforeHead.next = head;
 
-    ListNode prev = beforeHead;
-    ListNode current = head;
-    while (current != null) {
-      if (prev.val == current.val) {
-        // delete current
-        prev.next = current.next;
-        // update pointers
-        current = prev.next;
+    ListNode slow = beforeHead;
+    ListNode fast = beforeHead.next;
+    while (fast != null) {
+      if (slow.val == fast.val) {
+        // same: remove fast and move pointers
+        slow.next = fast.next;
+        fast = slow.next;
       } else {
-        // move pointers forward
-        current = current.next;
-        prev = prev.next;
+        // different: move pointers
+        slow = slow.next;
+        fast = fast.next;
       }
     }
 
