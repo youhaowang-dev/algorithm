@@ -102,19 +102,17 @@ class MergeKSortedLists {
     return this.mergeHelper(lists, 0, lists.length - 1);
   }
 
-  private ListNode mergeHelper(ListNode[] lists, int start, int end) {
-    // [0,7] => [0,3][4,7] => [0,1][2,2][4,5][6,7] => [0,0][1,1][2,2][4,4][5,5][6,6][7,7]
-    // partition end result
-    if (start == end) {
-      System.out.println(start + ":" + end);
-      return lists[start];
+  // [0,7] => [0,3][4,7] => [0,1][2,2][4,5][6,7] => [0,0][1,1][2,2][4,4][5,5][6,6][7,7]
+  private ListNode mergeHelper(ListNode[] lists, int left, int right) {
+    if (left == right) {
+      return lists[left];
     }
 
-    int mid = start - (start - end) / 2;
-    ListNode left = this.mergeHelper(lists, start, mid);
-    ListNode right = this.mergeHelper(lists, mid + 1, end);
+    int mid = left - (left - right) / 2;
+    ListNode list1 = this.mergeHelper(lists, left, mid);
+    ListNode list2 = this.mergeHelper(lists, mid + 1, right);
 
-    return this.mergeTwoLists(left, right);
+    return this.mergeTwoLists(list1, list2);
   }
 
   private ListNode mergeTwoLists(ListNode list1, ListNode list2) {
@@ -130,6 +128,7 @@ class MergeKSortedLists {
       }
       tail = tail.next;
     }
+    // connect rest
     if (list1 != null) {
       tail.next = list1;
     }
