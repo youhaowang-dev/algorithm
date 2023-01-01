@@ -30,23 +30,24 @@
 class ReorderList {
 
   // find mid
-  // reverse the second half
-  // merge
+  // reverse the second half of the list
+  // merge two lists
   public void reorderList(ListNode head) {
     if (head == null) {
       return;
     }
+
     ListNode mid = this.getMid(head);
-    ListNode midNext = mid.next;
+    ListNode reversedHead = this.reverse(mid.next);
     mid.next = null;
-    ListNode reversedHead = this.reverse(midNext);
     this.merge(head, reversedHead);
   }
 
-  public ListNode getMid(ListNode head) {
-    ListNode slow = head;
-    ListNode fast = head;
-    while (fast.next != null && fast.next.next != null) {
+  // two pointers fast and slow
+  private ListNode getMid(ListNode node) {
+    ListNode slow = node;
+    ListNode fast = node;
+    while (fast != null && fast.next != null) {
       slow = slow.next;
       fast = fast.next.next;
     }
@@ -54,50 +55,41 @@ class ReorderList {
     return slow;
   }
 
-  public ListNode reverse(ListNode head) {
+  // two pointers same speed
+  private ListNode reverse(ListNode node) {
     ListNode prev = null;
-    ListNode curr = head;
-    while (curr != null) {
-      ListNode nextTemp = curr.next;
-      curr.next = prev;
-      prev = curr;
-      curr = nextTemp;
+    ListNode current = node;
+    while (current != null) {
+      ListNode currentNext = current.next;
+      current.next = prev;
+      prev = current;
+      current = currentNext;
     }
+
     return prev;
   }
 
-  public void merge(ListNode first, ListNode second) {
-    int index = 0;
-    ListNode current = new ListNode(0);
-    while (first != null && second != null) {
-      if (index % 2 == 0) {
-        current.next = first;
-        first = first.next;
+  private void merge(ListNode list1, ListNode list2) {
+    ListNode beforeHead = new ListNode(0);
+    ListNode current = beforeHead;
+    int counter = 0;
+    while (list1 != null && list2 != null) {
+      boolean firstListInsert = counter % 2 == 0;
+      if (firstListInsert) {
+        current.next = list1;
+        list1 = list1.next;
       } else {
-        current.next = second;
-        second = second.next;
+        current.next = list2;
+        list2 = list2.next;
       }
       current = current.next;
-      index++;
+      counter++;
     }
-    if (first != null) {
-      current.next = first;
+    if (list1 != null) {
+      current.next = list1;
     }
-    if (second != null) {
-      current.next = second;
+    if (list2 != null) {
+      current.next = list2;
     }
   }
-  // public void merge(ListNode first, ListNode second) {
-  //   ListNode firstNext;
-  //   ListNode secondNext;
-  //   while (first != null && second != null) {
-  //     firstNext = first.next;
-  //     first.next = second;
-  //     first = firstNext; // update first so second can connect to the correct first
-
-  //     secondNext = second.next;
-  //     second.next = first;
-  //     second = secondNext;
-  //   }
-  // }
 }
