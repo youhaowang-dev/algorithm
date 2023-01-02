@@ -14,50 +14,26 @@
 
 class IntersectionOfTwoArrays {
 
-  // preprocess data for fast compare
-  // compare two sets
+  // preprocess data to sets for fast access and dedup
+  // if one set is much larger than the other, find the smaller size set and use it for loop
   public int[] intersection(int[] nums1, int[] nums2) {
-    Set<Integer> set1 = new HashSet<>();
+    Set<Integer> numSet1 = new HashSet<>();
     for (int num : nums1) {
-      set1.add(num);
+      numSet1.add(num);
     }
-    Set<Integer> set2 = new HashSet<>();
+    Set<Integer> numSet2 = new HashSet<>();
     for (int num : nums2) {
-      set2.add(num);
+      numSet2.add(num);
     }
 
-    Set<Integer> smallerSet;
-    Set<Integer> biggerSet;
-    if (set1.size() > set2.size()) {
-      smallerSet = set2;
-      biggerSet = set1;
-    } else {
-      smallerSet = set1;
-      biggerSet = set2;
-    }
-
-    // IMPORTANT: java.util.ConcurrentModificationException
-    // for (int num : smallerSet) {
-    //   if (!biggerSet.contains(num)) {
-    //     smallerSet.remove(num);
-    //   }
-    // }
-
-    Set<Integer> resultSet = new HashSet<>();
-    for (int num : smallerSet) {
-      if (biggerSet.contains(num)) {
-        resultSet.add(num);
+    List<Integer> result = new ArrayList<>();
+    for (int num : numSet1) {
+      if (numSet2.contains(num)) {
+        result.add(num);
       }
     }
 
-    int[] result = new int[resultSet.size()];
-    int index = 0;
-    for (int num : resultSet) {
-      result[index] = num;
-      index++;
-    }
-
-    return result;
+    return result.stream().mapToInt(num -> num).toArray();
   }
 
   // brute force m*n
