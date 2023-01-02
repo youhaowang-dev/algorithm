@@ -13,24 +13,56 @@
 
 class TwoSumLessThanK {
 
-  // quick sort + two pointers
-  public int twoSumLessThanK(int[] nums, int k) {
-    this.quickSort(nums, 0, nums.length - 1);
+  // brute force: check all pairs O(n^2)
 
-    int result = -1;
+  // sort + two pointers O(nlogn) + O(n) = O(nlogn)
+  public int twoSumLessThanK(int[] nums, int k) {
+    Integer[] numsSorted = this.getSortedNums(nums);
+
+    int maxSum = -1; // default value from description
     int left = 0;
-    int right = nums.length - 1;
+    int right = numsSorted.length - 1;
     while (left < right) {
-      int sum = nums[left] + nums[right];
+      int sum = numsSorted[left] + numsSorted[right];
       if (sum < k) {
-        result = Math.max(result, sum);
+        maxSum = Math.max(maxSum, sum);
         left++;
       } else {
         right--;
       }
     }
 
-    return result;
+    return maxSum;
+  }
+
+  private Integer[] getSortedNums(int[] nums) {
+    Integer[] numsSorted = new Integer[nums.length];
+    for (int i = 0; i < nums.length; i++) {
+      numsSorted[i] = nums[i];
+    }
+    Arrays.sort(numsSorted, (a, b) -> a - b);
+
+    return numsSorted;
+  }
+
+  // quick sort + two pointers
+  public int twoSumLessThanK(int[] nums, int k) {
+    this.quickSort(nums, 0, nums.length - 1);
+
+    int maxSum = Integer.MIN_VALUE;
+    int left = 0;
+    int right = nums.length - 1;
+    while (left < right) {
+      int sum = nums[left] + nums[right];
+      if (sum < k) {
+        maxSum = Math.max(maxSum, sum);
+        left++;
+      } else {
+        right--;
+      }
+    }
+
+    return maxSum;
   }
 
   private void quickSort(int[] nums, int start, int end) {
