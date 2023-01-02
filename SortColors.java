@@ -15,6 +15,8 @@
 // Output: [0,1,2]
 class SortColors {
 
+  // brute force: counting sort
+
   // easy solution would be two passes
   // pass1 moves all the 0s and pass2 moves all the 1s
 

@@ -17,6 +17,8 @@
 // You can directly use The counting sorting algorithm scan twice, but it will cost O(k) extra memory. Now can you do it in use O(logk) extra memory?
 public class SortColorsII {
 
+  // brute force: counting sort
+
   public void sortColors2(int[] colors, int k) {
     if (colors == null || colors.length < 2) {
       return;
