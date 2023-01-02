@@ -31,6 +31,36 @@ import java.util.*;
 
 final class MergeSortedArray {
 
+  // merge backward to avoid O(n) inserts
+  // insert bigger number while moving pointers
+  public void merge(int[] nums1, int m, int[] nums2, int n) {
+    // pointers
+    int nums1Last = m - 1;
+    int nums2Last = n - 1;
+    int mergedLast = nums1.length - 1;
+    while (nums1Last >= 0 && nums2Last >= 0) {
+      if (nums1[nums1Last] > nums2[nums2Last]) {
+        nums1[mergedLast] = nums1[nums1Last];
+        nums1Last--;
+        mergedLast--;
+      } else {
+        nums1[mergedLast] = nums2[nums2Last];
+        nums2Last--;
+        mergedLast--;
+      }
+    }
+    while (nums1Last >= 0) {
+      nums1[mergedLast] = nums1[nums1Last];
+      nums1Last--;
+      mergedLast--;
+    }
+    while (nums2Last >= 0) {
+      nums1[mergedLast] = nums2[nums2Last];
+      nums2Last--;
+      mergedLast--;
+    }
+  }
+
   private class SortedArraysIterator {
 
     int[] arr1;
@@ -110,34 +140,6 @@ final class MergeSortedArray {
 
     while (insertPosition >= 0 && iterator.hasNextMax()) {
       nums1[insertPosition] = iterator.getNextMax();
-      insertPosition--;
-    }
-  }
-
-  // merge backward to avoid O(n) inserts
-  public void merge(int[] nums1, int m, int[] nums2, int n) {
-    int nums1Position = m - 1;
-    int nums2Position = nums2.length - 1;
-    int insertPosition = nums1.length - 1;
-    while (nums1Position >= 0 && nums2Position >= 0) {
-      if (nums1[nums1Position] > nums2[nums2Position]) {
-        nums1[insertPosition] = nums1[nums1Position];
-        nums1Position--;
-        insertPosition--;
-      } else {
-        nums1[insertPosition] = nums2[nums2Position];
-        nums2Position--;
-        insertPosition--;
-      }
-    }
-    while (nums1Position >= 0) {
-      nums1[insertPosition] = nums1[nums1Position];
-      nums1Position--;
-      insertPosition--;
-    }
-    while (nums2Position >= 0) {
-      nums1[insertPosition] = nums2[nums2Position];
-      nums2Position--;
       insertPosition--;
     }
   }
