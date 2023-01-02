@@ -28,35 +28,40 @@ class ReverseLinkedListII {
       return head;
     }
 
-    ListNode beforeHead = new ListNode(Integer.MIN_VALUE);
-    beforeHead.next = head;
+    ListNode headPrev = new ListNode(Integer.MIN_VALUE);
+    headPrev.next = head;
 
-    ListNode beforeLeft = beforeHead; // IMPORTANT: not = head
+    // get left list tail
+    ListNode leftListTail = headPrev;
     for (int i = 1; i < left; i++) {
-      if (beforeLeft == null) {
+      if (leftListTail == null) {
         return null;
       }
-      beforeLeft = beforeLeft.next;
+      leftListTail = leftListTail.next;
     }
-    ListNode reversedEnd = beforeLeft.next;
+    // save reversed list tail
+    ListNode reversedListTail = leftListTail.next;
 
-    ListNode leftNode = beforeLeft.next;
-    ListNode rightNode = leftNode.next;
+    // prev will stop at right
+    // current will stop at right next
+    ListNode prev = leftListTail.next;
+    ListNode current = prev.next;
     for (int i = left; i < right; i++) {
-      if (rightNode == null) {
+      if (current == null) {
         return null;
       }
-      ListNode rightNodeNextRef = rightNode.next;
-      rightNode.next = leftNode;
-      leftNode = rightNode;
-      rightNode = rightNodeNextRef;
+      ListNode currentNext = current.next;
+      current.next = prev;
+      prev = current;
+      current = currentNext;
     }
-    ListNode reversedStart = leftNode;
-    ListNode afterRight = rightNode;
 
-    beforeLeft.next = reversedStart;
-    reversedEnd.next = afterRight;
+    ListNode reversedListHead = prev;
+    ListNode rightListHead = current;
 
-    return beforeHead.next;
+    leftListTail.next = reversedListHead;
+    reversedListTail.next = rightListHead;
+
+    return headPrev.next;
   }
 }
