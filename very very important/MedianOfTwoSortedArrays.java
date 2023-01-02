@@ -22,6 +22,60 @@ final class MedianOfTwoSortedArrays {
   // merge two arrays and find the median
   // O(m+n)
 
+  // binary search an answer in an interval
+  // O(log(m + n) / 2) == O(log(m + n))
+  // get median of two sorted arrays => get index i element of two sorted arrays like they are merged
+  public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+    int length1 = nums1.length, length2 = nums2.length;
+    int totalLength = length1 + length2;
+    if (totalLength % 2 == 1) {
+      return (double) this.getNumber(nums1, nums2, totalLength / 2 + 1);
+    } else {
+      int left = this.getNumber(nums1, nums2, totalLength / 2);
+      int right = this.getNumber(nums1, nums2, totalLength / 2 + 1);
+      return (left + right) / 2.0;
+    }
+  }
+
+  // binary search for the target index like the two sorted arrays are merged
+  public int getNumber(int[] nums1, int[] nums2, int targetIndex) {
+    int length1 = nums1.length;
+    int length2 = nums2.length;
+    // pointers start at left and moves to right
+    int left1 = 0;
+    int left2 = 0;
+    while (true) {
+      // all nums1 are dropped
+      if (left1 == length1) {
+        return nums2[left2 + targetIndex - 1];
+      }
+      // all nums2 are dropped
+      if (left2 == length2) {
+        return nums1[left1 + targetIndex - 1];
+      }
+      // return min when targetIndex is the smallest(1)
+      if (targetIndex == 1) {
+        return Math.min(nums1[left1], nums2[left2]);
+      }
+
+      // binary search
+      int halfTargetIndex = targetIndex / 2;
+      int pivot1 = Math.min(left1 + halfTargetIndex, length1) - 1;
+      int pivot2 = Math.min(left2 + halfTargetIndex, length2) - 1;
+      if (nums1[pivot1] <= nums2[pivot2]) {
+        // left part of nums1 does NOT have targetIndexth; drop [left1, pivot1]
+        int droppedCount = pivot1 - left1 + 1;
+        targetIndex = targetIndex - droppedCount;
+        left1 = pivot1 + 1; // move to next part that may have targetIndexth
+      } else {
+        // left part of nums2 does NOT have targetIndexth; drop [left2, pivot2]
+        int droppedCount = pivot2 - left2 + 1;
+        targetIndex = targetIndex - droppedCount;
+        left2 = pivot2 + 1; // move to next part that may have kth
+      }
+    }
+  }
+
   // drop the unwanted part where target is not in
   // find median => find median index(s) => find kth largest number for the index(s) => calculate median
   //    *** k counts from 1 ***
