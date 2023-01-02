@@ -22,58 +22,73 @@ final class MedianOfTwoSortedArrays {
   // merge two arrays and find the median
   // O(m+n)
 
-  // binary search an answer in an interval
-  // O(log(m + n) / 2) == O(log(m + n))
-  // get median of two sorted arrays => get index i element of two sorted arrays like they are merged
+  // binary search for a max partition(inclusive) position that spit two sides with same total count AND
+  // short array partion left < long array parition && short array partion > long array parition left
+
+  // [1,3][2,4,5] => totalLeftCount = (5+1)/2 = 3
+  //        shortPartition: 2 => longPartition: 3-2=1
+  //        shortPartitionLeftVal: short[2-1]=3, longPartitionLeftVal: long[1-1]=2
+  //        median = max(3,2) = 3
+  // [1,3,5][2,4,6] => totalLeftCount = (6+1)/2 = 3
+  //        shortPartition: 2 => longPartition: 3-2=1
+  //        shortPartitionLeftVal: short[2-1]=3, longPartitionLeftVal: long[1-1]=2
+  //        shortPartitionVal: short[2]=5, longPartitionVal: long[1]=4
+  //        median = (max(3,2) + min(5,4)) / 2 = 7/2 = 3.5
   public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-    int length1 = nums1.length, length2 = nums2.length;
-    int totalLength = length1 + length2;
-    if (totalLength % 2 == 1) {
-      return (double) this.getNumber(nums1, nums2, totalLength / 2 + 1);
-    } else {
-      int left = this.getNumber(nums1, nums2, totalLength / 2);
-      int right = this.getNumber(nums1, nums2, totalLength / 2 + 1);
-      return (left + right) / 2.0;
+    // make sure first array is shorter
+    if (nums1.length > nums2.length) {
+      return this.findMedianSortedArrays(nums2, nums1);
     }
+
+    int shortLength = nums1.length;
+    int longLength = nums2.length;
+    int totalLeftCount = (shortLength + longLength + 1) / 2; // works for both odd and even cases
+    int shortPartition = this.partitionShort(nums1, nums2);
+    int longPartition = totalLeftCount - shortPartition;
+
+    int shortPartitionLeftVal = shortPartition == 0
+      ? Integer.MIN_VALUE
+      : nums1[shortPartition - 1];
+    int longPartitionLeftVal = longPartition == 0
+      ? Integer.MIN_VALUE
+      : nums2[longPartition - 1];
+
+    if ((shortLength + longLength) % 2 == 1) {
+      return (double) Math.max(shortPartitionLeftVal, longPartitionLeftVal);
+    }
+
+    int shortPartitionVal = shortPartition == shortLength
+      ? Integer.MAX_VALUE
+      : nums1[shortPartition];
+    int longPartitionVal = longPartition == longLength
+      ? Integer.MAX_VALUE
+      : nums2[longPartition];
+    int leftMax = Math.max(shortPartitionLeftVal, longPartitionLeftVal);
+    int rightMin = Math.min(shortPartitionVal, longPartitionVal);
+
+    return (leftMax + rightMin) * 0.5;
   }
 
-  // binary search for the target index like the two sorted arrays are merged
-  public int getNumber(int[] nums1, int[] nums2, int targetIndex) {
-    int length1 = nums1.length;
-    int length2 = nums2.length;
-    // pointers start at left and moves to right
-    int left1 = 0;
-    int left2 = 0;
-    while (true) {
-      // all nums1 are dropped
-      if (left1 == length1) {
-        return nums2[left2 + targetIndex - 1];
-      }
-      // all nums2 are dropped
-      if (left2 == length2) {
-        return nums1[left1 + targetIndex - 1];
-      }
-      // return min when targetIndex is the smallest(1)
-      if (targetIndex == 1) {
-        return Math.min(nums1[left1], nums2[left2]);
-      }
-
-      // binary search
-      int halfTargetIndex = targetIndex / 2;
-      int pivot1 = Math.min(left1 + halfTargetIndex, length1) - 1;
-      int pivot2 = Math.min(left2 + halfTargetIndex, length2) - 1;
-      if (nums1[pivot1] <= nums2[pivot2]) {
-        // left part of nums1 does NOT have targetIndexth; drop [left1, pivot1]
-        int droppedCount = pivot1 - left1 + 1;
-        targetIndex = targetIndex - droppedCount;
-        left1 = pivot1 + 1; // move to next part that may have targetIndexth
+  private int partitionShort(int[] shortArr, int[] longArr) {
+    int left = 0;
+    int right = shortArr.length; // this is fine as left(-1) is needed
+    int totalLeftCount = (shortArr.length + longArr.length + 1) / 2; // works for both odd and even
+    // binary search a max partition in short array that can make short partition left
+    while (left < right) {
+      // + 1 prevent infinite loop
+      int partition = (left + right + 1) / 2;
+      int longArrPartition = totalLeftCount - partition;
+      int partitionLeft = partition - 1;
+      if (shortArr[partitionLeft] > longArr[longArrPartition]) {
+        // unwanted condition; continue search in left side
+        right = partitionLeft;
       } else {
-        // left part of nums2 does NOT have targetIndexth; drop [left2, pivot2]
-        int droppedCount = pivot2 - left2 + 1;
-        targetIndex = targetIndex - droppedCount;
-        left2 = pivot2 + 1; // move to next part that may have kth
+        // wanted condition; make it as big as possible
+        left = partition;
       }
     }
+
+    return left;
   }
 
   // drop the unwanted part where target is not in
@@ -177,7 +192,7 @@ final class MedianOfTwoSortedArrays {
       }
     }
 
-    // update the partion one more time
+    // update the partition one more time
     int shortPartition = shortPartitionStart;
     int longPartition = totalLeft - shortPartition;
     // get the 4 numbers that are needed for median
