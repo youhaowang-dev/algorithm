@@ -27,8 +27,8 @@ public class LinkedListCycle {
     while (fast != null && fast.next != null) {
       slow = slow.next;
       fast = fast.next.next;
-      if (slow == fast) {
-        // because pointers are init to the same value, the check can only be after the move
+      // init pointers are equal, so check after moving
+      if (fast == slow) {
         return true;
       }
     }
