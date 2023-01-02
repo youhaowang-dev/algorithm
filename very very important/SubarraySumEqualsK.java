@@ -24,6 +24,15 @@ class SubarraySumEqualsK {
   // dict to store key=prefixsum(0, i) value=sumCount
   // 1. prefix sum == target => count++
   // 2. subarraysum(j, i) is in dict => count += prevCount
+
+  // [1,-1,1,-1,1], target 1 => expect 6, [1][1][1][1,-1,1][1,-1,1][1,-1,1,-1,1]
+  // count = 0, dict={}
+  // 1:                     prefixsum 1 == 1, count++ = 1, dict={1:1}, subarraySum 0 not in dict
+  // 1+(-1):                prefixsum 0 != 1, count = 1, dict={1:1,0:1}, subarraySum -1 not in dict
+  // 1+(-1)+1:              prefixsum 1 == 1, count++ = 2, dict={1:2,0:1}, subarraySum 0 in dict, count+=1=2+1=3
+  // 1+(-1)+1+(-1):         prefixsum 0 != 1, count = 3, dict={1:2,0:2}, subarraySum -1 not in dict
+  // 1+(-1)+1+(-1)+1:       prefixsum 1 == 1, count++ = 4, dict={1:3,0:2}, subarraySum 0 in dict, count+=2=4+2=6
+
   public int subarraySum(int[] nums, int target) {
     int count = 0;
     Map<Integer, Integer> prefixSumToCount = new HashMap<>();
