@@ -6,56 +6,10 @@
 
 class MaximumSubarray {
 
-  // same prefixSum but space optimized
-  // currentSum can be a variable instead of using an array for all prefixSums
-  public int maxSubArray(int[] nums) {
-    int prefixSum = 0;
-    int maxSum = Integer.MIN_VALUE;
-    int minPrefixSum = 0;
-    for (int i = 0; i < nums.length; i++) {
-      prefixSum = prefixSum + nums[i];
-      maxSum = Math.max(maxSum, prefixSum - minPrefixSum);
-      minPrefixSum = Math.min(minPrefixSum, prefixSum);
-    }
-
-    return maxSum;
-  }
-
-  // between 0 to i, find the minPrefixSum, so the maxSum=max(maxSum, currentSum - minPrefixSum)
-  public int maxSubArray(int[] nums) {
-    int maxSum = Integer.MIN_VALUE;
-    int minPrefixSum = 0;
-
-    int[] prefixSum = this.getPrefixSum(nums);
-    // need to skip the 0 as it is not part of the input
-    for (int i = 1; i < prefixSum.length; i++) {
-      maxSum = Math.max(maxSum, prefixSum[i] - minPrefixSum);
-      minPrefixSum = Math.min(minPrefixSum, prefixSum[i]);
-    }
-
-    return maxSum;
-  }
-
-  // sum(i) = sigma(0 to i)
-  // [1,2,3] => [0,1,3,6]
-  private int[] getPrefixSum(int[] nums) {
-    int[] prefixSum = new int[nums.length + 1];
-    prefixSum[0] = 0;
-
-    for (int i = 1; i < prefixSum.length; i++) {
-      prefixSum[i] = prefixSum[i - 1] + nums[i - 1];
-    }
-
-    return prefixSum;
-  }
-
-  // brute force
-  // find all subarrays
-  // find the sum
-  // max the sum
+  // brute force: find all subarrays and get the sums
   // time complexity: O(n^2) all subarrays * O(n) subarray sum = O(n^3)
   // space complexity: O(1) for no extra space usage
-  public int maxSubArrayBruteForce(int[] nums) {
+  public int maxSubArray(int[] nums) {
     int maxSubarraySum = Integer.MIN_VALUE;
     if (nums.length == 0) {
       return maxSubarraySum;
@@ -73,6 +27,53 @@ class MaximumSubarray {
     }
 
     return maxSubarraySum;
+  }
+
+  // time n space n
+  // build the prefixSum and track the minPrefixSum(0 or lower)
+  // maxSum=max(maxSum, currentPrefixSum - minPrefixSum)
+  public int maxSubArray(int[] nums) {
+    int maxSum = Integer.MIN_VALUE;
+    int minPrefixSum = 0;
+
+    int[] prefixSum = this.getPrefixSum(nums);
+    // need to skip the 0 as it is not part of the input
+    for (int i = 1; i < prefixSum.length; i++) {
+      maxSum = Math.max(maxSum, prefixSum[i] - minPrefixSum);
+      minPrefixSum = Math.min(minPrefixSum, prefixSum[i]);
+    }
+
+    return maxSum;
+  }
+
+  // time n space n
+  // build the prefixSum and track the minPrefixSum(0 or lower)
+  // maxSum=max(maxSum, currentPrefixSum - minPrefixSum)
+  public int maxSubArray(int[] nums) {
+    int prefixSum = 0;
+    int minPrefixSum = 0;
+    int maxSum = Integer.MIN_VALUE;
+    for (int num : nums) {
+      prefixSum = prefixSum + num;
+      int currentMaxprefixSum = prefixSum - minPrefixSum;
+      maxSum = Math.max(maxSum, currentMaxprefixSum);
+      minPrefixSum = Math.min(minPrefixSum, prefixSum);
+    }
+
+    return maxSum;
+  }
+
+  // sum(i) = sigma(0 to i)
+  // [1,2,3] => [0,1,3,6]
+  private int[] getPrefixSum(int[] nums) {
+    int[] prefixSum = new int[nums.length + 1];
+    prefixSum[0] = 0;
+
+    for (int i = 1; i < prefixSum.length; i++) {
+      prefixSum[i] = prefixSum[i - 1] + nums[i - 1];
+    }
+
+    return prefixSum;
   }
 
   // brute force with prefix sum
