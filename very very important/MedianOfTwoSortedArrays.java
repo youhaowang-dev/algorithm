@@ -25,11 +25,13 @@ final class MedianOfTwoSortedArrays {
   // binary search for a max partition(inclusive) position that spit two sides with same total count AND
   // short array partion left < long array parition && short array partion > long array parition left
 
-  // [1,3][2,4,5] => totalLeftCount = (5+1)/2 = 3
+  // [1,3][2,4,5] => partition 1,3,| and 2,|4,5 => median=max(3,2)=3
+  //        totalLeftCount = (5+1)/2 = 3
   //        shortPartition: 2 => longPartition: 3-2=1
   //        shortPartitionLeftVal: short[2-1]=3, longPartitionLeftVal: long[1-1]=2
   //        median = max(3,2) = 3
-  // [1,3,5][2,4,6] => totalLeftCount = (6+1)/2 = 3
+  // [1,3,5][2,4,6] => partition 1,3,|5 and 2,|4,6 => median=(max(3,2)+min(5,4))=(3+4)/2=3.5
+  //        totalLeftCount = (6+1)/2 = 3
   //        shortPartition: 2 => longPartition: 3-2=1
   //        shortPartitionLeftVal: short[2-1]=3, longPartitionLeftVal: long[1-1]=2
   //        shortPartitionVal: short[2]=5, longPartitionVal: long[1]=4
