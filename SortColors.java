@@ -18,26 +18,34 @@ class SortColors {
   // easy solution would be two passes
   // pass1 moves all the 0s and pass2 moves all the 1s
 
-  // three pointers to track the rightmost boundary of zeros, the leftmost boundary of twos and the current element under the consideration.
-  // like a partition but for 3 parts
+  // one pass: swap 0 to left and 2 to right, so 1 is in the middle
+  // three pointers to track the tail of 0, the head of 2, and the current swap position
   public void sortColors(int[] nums) {
-    int zero = 0; // index smaller than zero should only have 1 as the value
-    int two = nums.length - 1; // index bigger than two should only have 2 as the value
+    int zerosTail = 0;
+    int twosHead = nums.length - 1;
     int current = 0;
-    while (current <= two) {
-      if (nums[current] == 0) {
-        int rightmostZeroCopy = nums[zero];
-        nums[zero] = nums[current];
-        nums[current] = rightmostZeroCopy;
-        zero++;
+    while (current <= twosHead) {
+      int currentVal = nums[current];
+      // 0, move 0 to zero tail
+      if (currentVal == 0) {
+        int zeroTailCopy = nums[zerosTail];
+        nums[zerosTail] = currentVal;
+        nums[current] = zeroTailCopy;
+        zerosTail++;
         current++;
-      } else if (nums[current] == 2) {
-        int leftostTwoCopy = nums[two];
-        nums[two] = nums[current];
-        nums[current] = leftostTwoCopy;
-        two--;
-      } else {
-        // 1, noop
+        continue;
+      }
+      // 2, move 2 to two head, donot move current as the swapped value coult be 0
+      if (currentVal == 2) {
+        int twoHeadCopy = nums[twosHead];
+        nums[twosHead] = currentVal;
+        nums[current] = twoHeadCopy;
+        twosHead--;
+        continue;
+      }
+
+      // 1, noop, move current
+      if (currentVal == 1) {
         current++;
       }
     }
