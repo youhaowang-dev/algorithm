@@ -1,5 +1,7 @@
 // tag: Array, Binary Search, Interactive
 // Facebook 3 Microsoft 2 Adobe 2 Google 3 instacart 3
+// https://leetcode.com/problems/search-in-a-sorted-array-of-unknown-size/
+
 // This is an interactive problem.
 // You have a sorted array of unique elements and an unknown size.
 // You do not have an access to the array but you can use the ArrayReader interface to access it. You can call ArrayReader.get(i) that:
@@ -22,33 +24,36 @@
 
 final class SearchInASortedArrayOfUnknownSize {
 
+  // brute force: call function and length++
+
   public int search(ArrayReader reader, int target) {
-    int start = 0;
-    int end = 1;
-    // binary search the boundary
-    while (reader.get(end) < target) {
-      start = end;
-      end = end * 2; // can also do << 1
+    int left = 0;
+    int right = 1;
+
+    // binary search the range
+    while (reader.get(right) < target) {
+      left = right;
+      right = right * 2; // can also do << 1
     }
     // binary search the target
-    while (start + 1 < end) {
-      int mid = start - (start - end) / 2;
+    while (left + 1 < right) {
+      int mid = left - (left - right) / 2;
       int midVal = reader.get(mid);
       if (midVal == target) {
         return mid;
       }
       if (midVal < target) {
-        start = mid;
+        left = mid;
       }
       if (midVal > target) {
-        end = mid;
+        right = mid;
       }
     }
-    if (reader.get(start) == target) {
-      return start;
+    if (reader.get(left) == target) {
+      return left;
     }
-    if (reader.get(end) == target) {
-      return end;
+    if (reader.get(right) == target) {
+      return right;
     }
 
     return -1;
