@@ -1,5 +1,6 @@
 // Stack, Design, Queue
 // Amazon 4 Goldman Sachs 3 eBay 2 Docusign 2 Microsoft 2 Oracle 2 Apple 6 ByteDance 3 VMware 3 Bloomberg 2 Google 2 Qualcomm 2 Splunk 2 DE Shaw 2
+// https://leetcode.com/problems/implement-queue-using-stacks/description/
 
 // Implement a first in first out (FIFO) queue using only two stacks. The implemented queue should support all the functions of a normal queue (push, peek, pop, and empty).
 

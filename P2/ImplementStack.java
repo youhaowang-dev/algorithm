@@ -2,21 +2,10 @@
 // Implement a stack. You can use any data structure inside a stack except stack itself to implement it.
 public class Stack {
 
-  Node peek; // IMPORTANT: put it here; not in the node class
+  Node peek;
 
   public Stack() {
     this.peek = null;
-  }
-
-  private class Node {
-
-    int x;
-    Node next;
-
-    public Node(int x, Node next) {
-      this.x = x;
-      this.next = next;
-    }
   }
 
   public void push(int x) {
@@ -34,5 +23,16 @@ public class Stack {
 
   public boolean isEmpty() {
     return this.peek == null;
+  }
+
+  private class Node {
+
+    public int x;
+    public Node next;
+
+    public Node(int x, Node next) {
+      this.x = x;
+      this.next = next;
+    }
   }
 }
