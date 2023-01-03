@@ -33,7 +33,7 @@ class BinarySearch {
         left = mid;
       }
     }
-
+    // handled terminated cases
     if (nums[left] == target) {
       return left;
     }
