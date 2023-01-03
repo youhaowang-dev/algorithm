@@ -20,7 +20,7 @@
 class LongestIncreasingSubsequence {
 
   // dp
-  // longest(index) = max(longest(prev index) + 1) if it is an increasing sequence
+  // longestSubseq[i] = max(longestSubseq[0...j] + 1 if is increasing)
   // https://www.jiuzhang.com/solutions/longest-increasing-subsequence/
   public int lengthOfLIS(int[] nums) {
     if (nums == null || nums.length == 0) {
@@ -37,9 +37,9 @@ class LongestIncreasingSubsequence {
     for (int index = 0; index < length; index++) {
       for (int prev = 0; prev < index; prev++) {
         boolean isIncreasing = nums[prev] < nums[index];
-        boolean isLonger = longestSubseq[prev] + 1 > longestSubseq[index];
-        if (isIncreasing && isLonger) {
-          longestSubseq[index] = longestSubseq[prev] + 1;
+        if (isIncreasing) {
+          longestSubseq[index] =
+            Math.max(longestSubseq[index], longestSubseq[prev] + 1);
         }
       }
     }
