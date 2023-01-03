@@ -16,8 +16,8 @@ final class FindMinimumInRotatedSortedArray {
 
   // binary search by dropping the unwanted part(the part without the target)
   // 4,5,6,1,2,3
-  // l   m     r => mid > right drop [l, m-1]
-  //   l   m  r  => mid < right drop [m+1, r]
+  // l   m     r => midVal > rightVal => continue search in [mid, right]
+  //     l   m r => midVal < rightVal => continue search in [left, mid]
   public int findMin(int[] nums) {
     if (nums.length == 1) {
       return nums[0];
@@ -27,17 +27,15 @@ final class FindMinimumInRotatedSortedArray {
     int right = nums.length - 1;
     while (left + 1 < right) {
       int mid = left - (left - right) / 2;
-      int midNum = nums[mid];
-      int rightNum = nums[right];
-      if (midNum > rightNum) {
-        // target in right side
+      int midVal = nums[mid];
+      int rightVal = nums[right];
+      if (midVal > rightVal) {
         left = mid;
       }
-      if (midNum < rightNum) {
-        // target in left side
+      if (midVal < rightVal) {
         right = mid;
       }
-      // midNum == rightNum, let /2 do its work
+      // midVal == rightVal, problem assumes "All the integers of nums are unique."
     }
 
     return Math.min(nums[left], nums[right]);
