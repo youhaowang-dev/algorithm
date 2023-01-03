@@ -33,6 +33,39 @@
 
 // either pop or push will be O(n) as queue is FIFO
 // assumption: All the calls to pop and top are valid.
+
+// Follow-up: Can you implement the stack using only one queue?
+class MyStack {
+
+  Queue<Integer> queue = new LinkedList<>();
+
+  public void push(int x) {
+    this.queue.offer(x);
+    this.rotateExceptLast();
+  }
+
+  // mimic stack push result by "rotating all elements"
+  private void rotateExceptLast() {
+    int n = this.queue.size();
+    while (n > 1) {
+      this.queue.offer(this.queue.poll());
+      n--;
+    }
+  }
+
+  public int pop() {
+    return this.queue.poll();
+  }
+
+  public int top() {
+    return this.queue.peek();
+  }
+
+  public boolean empty() {
+    return this.queue.isEmpty();
+  }
+}
+
 class MyStack {
 
   Queue<Integer> queue;
@@ -59,7 +92,6 @@ class MyStack {
       val = this.queue.poll();
       count--;
       if (count != 0) {
-        System.out.println(val);
         // not val put back
         this.queue.offer(val);
       }
