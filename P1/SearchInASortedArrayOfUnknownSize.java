@@ -26,6 +26,7 @@ final class SearchInASortedArrayOfUnknownSize {
 
   // brute force: call function and length++
 
+  // binary search the [left, right], then search inside
   public int search(ArrayReader reader, int target) {
     int left = 0;
     int right = 1;
