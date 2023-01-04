@@ -32,7 +32,6 @@
 //   l r  => l=1, r=2, check left, if bad return, otherwise return right
 final class FirstBadVersion {
 
-  // TLE on leetcode but same complexity
   public int firstBadVersion(int n) {
     int left = 1;
     int right = n;
@@ -41,7 +40,7 @@ final class FirstBadVersion {
       if (isBadVersion(mid)) {
         right = mid;
       } else {
-        left = mid + 1;
+        left = mid;
       }
     }
     if (isBadVersion(left)) {
@@ -49,21 +48,5 @@ final class FirstBadVersion {
     }
 
     return right;
-  }
-
-  public int firstBadVersionV2(int n) {
-    int left = 1;
-    int right = n;
-    while (left < right) {
-      int mid = left - (left - right) / 2;
-      if (isBadVersion(mid)) {
-        right = mid;
-      } else {
-        left = mid + 1;
-      }
-    }
-
-    // left == right
-    return left;
   }
 }
