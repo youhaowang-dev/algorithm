@@ -2,7 +2,8 @@
 // Amazon 3 LinkedIn 5 Facebook 3 Adobe 3 Apple 2 Microsoft 3 Google 2 TikTok 2
 // https://leetcode.com/problems/search-in-rotated-sorted-array-ii/description/
 
-// This problem is similar to Search in Rotated Sorted Array, but nums may contain duplicates. Would this affect the runtime complexity? How and why?
+// This problem is similar to Search in Rotated Sorted Array, but nums may contain duplicates.
+// Would this affect the runtime complexity? How and why?
 
 // There is an integer array nums sorted in non-decreasing order (not necessarily with distinct values).
 // Before being passed to your function, nums is rotated at an unknown pivot index k (0 <= k < nums.length) such that
@@ -14,104 +15,61 @@ import java.util.*;
 
 final class SearchInRotatedSortedArrayII {
 
-  // with duplicates, we cannot tell the partition the target belongs to,
-  // so the pointer can only move by 1 and the worst complexity can be O(n).
-  // Worst case: This happens when all the elements are the same and we search for some different element.
-  // At each step, we will only be able to reduce the search space by 1 since arr[mid] equals arr[start] and
-  // it's not possible to decide the relative position of target from arr[mid]. Example: [1, 1, 1, 1, 1, 1, 1], target = 2.
-  // As we can see, by having duplicate elements in the array, we often miss the opportunity to apply binary search
-  // in certain search spaces. Hence, we get O(N) worst case (with duplicates) vs O(log⁡N) best case complexity (without duplicates).
+  // O(n)
+  // with duplicates, mid cannot be (left+right)/2 as the duplicate length is unknown
   public boolean search(int[] nums, int target) {
     if (nums == null || nums.length == 0) {
       return false;
     }
 
-    int start = 0;
-    int end = nums.length - 1;
-    while (start + 1 < end) {
-      int mid = start - (start - end) / 2;
+    int left = 0;
+    int right = nums.length - 1;
+    while (left + 1 < right) {
+      int mid = left - (left - right) / 2;
       int midVal = nums[mid];
-      int firstVal = nums[start];
-      int lastVal = nums[end];
-      // IMPORTANT to check equal here
-      if (firstVal == target || midVal == target || lastVal == target) {
+      int leftVal = nums[left];
+      int rightVal = nums[right];
+      // handle equals
+      if (midVal == target) {
         return true;
       }
-      if (!this.partitionCanBinarySearch(firstVal, midVal)) {
-        start++;
+      if (leftVal == target) {
+        return true;
+      }
+      if (rightVal == target) {
+        return true;
+      }
+      // handle duplicate
+      if (leftVal == midVal) {
+        left++;
         continue;
       }
-      if (!this.partitionCanBinarySearch(midVal, lastVal)) {
-        end--;
+      if (midVal == rightVal) {
+        right--;
         continue;
       }
-      if (this.partitionIsSorted(firstVal, midVal)) {
-        if (this.partitionHasTarget(firstVal, target, midVal)) {
-          end = mid;
-        } else { // else is must have here otherwise we will move start to the wrong position
-          // continue search in the other partition
-          start = mid;
-        }
-      }
-      if (this.partitionIsSorted(midVal, lastVal)) {
-        if (this.partitionHasTarget(midVal, target, lastVal)) {
-          start = mid;
+      // left is sorted
+      boolean leftPartSorted = leftVal < midVal;
+      boolean targetInLeftPart = leftVal < target && target < midVal;
+      if (leftPartSorted) {
+        if (targetInLeftPart) {
+          right = mid;
         } else {
-          end = mid;
+          left = mid;
+        }
+      }
+      // right is sorted
+      boolean rightPartSorted = midVal < rightVal;
+      boolean targetInRightPart = midVal < target && target < rightVal;
+      if (rightPartSorted) {
+        if (targetInRightPart) {
+          left = mid;
+        } else {
+          right = mid;
         }
       }
     }
-    if (nums[start] == target) {
-      return true;
-    }
-    if (nums[end] == target) {
-      return true;
-    }
 
-    return false;
-  }
-
-  private boolean partitionCanBinarySearch(int firstVal, int lastVal) {
-    return firstVal != lastVal;
-  }
-
-  private boolean partitionIsSorted(int firstVal, int lastVal) {
-    return firstVal < lastVal;
-  }
-
-  private boolean partitionHasTarget(int firstVal, int target, int lastVal) {
-    return firstVal < target && target < lastVal;
-  }
-
-  public static void main(String[] args) throws Exception {
-    SearchInRotatedSortedArrayII SearchInRotatedSortedArrayII = new SearchInRotatedSortedArrayII();
-    // int[] array = new int[] { 3, 3, 3, 1, 1, 1 };
-    // int[] targets = new int[] { 1, 3, 8 };
-    int[] array = new int[] { 4, 5, 6, 7, 0, 1, 2 };
-    int[] targets = new int[] { 1 };
-    // NOTE: the method must be public to make .getMethod work
-    String[] testMethodNames = new String[] { "search" };
-
-    for (int target : targets) {
-      for (String methodName : testMethodNames) {
-        java.lang.reflect.Method method = SearchInRotatedSortedArrayII
-          .getClass()
-          .getMethod(methodName, int[].class, int.class);
-        boolean found = (boolean) method.invoke(
-          SearchInRotatedSortedArrayII,
-          array,
-          target
-        );
-
-        System.out.println(
-          String.format(
-            "Method Name: %s\nInput: %s, Output: %s",
-            methodName,
-            Arrays.toString(array) + " Target: " + target,
-            found
-          )
-        );
-      }
-    }
+    return nums[left] == target || nums[right] == target;
   }
 }

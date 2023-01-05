@@ -38,7 +38,7 @@ final class SearchInRotatedSortedArray {
   // if sorted part contains the target, continue search in this part
   // if sorted part does not contain the target, continue search the other part
   public int search(int[] nums, int target) {
-    if (nums.length == 0) {
+    if (nums == null || nums.length == 0) {
       return -1;
     }
     int left = 0;
