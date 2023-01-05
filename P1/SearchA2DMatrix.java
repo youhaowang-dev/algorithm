@@ -26,7 +26,7 @@ final class SearchA2DMatrix {
     int right = totalLength - 1;
     while (left + 1 < right) {
       int mid = left - (left - right) / 2;
-      int midVal = this.getValue(matrix, mid);
+      int midVal = this.getVal(matrix, mid);
       if (midVal == target) {
         return true;
       }
@@ -39,10 +39,10 @@ final class SearchA2DMatrix {
     }
 
     // left == right or left+1 == right
-    if (this.getValue(matrix, left) == target) {
+    if (this.getVal(matrix, left) == target) {
       return true;
     }
-    if (this.getValue(matrix, right) == target) {
+    if (this.getVal(matrix, right) == target) {
       return true;
     }
 
@@ -53,7 +53,7 @@ final class SearchA2DMatrix {
   // given [[1,2,3],[4,5,6],[7,8,9]]
   // index = 3 => rowIndex = 1, colIndex = 0 => rowIndex = index / colCount = 3/3 = 1, colIndex = index % colCount = 3%3=0
   // index = 5 => expect value = 6, expect rowIndex = 1 = 5 / 3, colIndex = 2 = 5 % 3
-  private int getValue(int[][] matrix, int index) {
+  private int getVal(int[][] matrix, int index) {
     if (
       matrix.length == 0 ||
       matrix[0].length == 0 ||
