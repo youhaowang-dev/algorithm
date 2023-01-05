@@ -55,6 +55,77 @@ final class MedianOfTwoSortedArrays {
     int length2 = nums2.length;
     int index1 = 0;
     int index2 = 0;
+    while (k != 1) {
+      // all nums1 are dropped
+      if (index1 == length1) {
+        return nums2[index2 + k - 1];
+      }
+      // all nums2 are dropped
+      if (index2 == length2) {
+        return nums1[index1 + k - 1];
+      }
+
+      // get the next index if drop k/2 elements
+      int halfK = k / 2;
+      int pivot1 = Math.min(index1 + halfK, length1) - 1;
+      int pivot2 = Math.min(index2 + halfK, length2) - 1;
+      if (nums1[pivot1] <= nums2[pivot2]) {
+        // [index1, pivot1] has no target; continue in [pivot1+1, end]
+        int droppedCount = pivot1 - index1 + 1;
+        k = k - droppedCount;
+        index1 = pivot1 + 1;
+      } else {
+        // [index2, pivot2] has no target; continue in [pivot2+1, end]
+        int droppedCount = pivot2 - index2 + 1;
+        k = k - droppedCount;
+        index2 = pivot2 + 1;
+      }
+    }
+
+    // k == 1
+    int val1;
+    if (index1 < 0 || index1 > length1 - 1) {
+      val1 = Integer.MAX_VALUE;
+    } else {
+      val1 = nums1[index1];
+    }
+    int val2;
+    if (index2 < 0 || index2 > length2 - 1) {
+      val2 = Integer.MAX_VALUE;
+    } else {
+      val2 = nums2[index2];
+    }
+
+    return Math.min(val1, val2);
+  }
+
+  private int getKthElement(int[] A, int aStart, int[] B, int bStart, int k) {
+    if (aStart >= A.length) {
+      return B[bStart + k - 1];
+    }
+    if (bStart >= B.length) {
+      return A[aStart + k - 1];
+    }
+    if (k == 1) {
+      return Math.min(A[aStart], B[bStart]);
+    }
+    int halfK = k / 2;
+    int aMid = aStart + halfK - 1;
+    int bMid = bStart + halfK - 1;
+    int aVal = aMid >= A.length ? Integer.MAX_VALUE : A[aMid];
+    int bVal = bMid >= B.length ? Integer.MAX_VALUE : B[bMid];
+    if (aVal <= bVal) {
+      return this.getKthElement(A, aMid + 1, B, bStart, k - halfK);
+    } else {
+      return this.getKthElement(A, aStart, B, bMid + 1, k - halfK);
+    }
+  }
+
+  public int getKthElement(int[] nums1, int[] nums2, int k) {
+    int length1 = nums1.length;
+    int length2 = nums2.length;
+    int index1 = 0;
+    int index2 = 0;
     while (true) {
       // all nums1 are dropped
       if (index1 == length1) {
