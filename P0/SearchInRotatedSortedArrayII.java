@@ -72,4 +72,125 @@ final class SearchInRotatedSortedArrayII {
 
     return nums[left] == target || nums[right] == target;
   }
+
+  public boolean search(int[] nums, int target) {
+    if (nums == null || nums.length == 0) {
+      return false;
+    }
+
+    BinarySearchTarget search = new BinarySearchTarget(nums, target);
+    while (search.unfinished()) {
+      if (search.targetFound()) {
+        return true;
+      }
+      if (search.foundDuplicate()) {
+        search.handleDuplicate();
+        continue;
+      }
+      search.updateLeftPart();
+      search.updateRightPart();
+    }
+
+    return search.targetFound();
+  }
+
+  private class BinarySearchTarget {
+
+    private int left;
+    private int right;
+    private int target;
+    private int[] nums;
+
+    public BinarySearchTarget(int[] nums, int target) {
+      this.left = 0;
+      this.right = nums.length - 1;
+      this.target = target;
+      this.nums = nums;
+    }
+
+    public boolean unfinished() {
+      return this.left + 1 < this.right;
+    }
+
+    public boolean targetFound() {
+      return (
+        this.getMidVal() == this.target ||
+        this.getLeftVal() == this.target ||
+        this.getRightVal() == this.target
+      );
+    }
+
+    public boolean foundDuplicate() {
+      return this.leftHasDuplicate() || this.rightHasDuplicate();
+    }
+
+    private boolean leftHasDuplicate() {
+      return this.getLeftVal() == this.getMidVal();
+    }
+
+    private boolean rightHasDuplicate() {
+      return this.getRightVal() == this.getMidVal();
+    }
+
+    public void handleDuplicate() {
+      if (this.leftHasDuplicate()) {
+        this.left++;
+      }
+      if (this.rightHasDuplicate()) {
+        this.right--;
+      }
+    }
+
+    public void updateLeftPart() {
+      if (this.leftPartSorted()) {
+        if (this.targetInLeftPart()) {
+          this.right = this.getMid();
+        } else {
+          this.left = this.getMid();
+        }
+      }
+    }
+
+    public void updateRightPart() {
+      if (this.rightPartSorted()) {
+        if (this.targetInRightPart()) {
+          this.left = this.getMid();
+        } else {
+          this.right = this.getMid();
+        }
+      }
+    }
+
+    private int getLeftVal() {
+      return this.nums[this.left];
+    }
+
+    private int getRightVal() {
+      return this.nums[this.right];
+    }
+
+    private int getMidVal() {
+      return this.nums[this.getMid()];
+    }
+
+    private int getMid() {
+      return this.left + (this.right - this.left) / 2;
+    }
+
+    private boolean leftPartSorted() {
+      return this.getLeftVal() < this.getMidVal();
+    }
+
+    private boolean targetInLeftPart() {
+      return this.getLeftVal() < this.target && this.target < this.getMidVal();
+    }
+
+    private boolean rightPartSorted() {
+      return this.getMidVal() < this.getRightVal();
+    }
+
+    private boolean targetInRightPart() {
+      return this.getMidVal() < this.target && this.target < this.getRightVal();
+    }
+  }
 }
