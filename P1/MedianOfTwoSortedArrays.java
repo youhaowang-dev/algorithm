@@ -22,6 +22,71 @@ final class MedianOfTwoSortedArrays {
   // merge two arrays and find the median
   // O(m+n)
 
+  // binary search the kth largest number of 2 sorted arrays; k is 1 based index
+  // find median => find median index(s) => find kth largest number for the index(s) => calculate median
+
+  // A[1,3,5,7], B[2,4,6], target 4th largest
+  // k: 4, index1: 0, pivot1: 1, index2: 0, pivot2: 1 ==> k: 2, index1: 2, index2: 0
+  // k: 2, index1: 2, pivot1: 2, index2: 0, pivot2: 0 ==> k: 1, index1: 2, index2: 1
+  // k: 1, return min(A[2],B[1]) = min(5,4) = 4
+
+  // 3 cases
+  //    A[k/2-1] < B[k/2-1], A[0, k/2-1] can be dropped
+  //    B[k/2-1] < A[k/2-1], B[0, k/2-1] can be dropped
+  //    A[k/2-1] == B[k/2-1], same as A[k/2-1] < B[k/2-1]
+  // special cases
+  //    A[k/2-1] or B[k/2-1] out of bound, get the last element; we cannot simply remove k/2
+  //    index == length, search is finished, just return kth in the other array
+  //    k == 1, return min(A[i], B[j])
+  public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+    int length1 = nums1.length, length2 = nums2.length;
+    int totalLength = length1 + length2;
+    if (totalLength % 2 == 1) {
+      return (double) this.getKthElement(nums1, nums2, totalLength / 2 + 1);
+    } else {
+      int left = this.getKthElement(nums1, nums2, totalLength / 2);
+      int right = this.getKthElement(nums1, nums2, totalLength / 2 + 1);
+      return (left + right) / 2.0;
+    }
+  }
+
+  public int getKthElement(int[] nums1, int[] nums2, int k) {
+    int length1 = nums1.length;
+    int length2 = nums2.length;
+    int index1 = 0;
+    int index2 = 0;
+    while (true) {
+      // all nums1 are dropped
+      if (index1 == length1) {
+        return nums2[index2 + k - 1];
+      }
+      // all nums2 are dropped
+      if (index2 == length2) {
+        return nums1[index1 + k - 1];
+      }
+      // return min when k is the smallest(1)
+      if (k == 1) {
+        return Math.min(nums1[index1], nums2[index2]);
+      }
+
+      // get the next index if drop k/2 elements
+      int halfK = k / 2;
+      int pivot1 = Math.min(index1 + halfK, length1) - 1;
+      int pivot2 = Math.min(index2 + halfK, length2) - 1;
+      if (nums1[pivot1] <= nums2[pivot2]) {
+        // [index1, pivot1] has no target; continue in [pivot1+1, end]
+        int droppedCount = pivot1 - index1 + 1;
+        k = k - droppedCount;
+        index1 = pivot1 + 1;
+      } else {
+        // [index2, pivot2] has no target; continue in [pivot2+1, end]
+        int droppedCount = pivot2 - index2 + 1;
+        k = k - droppedCount;
+        index2 = pivot2 + 1;
+      }
+    }
+  }
+
   // binary search for a max partition(inclusive) position that spit two sides with same total count AND
   // shortArr[partition-1] < longArr[partition] && shortArr[partition] > longArr[partition-1]
   // binary search on short array
@@ -104,157 +169,5 @@ final class MedianOfTwoSortedArrays {
       : nums2[longPartition];
 
     return Math.min(shortPartitionVal, longPartitionVal);
-  }
-
-  // binary search the kth largest number of 2 sorted arrays; k is 1 based index
-  // find median => find median index(s) => find kth largest number for the index(s) => calculate median
-  // [1,2,3,4,5] => find 3 => 3 = length/2 + 1 => k = length / 2 + 1
-  // [1,2,3,4] => find 2,3 => 2 = length/2, 3 = length/2 + 1 => k1 = length / 2, k2 = length / 2 + 1
-
-  // 3 cases
-  //    A[k/2-1] < B[k/2-1], A[0, k/2-1] can be dropped
-  //    B[k/2-1] < A[k/2-1], B[0, k/2-1] can be dropped
-  //    A[k/2-1] == B[k/2-1], same as A[k/2-1] < B[k/2-1]
-  // special cases
-  //    A[k/2-1] or B[k/2-1] out of bound, get the last element; we cannot simply remove k/2
-  //    index == length, search is finished, just return kth in the other array
-  //    k == 1, return min(A[i], B[j])
-  public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-    int length1 = nums1.length, length2 = nums2.length;
-    int totalLength = length1 + length2;
-    if (totalLength % 2 == 1) {
-      return (double) this.getKthElement(nums1, nums2, totalLength / 2 + 1);
-    } else {
-      int left = this.getKthElement(nums1, nums2, totalLength / 2);
-      int right = this.getKthElement(nums1, nums2, totalLength / 2 + 1);
-      return (left + right) / 2.0;
-    }
-  }
-
-  // A[1,3,5,7], B[2,4,6], target 4th largest
-  // k: 4, index1: 0, pivot1: 1, index2: 0, pivot2: 1 ==> k: 2, index1: 2, index2: 0
-  // k: 2, index1: 2, pivot1: 2, index2: 0, pivot2: 0 ==> k: 1, index1: 2, index2: 1
-  // k: 1, return min(A[2],B[1]) = min(5,4) = 4
-  public int getKthElement(int[] nums1, int[] nums2, int k) {
-    int length1 = nums1.length;
-    int length2 = nums2.length;
-    int index1 = 0;
-    int index2 = 0;
-    while (true) {
-      // all nums1 are dropped
-      if (index1 == length1) {
-        return nums2[index2 + k - 1];
-      }
-      // all nums2 are dropped
-      if (index2 == length2) {
-        return nums1[index1 + k - 1];
-      }
-      // return min when k is the smallest(1)
-      if (k == 1) {
-        return Math.min(nums1[index1], nums2[index2]);
-      }
-
-      // get the next index if drop k/2 elements
-      int halfK = k / 2;
-      int pivot1 = Math.min(index1 + halfK, length1) - 1;
-      int pivot2 = Math.min(index2 + halfK, length2) - 1;
-      if (nums1[pivot1] <= nums2[pivot2]) {
-        // [index1, pivot1] has no target; continue in [pivot1+1, end]
-        int droppedCount = pivot1 - index1 + 1;
-        k = k - droppedCount;
-        index1 = pivot1 + 1;
-      } else {
-        // [index2, pivot2] has no target; continue in [pivot2+1, end]
-        int droppedCount = pivot2 - index2 + 1;
-        k = k - droppedCount;
-        index2 = pivot2 + 1;
-      }
-    }
-  }
-
-  public double findMedianSortedArrays2(int[] nums1, int[] nums2) {
-    // make sure first array is shorter
-    if (nums1.length > nums2.length) {
-      int[] nums2Ref = nums2;
-      nums2 = nums1;
-      nums1 = nums2Ref;
-    }
-    int shortLength = nums1.length;
-    int longLength = nums2.length;
-    // define the partition left and right count; even: left = right, odd: left = right+1
-    // because we include the median to left for odd cases, + 1 is needed to include it in the left part
-    // + 1 does not affect the even cases, so the following relationship works for both even and odd
-    int totalLeft = (shortLength + longLength + 1) / 2;
-    // short array partition index = total element count from 0 to index-1; [0, index-1][[index, end]
-    // long array partition index = total element count from 0 to index-1; [0, index-1][[index, end]
-    // long partition index + short partition index = long left count + short left count = half
-
-    // find a position in nums1 where nums1[partition left max] < nums2[partition right min] && nums2[partition left max] < nums1[partition right min]
-    int shortPartitionStart = 0;
-    int shortPartitionEnd = shortLength;
-    while (shortPartitionStart < shortPartitionEnd) {
-      // + 1 to avoid shortPartition - 1 out of bound; also prevent infinite loop
-      int shortPartition = (shortPartitionStart + shortPartitionEnd + 1) / 2;
-      int longPartition = totalLeft - shortPartition;
-      // check the inverse of the valid cases
-      if (nums1[shortPartition - 1] > nums2[longPartition]) {
-        shortPartitionEnd = shortPartition - 1;
-      } else {
-        shortPartitionStart = shortPartition;
-      }
-    }
-
-    // update the partition one more time
-    int shortPartition = shortPartitionStart;
-    int longPartition = totalLeft - shortPartition;
-    // get the 4 numbers that are needed for median
-    int nums1LeftMax = shortPartition == 0
-      ? Integer.MIN_VALUE
-      : nums1[shortPartition - 1];
-    int nums1RightMin = shortPartition == shortLength
-      ? Integer.MAX_VALUE
-      : nums1[shortPartition];
-    int nums2LeftMax = longPartition == 0
-      ? Integer.MIN_VALUE
-      : nums2[longPartition - 1];
-    int nums2RightMin = longPartition == longLength
-      ? Integer.MAX_VALUE
-      : nums2[longPartition];
-
-    if ((shortLength + longLength) % 2 == 1) {
-      return (double) Math.max(nums1LeftMax, nums2LeftMax);
-    } else {
-      int leftMax = Math.max(nums1LeftMax, nums2LeftMax);
-      int rightMin = Math.min(nums1RightMin, nums2RightMin);
-      return (leftMax + rightMin) * 0.5;
-    }
-  }
-
-  public static void main(String[] args) throws Exception {
-    MedianOfTwoSortedArrays MedianOfTwoSortedArrays = new MedianOfTwoSortedArrays();
-    int[] array1 = new int[] { 1, 2, 3, 4 };
-    int[] array2 = new int[] { 5, 6, 7, 8 };
-    // NOTE: the method must be public to make .getMethod work
-    String[] testMethodNames = new String[] {
-      "findMedianSortedArrays",
-      "findMedianSortedArrays2",
-    };
-
-    for (String methodName : testMethodNames) {
-      System.out.println("methodName: " + methodName);
-      System.out.println("array1: " + Arrays.toString(array1));
-      System.out.println("array2: " + Arrays.toString(array2));
-      java.lang.reflect.Method method = MedianOfTwoSortedArrays
-        .getClass()
-        .getMethod(methodName, int[].class, int[].class);
-      double result = (double) method.invoke(
-        MedianOfTwoSortedArrays,
-        array1,
-        array2
-      );
-
-      System.out.println("result: " + result);
-      System.out.println();
-    }
   }
 }
