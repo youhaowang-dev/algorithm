@@ -24,9 +24,10 @@ import java.util.*;
 
 final class FindPeakElement {
 
-  // based on the assumption, peak always exists, so we just need to binary search by dropping the increasing side or decreasing side
-  // if mid value > mid+1 value, peak is at the left, move the right to mid
-  // else peak is at the right side, move the left to right
+  // based on the assumption(-1 and len are max int), peak always exists
+  // so binary search by dropping the increasing side or decreasing side
+  // increase: midVal < midRightVal, drop left side
+  // decrease: midVal > midRightVal, drop right side
   public int findPeakElement(int[] nums) {
     // TODO: validation
     int left = 0;
@@ -34,20 +35,26 @@ final class FindPeakElement {
     while (left + 1 < right) {
       int mid = left - (left - right) / 2;
       int midVal = nums[mid];
-      int nextMidVal = nums[mid + 1];
-      if (midVal > nextMidVal) {
-        // current range is decreasing, so peak is on the left side, drop current range
-        right = mid; // drop [mid+1, right]
+      int midRightVal = nums[mid + 1];
+      if (midVal > midRightVal) {
+        // [mid, mid + 1] decreases, so peak is on the left side, drop [mid, right]
+        right = mid;
       }
-      if (midVal < nextMidVal) {
-        // current range is increasing, so peak is on the right side, drop current range
+      if (midVal < midRightVal) {
+        // [mid, mid + 1] increases, so peak is on the right side, drop [left, mid]
         left = mid;
       }
-      // midVal == nextMidVal, let /2 do its work, nums[-1] = nums[n] = -∞, so anyone of them will work for case like [1,1,1,1,1]
+      if (midVal == midRightVal) {
+        // either left or right is fine
+        right = mid;
+      }
     }
+
+    // either left or right is the peak, return the index of max val(peak)
     if (nums[left] < nums[right]) {
       return right;
     }
+
     return left;
   }
 
