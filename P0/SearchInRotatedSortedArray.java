@@ -22,6 +22,75 @@
 
 final class SearchInRotatedSortedArray {
 
+  // brute force: linear scan O(n)
+
+  // TODO: use class SearchState {left, right, getMid, leftIsSorted, rightIsSorted, searchLeftNext, searchRightNext}
+
+  // binary search O(logn)
+  // 4,5,6,7,0,1,2
+  // l t   m     r => left sorted and t in left       => r move to m
+  // l     m   t r => left sorted but t not in left   => l move to m
+  // 4,5,6,7,0,1,2
+  //   l t   m   r => right sorted but t not in right => r move to m
+  //   l     m t r => right sorted and t in right     => l move to m
+  // mid can split the rotated array in two parts; one part is sorted, the other part is unsorted
+  // handle the sorted part by additionaly checking if the target in this part
+  // if sorted part contains the target, continue search in this part
+  // if sorted part does not contain the target, continue search the other part
+  public int search(int[] nums, int target) {
+    if (nums.length == 0) {
+      return -1;
+    }
+    int left = 0;
+    int right = nums.length - 1;
+    while (left + 1 < right) {
+      int mid = left - (left - right) / 2;
+      int midVal = nums[mid];
+      int leftVal = nums[left];
+      int rightVal = nums[right];
+      // handle equals
+      if (midVal == target) {
+        return mid;
+      }
+      if (leftVal == target) {
+        return left;
+      }
+      if (rightVal == target) {
+        return right;
+      }
+      // left is sorted
+      boolean leftPartSorted = leftVal < midVal;
+      boolean targetInLeftPart = leftVal < target && target < midVal;
+      if (leftPartSorted) {
+        if (targetInLeftPart) {
+          right = mid;
+        } else {
+          left = mid;
+        }
+      }
+      // right is sorted
+      boolean rightPartSorted = midVal < rightVal;
+      boolean targetInRightPart = midVal < target && target < rightVal;
+      if (rightPartSorted) {
+        if (targetInRightPart) {
+          left = mid;
+        } else {
+          right = mid;
+        }
+      }
+    }
+
+    if (nums[left] == target) {
+      return left;
+    }
+
+    if (nums[right] == target) {
+      return right;
+    }
+
+    return -1;
+  }
+
   // 1. binary search the min index
   // 2. binary search the target in the sorted part
   public int search(int[] nums, int target) {
@@ -36,9 +105,9 @@ final class SearchInRotatedSortedArray {
       return nums.length - 1;
     }
 
-    boolean targetInLeftSide = target > rightVal;
-    int left = targetInLeftSide ? 0 : minIndex;
-    int right = targetInLeftSide ? minIndex - 1 : nums.length - 1;
+    boolean targetInLeftPart = target > rightVal;
+    int left = targetInLeftPart ? 0 : minIndex;
+    int right = targetInLeftPart ? minIndex - 1 : nums.length - 1;
     while (left + 1 < right) {
       int mid = left - (left - right) / 2;
       int midVal = nums[mid];
@@ -85,64 +154,6 @@ final class SearchInRotatedSortedArray {
     }
 
     if (nums[left] > nums[right]) {
-      return right;
-    }
-
-    return -1;
-  }
-
-  // https://leetcode.com/problems/search-in-rotated-sorted-array/solutions/216624/search-in-rotated-sorted-array/comments/1350031
-  // If a sorted array is shifted, the mid splits the arrays in two sides and one side must be sorted.
-  //    The other side may or may not be sorted.
-  // for sorted side, if (leftVal < midVal < rightVal) continue binary search in this side, otherwise abandon this side
-  // the unsorted side needs no handling because we either continue binary search in the sorted side or abandon the sorted side
-  public int search(int[] nums, int target) {
-    if (nums.length == 0) {
-      return -1;
-    }
-    int left = 0;
-    int right = nums.length - 1;
-    while (left + 1 < right) {
-      int mid = left - (left - right) / 2;
-      int midVal = nums[mid];
-      int leftVal = nums[left];
-      int rightVal = nums[right];
-      if (midVal == target) {
-        return mid;
-      }
-      // we don't use <= or >=, so handle the == cases here
-      if (leftVal == target) {
-        return left;
-      }
-      if (rightVal == target) {
-        return right;
-      }
-      boolean leftSideIsSorted = leftVal < midVal;
-      boolean targetInLeftSide = leftVal < target && target < midVal;
-      // do not use && as it is a different condition
-      if (leftSideIsSorted) {
-        if (targetInLeftSide) {
-          right = mid;
-        } else {
-          left = mid;
-        }
-      }
-      boolean rightSideIsSorted = midVal < rightVal;
-      boolean targetInRightSide = midVal < target && target < rightVal;
-      if (rightSideIsSorted) {
-        if (targetInRightSide) {
-          left = mid;
-        } else {
-          right = mid;
-        }
-      }
-    }
-
-    if (nums[left] == target) {
-      return left;
-    }
-
-    if (nums[right] == target) {
       return right;
     }
 
