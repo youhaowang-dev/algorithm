@@ -23,19 +23,12 @@ final class MedianOfTwoSortedArrays {
   // O(m+n)
 
   // binary search for a max partition(inclusive) position that spit two sides with same total count AND
-  // short array partion left < long array parition && short array partion > long array parition left
-
-  // [1,3][2,4,5] => partition 1,3,| and 2,|4,5 => median=max(3,2)=3
-  //        totalLeftCount = (5+1)/2 = 3
-  //        shortPartition: 2 => longPartition: 3-2=1
-  //        shortPartitionLeftVal: short[2-1]=3, longPartitionLeftVal: long[1-1]=2
-  //        median = max(3,2) = 3
-  // [1,3,5][2,4,6] => partition 1,3,|5 and 2,|4,6 => median=(max(3,2)+min(5,4))=(3+4)/2=3.5
-  //        totalLeftCount = (6+1)/2 = 3
-  //        shortPartition: 2 => longPartition: 3-2=1
-  //        shortPartitionLeftVal: short[2-1]=3, longPartitionLeftVal: long[1-1]=2
-  //        shortPartitionVal: short[2]=5, longPartitionVal: long[1]=4
-  //        median = (max(3,2) + min(5,4)) / 2 = 7/2 = 3.5
+  // shortArr[partition-1] < longArr[partition] && shortArr[partition] > longArr[partition-1]
+  // binary search on short array
+  // NOTE: result can go out of bound
+  // [1,3,5][2,4,6] => expect 1 3 | 5 and 2 | 4 6 => shortPartition=2, long=3-2=1
+  // [1,2][3,4,5,6] => expect 1 2 | and 3 | 4 5 6 => shortPartition=2, long=3-2=1
+  // [5,6][1,2,3,4] => expect | 5 6 and 1 2 3 | 4 => shortPartition=0, long=3-0=3
   public double findMedianSortedArrays(int[] nums1, int[] nums2) {
     // make sure first array is shorter
     if (nums1.length > nums2.length) {
@@ -69,12 +62,11 @@ final class MedianOfTwoSortedArrays {
       // + 1 prevent infinite loop
       int partition = (left + right + 1) / 2;
       int longArrPartition = totalLeftCount - partition;
-      int partitionLeft = partition - 1;
-      if (shortArr[partitionLeft] > longArr[longArrPartition]) {
+      if (shortArr[partition - 1] > longArr[longArrPartition]) {
         // partition is too big; drop right part
-        right = partitionLeft;
+        right = partition - 1;
       } else {
-        // partition is okay; try to make it bigger by dropping the left part
+        // partition is okay; drop the left part to make it bigger
         left = partition;
       }
     }
@@ -114,22 +106,19 @@ final class MedianOfTwoSortedArrays {
     return Math.min(shortPartitionVal, longPartitionVal);
   }
 
-  // drop the unwanted part where target is not in
+  // binary search the kth largest number of 2 sorted arrays; k is 1 based index
   // find median => find median index(s) => find kth largest number for the index(s) => calculate median
-  //    *** k counts from 1 ***
   // [1,2,3,4,5] => find 3 => 3 = length/2 + 1 => k = length / 2 + 1
   // [1,2,3,4] => find 2,3 => 2 = length/2, 3 = length/2 + 1 => k1 = length / 2, k2 = length / 2 + 1
 
-  // https://www.lintcode.com/problem/65/solution/56866
-  // 因此我们可以归纳出三种情况：
-  // 如果 A[k/2-1] < B[k/2-1]，则比 A[k/2-1] 小的数最多只有 A 的前 k/2-1 个数和 BB 的前 k/2-1个数，即比 A[k/2-1] 小的数最多只有 k-2 个，因此 A[k/2-1]不可能是第 k 个数，A[0] 到 A[k/2-1]也都不可能是第 k 个数，可以全部排除。
-  // 如果 A[k/2-1] > B[k/2-1]A[k/2−1]>B[k/2−1]，则可以排除 B[0]B[0] 到 B[k/2-1]B[k/2−1]。
-  // 如果 A[k/2-1] = B[k/2-1]A[k/2−1]=B[k/2−1]，则可以归入第一种情况处理。
-  // 可以看到，比较 A[k/2-1]和 B[k/2-1]之后，可以排除 k/2 个不可能是第 k 小的数，查找范围缩小了一半。同时，我们将在排除后的新数组上继续进行二分查找，并且根据我们排除数的个数，减少 k 的值，这是因为我们排除的数都不大于第 k 小的数。
-  // 有以下三种情况需要特殊处理：
-  // 如果 A[k/2-1]或者 B[k/2-1]越界，那么我们可以选取对应数组中的最后一个元素。在这种情况下，我们必须根据排除数的个数减少 k 的值，而不能直接将 kk 减去 k/2k/2。
-  // 如果一个数组为空，说明该数组中的所有元素都被排除，我们可以直接返回另一个数组中第 k 小的元素。
-  // 如果 k=1，我们只要返回两个数组首元素的最小值即可。
+  // 3 cases
+  //    A[k/2-1] < B[k/2-1], A[0, k/2-1] can be dropped
+  //    B[k/2-1] < A[k/2-1], B[0, k/2-1] can be dropped
+  //    A[k/2-1] == B[k/2-1], same as A[k/2-1] < B[k/2-1]
+  // special cases
+  //    A[k/2-1] or B[k/2-1] out of bound, get the last element; we cannot simply remove k/2
+  //    index == length, search is finished, just return kth in the other array
+  //    k == 1, return min(A[i], B[j])
   public double findMedianSortedArrays(int[] nums1, int[] nums2) {
     int length1 = nums1.length, length2 = nums2.length;
     int totalLength = length1 + length2;
@@ -142,10 +131,10 @@ final class MedianOfTwoSortedArrays {
     }
   }
 
-  // binary search
-  // drop left part of nums1 or nums2
-  //      nums1[0...k/2-1] or nums2[0...k/2-1] based on nums1 and nums2 values of k/2-1
-  // 1234 => kth 3 => find 3 => find index 2 => 2 = 0(index) + 3(kth) - 1
+  // A[1,3,5,7], B[2,4,6], target 4th largest
+  // k: 4, index1: 0, pivot1: 1, index2: 0, pivot2: 1 ==> k: 2, index1: 2, index2: 0
+  // k: 2, index1: 2, pivot1: 2, index2: 0, pivot2: 0 ==> k: 1, index1: 2, index2: 1
+  // k: 1, return min(A[2],B[1]) = min(5,4) = 4
   public int getKthElement(int[] nums1, int[] nums2, int k) {
     int length1 = nums1.length;
     int length2 = nums2.length;
@@ -165,20 +154,20 @@ final class MedianOfTwoSortedArrays {
         return Math.min(nums1[index1], nums2[index2]);
       }
 
-      // binary search
+      // get the next index if drop k/2 elements
       int halfK = k / 2;
       int pivot1 = Math.min(index1 + halfK, length1) - 1;
       int pivot2 = Math.min(index2 + halfK, length2) - 1;
       if (nums1[pivot1] <= nums2[pivot2]) {
-        // left part of nums1 does NOT have kth; drop [index1, pivot1]
+        // [index1, pivot1] has no target; continue in [pivot1+1, end]
         int droppedCount = pivot1 - index1 + 1;
         k = k - droppedCount;
-        index1 = pivot1 + 1; // move to next part that may have kth
+        index1 = pivot1 + 1;
       } else {
-        // left part of nums2 does NOT have kth; drop [index2, pivot2]
+        // [index2, pivot2] has no target; continue in [pivot2+1, end]
         int droppedCount = pivot2 - index2 + 1;
         k = k - droppedCount;
-        index2 = pivot2 + 1; // move to next part that may have kth
+        index2 = pivot2 + 1;
       }
     }
   }
@@ -196,7 +185,7 @@ final class MedianOfTwoSortedArrays {
     // because we include the median to left for odd cases, + 1 is needed to include it in the left part
     // + 1 does not affect the even cases, so the following relationship works for both even and odd
     int totalLeft = (shortLength + longLength + 1) / 2;
-    // short array parition index = total element count from 0 to index-1; [0, index-1][[index, end]
+    // short array partition index = total element count from 0 to index-1; [0, index-1][[index, end]
     // long array partition index = total element count from 0 to index-1; [0, index-1][[index, end]
     // long partition index + short partition index = long left count + short left count = half
 
