@@ -54,16 +54,15 @@ final class SearchA2DMatrix {
   // index = 3 => rowIndex = 1, colIndex = 0 => rowIndex = index / colCount = 3/3 = 1, colIndex = index % colCount = 3%3=0
   // index = 5 => expect value = 6, expect rowIndex = 1 = 5 / 3, colIndex = 2 = 5 % 3
   private int getVal(int[][] matrix, int index) {
-    if (
-      matrix.length == 0 ||
-      matrix[0].length == 0 ||
-      index < 0 ||
-      index > matrix.length * matrix[0].length
-    ) {
+    if (matrix.length == 0 || matrix[0].length == 0) {
       return Integer.MAX_VALUE;
     }
 
     int colCount = matrix[0].length;
+    if (index < 0 || index > matrix.length * colCount) {
+      return Integer.MAX_VALUE;
+    }
+
     int rowIndex = index / colCount;
     int colIndex = index % colCount;
 
