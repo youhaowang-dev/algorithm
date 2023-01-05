@@ -44,10 +44,50 @@ final class MedianOfTwoSortedArrays {
 
     int shortLength = nums1.length;
     int longLength = nums2.length;
-    int totalLeftCount = (shortLength + longLength + 1) / 2; // works for both odd and even cases
+    int totalLeftCount = (shortLength + longLength + 1) / 2; // make odd and even the same count
     int shortPartition = this.partitionShort(nums1, nums2);
     int longPartition = totalLeftCount - shortPartition;
 
+    int maxPartitionLeftVal =
+      this.getMaxPartitionLeftVal(nums1, nums2, shortPartition, longPartition);
+    if ((shortLength + longLength) % 2 == 1) {
+      return (double) maxPartitionLeftVal;
+    }
+
+    int minPartitionVal =
+      this.getMinPartitionVal(nums1, nums2, shortPartition, longPartition);
+
+    return (maxPartitionLeftVal + minPartitionVal) * 0.5;
+  }
+
+  private int partitionShort(int[] shortArr, int[] longArr) {
+    int left = 0;
+    int right = shortArr.length; // this is fine as left(-1) is needed
+    int totalLeftCount = (shortArr.length + longArr.length + 1) / 2; // make odd and even the same count
+    // binary search a max partition in short array that can make shortPartitionLeftVal <= longPartitionVal
+    while (left < right) {
+      // + 1 prevent infinite loop
+      int partition = (left + right + 1) / 2;
+      int longArrPartition = totalLeftCount - partition;
+      int partitionLeft = partition - 1;
+      if (shortArr[partitionLeft] > longArr[longArrPartition]) {
+        // partition is too big; drop right part
+        right = partitionLeft;
+      } else {
+        // partition is okay; try to make it bigger by dropping the left part
+        left = partition;
+      }
+    }
+
+    return left;
+  }
+
+  private int getMaxPartitionLeftVal(
+    int[] nums1,
+    int[] nums2,
+    int shortPartition,
+    int longPartition
+  ) {
     int shortPartitionLeftVal = shortPartition == 0
       ? Integer.MIN_VALUE
       : nums1[shortPartition - 1];
@@ -55,42 +95,23 @@ final class MedianOfTwoSortedArrays {
       ? Integer.MIN_VALUE
       : nums2[longPartition - 1];
 
-    if ((shortLength + longLength) % 2 == 1) {
-      return (double) Math.max(shortPartitionLeftVal, longPartitionLeftVal);
-    }
-
-    int shortPartitionVal = shortPartition == shortLength
-      ? Integer.MAX_VALUE
-      : nums1[shortPartition];
-    int longPartitionVal = longPartition == longLength
-      ? Integer.MAX_VALUE
-      : nums2[longPartition];
-    int leftMax = Math.max(shortPartitionLeftVal, longPartitionLeftVal);
-    int rightMin = Math.min(shortPartitionVal, longPartitionVal);
-
-    return (leftMax + rightMin) * 0.5;
+    return Math.max(shortPartitionLeftVal, longPartitionLeftVal);
   }
 
-  private int partitionShort(int[] shortArr, int[] longArr) {
-    int left = 0;
-    int right = shortArr.length; // this is fine as left(-1) is needed
-    int totalLeftCount = (shortArr.length + longArr.length + 1) / 2; // works for both odd and even
-    // binary search a max partition in short array that can make short partition left
-    while (left < right) {
-      // + 1 prevent infinite loop
-      int partition = (left + right + 1) / 2;
-      int longArrPartition = totalLeftCount - partition;
-      int partitionLeft = partition - 1;
-      if (shortArr[partitionLeft] > longArr[longArrPartition]) {
-        // unwanted condition; continue search in left side
-        right = partitionLeft;
-      } else {
-        // wanted condition; make it as big as possible
-        left = partition;
-      }
-    }
+  private int getMinPartitionVal(
+    int[] nums1,
+    int[] nums2,
+    int shortPartition,
+    int longPartition
+  ) {
+    int shortPartitionVal = shortPartition == nums1.length
+      ? Integer.MAX_VALUE
+      : nums1[shortPartition];
+    int longPartitionVal = longPartition == nums2.length
+      ? Integer.MAX_VALUE
+      : nums2[longPartition];
 
-    return left;
+    return Math.min(shortPartitionVal, longPartitionVal);
   }
 
   // drop the unwanted part where target is not in
