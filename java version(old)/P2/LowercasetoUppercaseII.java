@@ -1,5 +1,6 @@
 // Implement an upper method to convert all characters in a string to uppercase.
 // The characters not in alphabet don't need to convert.
+// https://www.lintcode.com/problem/146/
 
 class LowercasetoUppercaseII {
 
