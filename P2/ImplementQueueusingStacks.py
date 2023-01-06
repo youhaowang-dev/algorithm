@@ -40,7 +40,7 @@
 # time: O(1) average because we transfer at most N elements from one stack to another
 from collections import deque
 
-# only use stack APIs of deque; append==push, pop==pop
+# only use stack LIFO APIs of deque; append==push, pop==pop
 class MyQueue:
     def __init__(self):
         self.inStack = deque()
