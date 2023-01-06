@@ -18,12 +18,12 @@ class BinarySearch(object):
         #  + 1 never infinite loop
         while left + 1 < right:
             mid = (left + right) // 2
-            midVal = nums[mid]
-            if midVal == target:
+            mid_val = nums[mid]
+            if mid_val == target:
                 return mid
-            if midVal > target:
+            if mid_val > target:
                 right = mid
-            if midVal < target:
+            if mid_val < target:
                 left = mid
         #  handle terminated cases
         if nums[left] == target:
