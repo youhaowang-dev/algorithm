@@ -77,19 +77,21 @@ class MedianOfTwoSortedArrays:
         else:
             return self.get_kth(nums1, start1, nums2, b_pivot + 1, k - half_k)
 
-    def findMedianSortedArrays1(self, nums1: List[int], nums2: List[int]) -> float:
+
+class MedianOfTwoSortedArrays2:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
         length1 = len(nums1)
         length2 = len(nums2)
         total_len = length1 + length2
         kth = int(total_len // 2) + 1
         if total_len % 2 == 1:
-            return self.get_kth1(nums1, nums2, kth)
+            return self.get_kth(nums1, nums2, kth)
         else:
-            left = self.get_kth1(nums1, nums2, kth - 1)
-            right = self.get_kth1(nums1, nums2, kth)
+            left = self.get_kth(nums1, nums2, kth - 1)
+            right = self.get_kth(nums1, nums2, kth)
             return (left + right) / 2
 
-    def get_kth1(self, nums1: List[int], nums2: List[int], k: int) -> int:
+    def get_kth(self, nums1: List[int], nums2: List[int], k: int) -> int:
         length1 = len(nums1)
         length2 = len(nums2)
         index1 = 0
@@ -130,6 +132,8 @@ class MedianOfTwoSortedArrays:
 
         return min(val1, val2)
 
+
+class MedianOfTwoSortedArrays3:
     # binary search for a max partition(inclusive) position that spit two sides with same total count AND
     # shortArr[partition-1] < longArr[partition] && shortArr[partition] > longArr[partition-1]
     # binary search on short array
