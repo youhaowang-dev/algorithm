@@ -31,6 +31,9 @@ class FindPeakElement:
     # increase: mid_val < mid_right_val, drop left side
     # decrease: mid_val > mid_right_val, drop right side
     def findPeakElement(self, nums: List[int]) -> int:
+        if not nums:
+            return float("inf")
+
         left = 0
         right = len(nums) - 1
         while left + 1 < right:

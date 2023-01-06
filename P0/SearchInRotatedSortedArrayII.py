@@ -21,7 +21,7 @@ class SearchInRotatedSortedArrayII:
     # O(n)
     # with duplicates, mid cannot be (left+right)//2 as the duplicate length is unknown
     def search(self, nums: List[int], target: int) -> bool:
-        if nums is None or len(nums) == 0:
+        if not nums:
             return False
 
         left = 0
@@ -73,7 +73,7 @@ class SearchInRotatedSortedArrayII:
 
 class SearchInRotatedSortedArrayII2:
     def search(self, nums: List[int], target: int) -> int:
-        if nums is None or len(nums) == 0:
+        if not nums:
             return False
 
         search = BinarySearchTarget(nums, target)

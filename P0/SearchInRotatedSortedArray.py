@@ -40,7 +40,7 @@ class SearchInRotatedSortedArray:
     # if sorted part contains the target, continue search in this part
     # if sorted part does not contain the target, continue search the other part
     def search(self, nums: List[int], target: int) -> int:
-        if nums is None or len(nums) == 0:
+        if not nums:
             return -1
         left = 0
         right = len(nums) - 1
@@ -85,7 +85,7 @@ class SearchInRotatedSortedArray:
 
 class SearchInRotatedSortedArray2:
     def search(self, nums: List[int], target: int) -> int:
-        if nums is None or len(nums) == 0:
+        if not nums:
             return -1
 
         search = BinarySearchTarget(nums, target)
