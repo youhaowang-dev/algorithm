@@ -19,7 +19,7 @@
 from ast import List
 
 
-class MedianOfTwoSortedArrays(object):
+class MedianOfTwoSortedArrays:
     # brute force
     # merge two arrays and find the median
 
