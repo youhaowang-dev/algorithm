@@ -11,6 +11,9 @@
 #  Input: nums = [-1,0,3,5,9,12], target = 2
 #  Output: -1
 #  Explanation: 2 does not exist in nums so return -1
+from ast import List
+
+
 class BinarySearch(object):
     def search(self, nums: List[int], target: int) -> int:
         left = 0
@@ -30,5 +33,5 @@ class BinarySearch(object):
             return left
         if nums[right] == target:
             return right
-            
+
         return -1
