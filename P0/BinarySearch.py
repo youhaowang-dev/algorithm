@@ -16,6 +16,9 @@ from ast import List
 
 class BinarySearch(object):
     def search(self, nums: List[int], target: int) -> int:
+        if not nums:
+            return -1
+
         left = 0
         right = len(nums) - 1
         #  + 1 never infinite loop

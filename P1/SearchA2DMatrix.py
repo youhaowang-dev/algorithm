@@ -19,7 +19,7 @@ class SearchA2DMatrix:
     # binary search can be used on the sorted array
     # need to take care of 1D => 2D conversion
     def searchMatrix(self, matrix: List[List[int]], target: int) -> int:
-        if matrix is None or len(matrix) == 0 or len(matrix[0]) == 0:
+        if not matrix or not matrix[0]:
             return False
 
         total_len = len(matrix) * len(matrix[0])
@@ -51,8 +51,8 @@ class SearchA2DMatrix:
     # index = 3 => rowIndex = 1, colIndex = 0 => rowIndex = index / col_count = 3/3 = 1, colIndex = index % col_count = 3%3=0
     # index = 5 => expect value = 6, expect rowIndex = 1 = 5 / 3, colIndex = 2 = 5 % 3
     def get_val(self, matrix: List[List[int]], index: int) -> int:
-        if matrix is None or len(matrix) == 0 or len(matrix[0]) == 0:
-            return float("inf")
+        if not matrix or not matrix[0]:
+            return False
 
         row_count = len(matrix)
         col_count = len(matrix[0])

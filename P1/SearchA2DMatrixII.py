@@ -21,7 +21,7 @@ class SearchA2DMatrixII:
     # This would work equally well with a pointer initialized to the top-right.
     # Neither of the other two corners would work, as pruning a row/column might prevent us from achieving the correct answer.
     def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
-        if matrix is None or len(matrix) == 0 or len(matrix[0]) == 0:
+        if not matrix or not matrix[0]:
             return False
 
         # start position at bottom left corner, can only go up or go right

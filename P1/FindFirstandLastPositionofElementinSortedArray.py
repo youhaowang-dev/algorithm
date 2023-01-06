@@ -35,7 +35,7 @@ class SearchType(Enum):
 
 class FindFirstandLastPositionofElementinSortedArray:
     def searchRange(self, nums: List[int], target: int):
-        if len(nums) == 0:
+        if not nums:
             return [-1, -1]
 
         first = self.find_position(nums, target, SearchType.FIND_FIRST)
