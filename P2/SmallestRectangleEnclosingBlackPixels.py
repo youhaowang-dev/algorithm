@@ -9,9 +9,7 @@
 
 # You must write an algorithm with less than O(mn) runtime complexity
 
-
 # Example 1:
-
 
 # Input: image = [["0","0","1","0"],["0","1","1","0"],["0","1","0","0"]], x = 0, y = 2
 # Output: 6
@@ -20,8 +18,10 @@
 # Input: image = [["1"]], x = 0, y = 0
 # Output: 1
 
-# brute force: linear scan
 from ast import List
+
+
+# brute force: linear scan
 
 
 # linear scan O(m*n)
