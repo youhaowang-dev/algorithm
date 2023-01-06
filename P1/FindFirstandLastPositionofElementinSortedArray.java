@@ -18,6 +18,13 @@
 // Output: [-1,-1]
 class FindFirstandLastPositionofElementinSortedArray {
 
+  // brute force
+  // Given a target element, we can simply do a linear scan over the entire array to find the first and
+  // the last position. The first occurrence will be the first time when we encounter this target. Thereafter,
+  // we continue to scan elements until we find one that is greater than the target or until we reach the
+  // end of the array. This will help us determine the last position of the target.
+
+  // find first and last by binary search; move left and right differently when midVal==target
   public int[] searchRange(int[] nums, int target) {
     if (nums.length == 0) {
       return new int[] { -1, -1 };
@@ -51,7 +58,7 @@ class FindFirstandLastPositionofElementinSortedArray {
         left = mid;
       }
     }
-
+    // handle end states
     // check left bound first
     if (nums[left] == target) {
       return left;
