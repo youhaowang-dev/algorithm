@@ -38,6 +38,39 @@
 
 # two stacks, one hold the pushes, the other one will be populated when pop is called and when it is empty
 # time: O(1) average because we transfer at most N elements from one stack to another
+from collections import deque
+
+# only use stack APIs of deque; append==push, pop==pop
+class MyQueue:
+    def __init__(self):
+        self.inStack = deque()
+        self.outStack = deque()
+
+    def push(self, x: int) -> None:
+        self.inStack.append(x)
+
+    def pop(self) -> int:
+        # assumed valid
+        if not self.outStack:
+            self.moveInToOut()
+
+        return self.outStack.pop()
+
+    def peek(self) -> int:
+        # assumed valid
+        if not self.outStack:
+            self.moveInToOut()
+
+        return self.outStack[-1]
+
+    def empty(self) -> bool:
+        return not self.inStack and not self.outStack
+
+    def moveInToOut(self) -> None:
+        while self.inStack:
+            self.outStack.append(self.inStack.pop())
+
+
 class MyQueue:
     def __init__(self):
         self.inStack = []
