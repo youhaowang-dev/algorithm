@@ -18,7 +18,7 @@
 # Output: 23
 
 from ast import List
-import math
+from math import ceil
 
 
 # brute force: linear search the speed from min to max
@@ -38,7 +38,7 @@ class KokoEatingBananas:
     def get_eat_hour(self, piles: List[int], eat_speed: int) -> int:
         eat_hour = 0
         for pile in piles:
-            eat_hour += math.ceil(pile / eat_speed)
+            eat_hour += ceil(pile / eat_speed)
 
         return eat_hour
 
@@ -72,6 +72,6 @@ class KokoEatingBananas2:
     def get_eat_hour(self, piles: List[int], eat_speed: int) -> int:
         eat_hour = 0
         for pile in piles:
-            eat_hour += math.ceil(pile / eat_speed)
+            eat_hour += ceil(pile / eat_speed)
 
         return eat_hour
