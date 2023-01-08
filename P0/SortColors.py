@@ -31,6 +31,9 @@ class SortColors:
     # one pass: swap 0 to left and 2 to right, so 1 is in the middle
     # three pointers to track the tail of 0, the head of 2, and the current swap position
     def sortColors(self, nums: List[int]) -> None:
+        if not nums:
+            return
+
         zero_tail = 0
         two_head = len(nums) - 1
         current = 0
