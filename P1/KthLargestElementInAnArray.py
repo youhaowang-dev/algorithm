@@ -52,7 +52,7 @@ class MinHeap:
 # kth smallest, kth largest, kth most frequent, kth less frequent, etc.
 # Like quicksort, quickselect was developed by Tony Hoare, and also known as Hoare's selection algorithm.
 
-# quick select
+# quick select to sort the half containing target
 # time: O(n) where partition costs n + n/2 + n/4 + ... + = 2n
 # The worst case is that partitioning always results in very skewed partition sizes.
 # Consider what would happen if the first partitioning only removed one item. And the second only removed one, etc.
