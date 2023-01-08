@@ -18,7 +18,7 @@
 # Output: 44
 
 
-from ast import List
+from typing import List
 from math import ceil
 
 # linear search O(num_count * max_num)

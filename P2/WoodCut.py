@@ -21,7 +21,7 @@
 # Challenge
 # O(n log Len), where Len is the longest length of the wood.
 
-from ast import List
+from typing import List
 
 # linear search for a max, so decrease max cut len while cut_count > min_cut_count
 # return when first time the cut is too small: cut_count <= min_cut_count

@@ -16,7 +16,7 @@
 # Input: arr = [1,2,3,4,5], k = 4, x = -1
 # Output: [1,2,3,4]
 
-from ast import List
+from typing import List
 
 # search A[left] < target, A[right] >= target => expand left and right => build result
 # time: O(logn + 2k)

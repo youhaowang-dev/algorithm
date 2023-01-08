@@ -18,7 +18,7 @@
 # Input: image = [["1"]], x = 0, y = 0
 # Output: 1
 
-from ast import List
+from typing import List
 
 
 # brute force: linear scan

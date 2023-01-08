@@ -1,6 +1,6 @@
 # https://www.lintcode.com/problem/463/
 # Given an integer array, sort it in ascending order. Use selection sort, bubble sort, insertion sort or any O(n2) algorithm.
-from ast import List
+from typing import List
 
 
 class SortIntegers:

@@ -26,7 +26,7 @@
 # Output: 1
 
 
-from ast import List
+from typing import List
 
 # brute force: The mountain increases until it doesn't. The point at which it stops increasing is the peak.
 class PeakIndexinaMountainArray:
