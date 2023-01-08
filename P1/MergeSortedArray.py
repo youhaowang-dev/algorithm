@@ -40,28 +40,28 @@ class MergeSortedArray:
     # insert bigger number while moving pointers
     def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
         # pointers
-        nums1Last = m - 1
-        nums2Last = n - 1
-        mergedLast = len(nums1) - 1
-        while nums1Last >= 0 and nums2Last >= 0:
-            if nums1[nums1Last] > nums2[nums2Last]:
-                nums1[mergedLast] = nums1[nums1Last]
-                nums1Last -= 1
-                mergedLast -= 1
+        nums1_last = m - 1
+        nums_Last = n - 1
+        insert_index = len(nums1) - 1
+        while nums1_last >= 0 and nums_Last >= 0:
+            if nums1[nums1_last] > nums2[nums_Last]:
+                nums1[insert_index] = nums1[nums1_last]
+                nums1_last -= 1
+                insert_index -= 1
             else:
-                nums1[mergedLast] = nums2[nums2Last]
-                nums2Last -= 1
-                mergedLast -= 1
+                nums1[insert_index] = nums2[nums_Last]
+                nums_Last -= 1
+                insert_index -= 1
 
-        while nums1Last >= 0:
-            nums1[mergedLast] = nums1[nums1Last]
-            nums1Last -= 1
-            mergedLast -= 1
+        while nums1_last >= 0:
+            nums1[insert_index] = nums1[nums1_last]
+            nums1_last -= 1
+            insert_index -= 1
 
-        while nums2Last >= 0:
-            nums1[mergedLast] = nums2[nums2Last]
-            nums2Last -= 1
-            mergedLast -= 1
+        while nums_Last >= 0:
+            nums1[insert_index] = nums2[nums_Last]
+            nums_Last -= 1
+            insert_index -= 1
 
 
 class MergeSortedArray2:
