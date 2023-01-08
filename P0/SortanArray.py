@@ -23,9 +23,9 @@ from typing import List
 # merge sort time O(nlogn) stable space O(n)
 class SortanArray:
     def sortArray(self, nums: List[int]) -> List[int]:
-        return self.mergesort(nums)
+        return self.merge_sort(nums)
 
-    def mergesort(self, nums):
+    def merge_sort(self, nums):
         nums_len = len(nums)
         if nums_len == 1:
             return nums
@@ -33,14 +33,14 @@ class SortanArray:
         partition_index = nums_len // 2
 
         left_half = nums[:partition_index]
-        sorted_left_half = self.mergesort(left_half)
+        sorted_left_half = self.merge_sort(left_half)
 
         right_half = nums[partition_index:]
-        sorted_right_half = self.mergesort(right_half)
+        sorted_right_half = self.merge_sort(right_half)
 
-        return self.merge_sorted(sorted_left_half, sorted_right_half)
+        return self.merge_sorted_arrays(sorted_left_half, sorted_right_half)
 
-    def merge_sorted(self, left_half, right_half):
+    def merge_sorted_arrays(self, left_half, right_half):
         merged = []
         left, right = 0, 0
         while left < len(left_half) and right < len(right_half):
