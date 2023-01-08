@@ -24,7 +24,7 @@
 # we continue to scan elements until we find one that is greater than the target or until we reach the
 # end of the array. This will help us determine the last position of the target.
 
-from ast import List
+from typing import List
 from enum import Enum
 
 

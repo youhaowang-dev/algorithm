@@ -24,7 +24,7 @@
 # nums is sorted and rotated between 1 and n times.
 
 # Follow up: This problem is similar to Find Minimum in Rotated Sorted Array, but nums may contain duplicates. Would this affect the runtime complexity? How and why?
-from ast import List
+from typing import List
 
 
 class FindMinimumInRotatedSortedArrayII:

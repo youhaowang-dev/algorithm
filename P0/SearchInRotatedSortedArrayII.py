@@ -14,7 +14,7 @@
 
 # brute force: O(n) linear scan
 
-from ast import List
+from typing import List
 
 
 class SearchInRotatedSortedArrayII:

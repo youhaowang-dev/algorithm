@@ -20,7 +20,7 @@
 # Input: nums = [1], target = 0
 # Output: -1
 
-from ast import List
+from typing import List
 
 # brute force: linear scan O(n)
 

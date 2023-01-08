@@ -21,7 +21,7 @@
 # Output: 5
 # Explanation: Your function can return either index number 1 where the peak element is 2, or index number 5 where the peak element is 6.
 
-from ast import List
+from typing import List
 
 
 class FindPeakElement:
