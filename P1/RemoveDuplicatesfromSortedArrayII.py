@@ -48,6 +48,8 @@ from typing import List
 # two pointers and track the duplicate count
 # copy i to insert position then insert position+=1
 class RemoveDuplicatesfromSortedArrayII:
+    MAX_COPY_COUNT = 2
+
     def removeDuplicates(self, nums: List[int]) -> int:
         insert_index = 1
         duplicate_count = 1
@@ -58,7 +60,7 @@ class RemoveDuplicatesfromSortedArrayII:
             else:
                 duplicate_count = 1
 
-            if duplicate_count <= 2:
+            if duplicate_count <= self.MAX_COPY_COUNT:
                 nums[insert_index] = nums[i]
                 insert_index += 1
 
