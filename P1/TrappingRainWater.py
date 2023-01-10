@@ -22,7 +22,8 @@
 from typing import List
 
 
-# brute foce time O(n^2) space O(1)
+# brute force: for index find left and right max then calculate water
+# time O(n^2) space O(1)
 # For each element in the array, we find the maximum level of water it can trap after the rain,
 # which is equal to the minimum of maximum height of bars on both the sides minus its own height.
 class TrappingRainWater:
