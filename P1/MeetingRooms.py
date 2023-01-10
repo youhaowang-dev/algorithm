@@ -15,7 +15,7 @@
 
 from typing import List
 
-# brute force: compare every pair time O(m*n)
+# brute force: compare every pair time O(n^2)
 class MeetingRooms:
     def canAttendMeetings(self, intervals: List[List[int]]) -> bool:
         intervals_count = len(intervals)
