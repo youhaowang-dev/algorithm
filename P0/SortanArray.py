@@ -40,7 +40,9 @@ class SortanArray:
 
         return self.merge_sorted_arrays(sorted_left_half, sorted_right_half)
 
-    def merge_sorted_arrays(self, left_half, right_half):
+    def merge_sorted_arrays(
+        self, left_half: List[int], right_half: List[int]
+    ) -> List[int]:
         merged = []
         left, right = 0, 0
         while left < len(left_half) and right < len(right_half):
