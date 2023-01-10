@@ -16,10 +16,22 @@
 from typing import List
 
 
+# brute force m*n
 class IntersectionOfTwoArrays:
+    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        intersection = set()
+        for num1 in nums1:
+            for num2 in nums2:
+                if num1 == num2:
+                    intersection.add(num1)
 
-    # preprocess data to sets for fast access and dedup
-    # if one set is much larger than the other, find the smaller size set and use it for loop
+        return list(intersection)
+
+
+# hash set
+# preprocess data to sets for fast access and dedup
+# if one set is much larger than the other, find the smaller size set and use it for loop
+class IntersectionOfTwoArrays2:
     def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
         nums1_set = set()
         for num in nums1:
@@ -35,13 +47,3 @@ class IntersectionOfTwoArrays:
                 result.append(num)
 
         return result
-
-    # brute force m*n
-    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
-        intersection = set()
-        for num1 in nums1:
-            for num2 in nums2:
-                if num1 == num2:
-                    intersection.add(num1)
-
-        return list(intersection)
