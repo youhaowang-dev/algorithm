@@ -5,6 +5,7 @@
 # Morgan Stanley 3 Goldman Sachs 2 Twitter 2 Pinterest 2 Atlassian 2 Qualtrics 2 Hotstar JPMorgan 70 Splunk 7
 # Reddit 5 Wish 4 Intuit 3 DoorDash 3 Zillow 3 Visa 3 Twilio 3 Tesla 3 Nutanix 2 Netflix 2 ServiceNow 2 Two Sigma 2
 # BlackRock 2 Houzz 2 Robinhood 2 Tableau 2 Citadel 2 Arcesium 2 Yelp Wix
+# https://leetcode.com/problems/merge-intervals/
 
 # Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals,
 # and return an array of the non-overlapping intervals that cover all the intervals in the input.
