@@ -69,6 +69,7 @@ class LongestMountaininArray1:
         length = len(heights)
 
         i = 1
+        # each out loop iteration processes a mountain(uphill+downhill)
         while i < length:
             while i < length and heights[i - 1] == heights[i]:
                 i += 1
