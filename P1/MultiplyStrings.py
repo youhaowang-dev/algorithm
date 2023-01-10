@@ -42,11 +42,16 @@ class MultiplyStrings:
                 digits[left_digit_index] += digits[right_digit_index] // 10
                 digits[right_digit_index] %= 10
 
-        i = 0
-        while i < len(digits) and digits[i] == 0:
-            i += 1
-        res = "".join([str(ele) for ele in digits[i:]])
-        if res:
-            return res
-        else:
+        first_non_zero = 0
+        while first_non_zero < len(digits) and digits[first_non_zero] == 0:
+            first_non_zero += 1
+        digits = digits[first_non_zero:]
+
+        if not digits:
             return "0"
+
+        str_digits = list()
+        for digit in digits:
+            str_digits.append(str(digit))
+
+        return "".join(str_digits)
