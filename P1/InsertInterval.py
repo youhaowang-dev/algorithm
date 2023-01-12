@@ -28,6 +28,8 @@ class InsertInterval:
         self, intervals: List[List[int]], newInterval: List[int]
     ) -> List[List[int]]:
         # O(logN)
+        # The purpose of Bisect algorithm is to find a position in list where an element
+        # needs to be inserted to keep the list sorted
         position = bisect.bisect(intervals, newInterval)
 
         # O(N)
