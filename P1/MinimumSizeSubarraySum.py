@@ -34,8 +34,8 @@ class MinimumSizeSubarraySum:
 
             while sum >= target:
                 # right is now at the right bound + 1 position of the valid range
-                subarrayLength = right - left  # right-1 - left + 1 = right - left
-                min_subarr_length = min(min_subarr_length, subarrayLength)
+                subarr_length = right - left  # right-1 - left + 1 = right - left
+                min_subarr_length = min(min_subarr_length, subarr_length)
                 sum = sum - nums[left]
                 left += 1
 
