@@ -19,7 +19,7 @@ from typing import List
 # brute force: try all subarrays
 
 # prefix sum
-# if there exists some subarray from i to j summing to  k in nums, then we know that
+# if there exists some subarray from i to j summing to target in nums, then we know that
 # prefixSum[j] - prefixSum[i] = target => prefixSum[j] - target = prefixSum[i]
 class MaximumSizeSubarraySumEqualsk:
     def maxSubArrayLen(self, nums: List[int], target: int) -> int:
