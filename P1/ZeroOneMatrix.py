@@ -23,6 +23,7 @@
 #          [1,2,1]]
 
 from collections import deque
+import math
 from typing import List
 
 # bfs
@@ -64,5 +65,31 @@ class ZeroOneMatrix:
 
                 matrix[new_row][new_col] = matrix[row][col] + 1
                 queue.append((new_row, new_col))
+
+        return matrix
+
+
+# dp
+class ZeroOneMatrix2:
+    def updateMatrix(self, matrix: List[List[int]]) -> List[List[int]]:
+        if not matrix or not matrix[0]:
+            return matrix
+
+        row_count = len(matrix)
+        col_count = len(matrix[0])
+
+        for row in range(row_count):
+            for col in range(col_count):
+                if matrix[row][col] > 0:
+                    top = matrix[row - 1][col] if row > 0 else math.inf
+                    left = matrix[row][col - 1] if col > 0 else math.inf
+                    matrix[row][col] = min(top, left) + 1
+
+        for row in range(row_count - 1, -1, -1):
+            for col in range(col_count - 1, -1, -1):
+                if matrix[row][col] > 0:
+                    bottom = matrix[row + 1][col] if row < row_count - 1 else math.inf
+                    right = matrix[row][col + 1] if col < col_count - 1 else math.inf
+                    matrix[row][col] = min(matrix[row][col], bottom + 1, right + 1)
 
         return matrix
