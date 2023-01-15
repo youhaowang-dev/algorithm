@@ -14,7 +14,7 @@
 from collections import deque
 from typing import List
 
-
+# bfs time m*n space m*n queue size can grow upto m∗n in worst case.
 class TheMaze:
     EMPTY = 0
     WALL = 1
@@ -48,15 +48,16 @@ class TheMaze:
                 ):
                     new_row += row_delta
                     new_col += col_delta
-
                 new_row -= row_delta
                 new_col -= col_delta
+
                 if maze[new_row][new_col] == self.EMPTY:
                     queue.append([new_row, new_col])
 
         return False
 
 
+# dfs time m*n space m*n
 class TheMaze2:
     EMPTY = 0
     WALL = 1
