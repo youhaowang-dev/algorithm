@@ -29,7 +29,35 @@ class TreeNode:
 # we have easy access to the root which is preorder[0].
 # Inorder traversal follows Left -> Root -> Right, therefore if we know the position of Root,
 # we can recursively split the entire array into two subtrees.
+# time n space n
 class ConstructBinaryTreefromPreorderandInorderTraversal:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        inorder_val_to_index = dict()
+        for i, val in enumerate(inorder):
+            inorder_val_to_index[val] = i
+
+        postorder_root_index = 0
+
+        def buildTreeHelper(inorder_left, inorder_right):
+            # The nonlocal keyword is used to work with variables inside nested functions, where the variable should not belong to the inner function.
+            nonlocal postorder_root_index
+            if postorder_root_index >= len(preorder) or inorder_left > inorder_right:
+                return None
+
+            root_val = preorder[postorder_root_index]
+            root = TreeNode(root_val)
+            inorder_root_index = inorder_val_to_index[root_val]
+
+            postorder_root_index += 1
+            root.left = buildTreeHelper(inorder_left, inorder_root_index - 1)
+            root.right = buildTreeHelper(inorder_root_index + 1, inorder_right)
+            return root
+
+        return buildTreeHelper(0, len(inorder) - 1)
+
+
+# time n^2 space n^2
+class ConstructBinaryTreefromPreorderandInorderTraversal2:
     def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
         if not inorder:
             return None
