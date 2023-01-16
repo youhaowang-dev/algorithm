@@ -24,15 +24,15 @@ class BinaryTreeInorderTraversal:
             return result
 
         stack = deque()
-        self.push_lefts(root, stack)
+        self.push_roots(root, stack)
         while stack:
             node = stack.pop()
             result.append(node.val)
-            self.push_lefts(node.right, stack)
+            self.push_roots(node.right, stack)
 
         return result
 
-    def push_lefts(self, node: TreeNode, stack: Deque) -> None:
+    def push_roots(self, node: TreeNode, stack: Deque) -> None:
         while node:
             stack.append(node)
             node = node.left
