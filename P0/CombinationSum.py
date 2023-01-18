@@ -35,7 +35,9 @@ from ast import List
 class CombinationSum:
     def combinationSum(self, nums: List[int], target: int) -> List[List[int]]:
         result = list()
-        sum = 0
+        if not nums:
+            return result
+
         list_state = list()
         start_index = 0
         target_remain = target - 0
