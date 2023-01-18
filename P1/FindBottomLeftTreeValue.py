@@ -24,9 +24,11 @@ class TreeNode:
 
 
 class FindBottomLeftTreeValue:
+    MIN = -(2**31)
+
     def findBottomLeftValue(self, root: Optional[TreeNode]) -> int:
         if not root:
-            return float("-inf")
+            return self.MIN
 
         queue = deque()
         queue.append(root)
