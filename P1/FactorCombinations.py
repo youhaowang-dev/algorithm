@@ -22,6 +22,11 @@ from ast import List
 # time O(n^(1.5)) where O(n) total solutions and each solution costs O(n^(0.5)) to find
 # space O(log(n)) where the length of each solution is bound by O(log(n))
 # The length of each solution is on the order of O(log⁡(n))
+# getFactors(12)
+# result_state=[]       n=12    divisor_start=2
+# result_state=[2]      n=6     divisor_start=2
+# result_state=[2, 2]   n=3     divisor_start=2
+# result_state=[3]      n=4     divisor_start= 3
 class FactorCombinations:
     def getFactors(self, n: int) -> List[List[int]]:
         results = list()
