@@ -52,7 +52,7 @@ class RemoveInvalidParentheses:
                 continue
 
             for i, character in enumerate(removed):
-                if character != self.OPEN and character != self.CLOSE:  # or??
+                if character != self.OPEN and character != self.CLOSE:
                     continue
 
                 next_removed = removed[:i] + removed[i + 1 :]
