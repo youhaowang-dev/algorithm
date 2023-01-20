@@ -68,26 +68,26 @@ class NQueens:
         col_underattack,
         diagonal1_col_underattack,
         diagonal2_col_underattack,
-        row_index,
+        start_row_index,
     ):
         # of course no row can have more than one queen
         # if we are able to put n queens in n rows, that is a solution
-        if row_index == queens_count:
+        if start_row_index == queens_count:
             result = self.get_result(queens_col_indices)
             results.append(result)
-        # try put queen on board
-        for i in range(queens_count):
-            if i in col_underattack:
+        # try put queen in the row
+        for col_index in range(queens_count):
+            if col_index in col_underattack:
                 continue
-            diagonal1_col = row_index - i
+            diagonal1_col = start_row_index - col_index
             if diagonal1_col in diagonal1_col_underattack:
                 continue
-            diagonal2_col = row_index + i
+            diagonal2_col = start_row_index + col_index
             if diagonal2_col in diagonal2_col_underattack:
                 continue
             # put queen
-            queens_col_indices[row_index] = i
-            col_underattack.add(i)
+            queens_col_indices[start_row_index] = col_index
+            col_underattack.add(col_index)
             diagonal1_col_underattack.add(diagonal1_col)
             diagonal2_col_underattack.add(diagonal2_col)
 
@@ -98,11 +98,11 @@ class NQueens:
                 col_underattack,
                 diagonal1_col_underattack,
                 diagonal2_col_underattack,
-                row_index + 1,
+                start_row_index + 1,
             )
             # unput queen
-            queens_col_indices[row_index] = self.DEFAULT_INDEX
-            col_underattack.remove(i)
+            queens_col_indices[start_row_index] = self.DEFAULT_INDEX
+            col_underattack.remove(col_index)
             diagonal1_col_underattack.remove(diagonal1_col)
             diagonal2_col_underattack.remove(diagonal2_col)
 
