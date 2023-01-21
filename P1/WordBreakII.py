@@ -23,6 +23,8 @@ from ast import Dict, List, Set
 # dfs all substrings with memoization
 # time O(n^2) for memoization, totally max n^2 substrings
 # without memoization, the time would be O(2^n)
+# "abc", dict ["a","b","c","bc"]
+# ['c'] => ['bc', 'b c'] => ['a bc', 'a b c']
 class WordBreakII:
     DELIMITER = " "
 

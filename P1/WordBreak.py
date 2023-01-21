@@ -25,19 +25,23 @@ from collections import deque
 
 # bfs: time n^3 For every starting index, the search can continue till the end of the given string.
 # space n for queue size can be up to n
+# "abc", ["ab","cd","a","bc"]
+# deque([0]) substrings are: [a ab abc]
+# deque([1, 2]) substrings are [b bc]
 class WordBreak2:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         word_set = set(wordDict)
         queue = deque()
         queue.append(0)
-        visited = set()
+        visited = set()  # dedup by substring start index
 
         while queue:
             substring_start = queue.popleft()
             if substring_start in visited:
                 continue
             for substring_end in range(substring_start + 1, len(s) + 1):
-                if s[substring_start:substring_end] in word_set:
+                substring = s[substring_start:substring_end]
+                if substring in word_set:
                     queue.append(substring_end)
                     if substring_end == len(s):
                         return True
