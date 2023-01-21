@@ -23,34 +23,35 @@
 
 class WordBreak {
 
-  // BFS
-  // time n^3 For every starting index, the search can continue till the end of the given string.
-  // space n Queue of at most nnn size is needed.
-  public boolean wordBreak(String s, List<String> wordDict) {
-    Set<String> wordDictSet = new HashSet<>(wordDict);
-    Queue<Integer> searchStartIndex = new LinkedList<>();
-    searchStartIndex.offer(0);
-    boolean[] visited = new boolean[s.length()];
+  // TLE: TODO: fix it
+  //   // BFS
+  //   // time n^3 For every starting index, the search can continue till the end of the given string.
+  //   // space n Queue of at most nnn size is needed.
+  //   public boolean wordBreak(String s, List<String> wordDict) {
+  //     Set<String> wordDictSet = new HashSet<>(wordDict);
+  //     Queue<Integer> searchStartIndex = new LinkedList<>();
+  //     searchStartIndex.offer(0);
+  //     boolean[] visited = new boolean[s.length()];
 
-    while (!searchStartIndex.isEmpty()) {
-      int start = searchStartIndex.poll();
-      if (visited[start]) {
-        continue;
-      }
-      // <= s.length() for substring(inclusive, exclusive)
-      for (int end = start + 1; end <= s.length(); end++) {
-        if (wordDictSet.contains(s.substring(start, end))) {
-          searchStartIndex.offer(end);
-          if (end == s.length()) {
-            // able to reach the end of string
-            return true;
-          }
-        }
-      }
-    }
+  //     while (!searchStartIndex.isEmpty()) {
+  //       int start = searchStartIndex.poll();
+  //       if (visited[start]) {
+  //         continue;
+  //       }
+  //       // <= s.length() for substring(inclusive, exclusive)
+  //       for (int end = start + 1; end <= s.length(); end++) {
+  //         if (wordDictSet.contains(s.substring(start, end))) {
+  //           searchStartIndex.offer(end);
+  //           if (end == s.length()) {
+  //             // able to reach the end of string
+  //             return true;
+  //           }
+  //         }
+  //       }
+  //     }
 
-    return false;
-  }
+  //     return false;
+  //   }
 
   // DFS with memoization
   // time n^3 size of recursion tree can go up to n^2
