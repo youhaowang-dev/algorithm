@@ -34,13 +34,14 @@ class TargetSum:
         if not nums:
             return 0
 
-        count = defaultdict(int)
-        count[0] = 1
-        for x in nums:
-            step = defaultdict(int)
-            for y in count:
-                step[y + x] += count[y]
-                step[y - x] += count[y]
-            count = step
+        result_to_count = defaultdict(int)
+        result_to_count[0] = 1
+        for num in nums:
+            next_result_to_count = defaultdict(int)
+            for result in result_to_count.keys():
+                # do + and -
+                next_result_to_count[result + num] += result_to_count[result]
+                next_result_to_count[result - num] += result_to_count[result]
+            result_to_count = next_result_to_count
 
-        return count[target_result]
+        return result_to_count[target_result]
