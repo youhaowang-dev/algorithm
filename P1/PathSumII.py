@@ -9,6 +9,7 @@
 # A root-to-leaf path is a path starting from the root and ending at any leaf node. A leaf is a node with no children.
 
 
+import copy
 from typing import List, Optional
 
 
@@ -23,36 +24,42 @@ class TreeNode:
 # as a result, dfs is better for this question
 class PathSumII:
     def pathSum(self, root: Optional[TreeNode], target: int) -> List[List[int]]:
-        result = list()
+        results = list()
         if not root:
-            return result
+            return results
 
-        path_state = list()
-        self.searchPathSum(root, target, path_state, result)
+        result_state = list()
+        self.build_results(root, target, result_state, results)
 
-        return result
+        return results
 
-    def searchPathSum(
+    def build_results(
         self,
         root: Optional[TreeNode],
         target_remain: int,
-        path_state: List[int],
-        result: List[List[int]],
+        result_state: List[int],
+        results: List[List[int]],
     ) -> None:
         if not root:
             return
 
-        path_state.append(root.val)
+        # if target_remain < root.val: return # not work for negative val
 
-        if self.is_leaf(root) and target_remain == root.val:
-            result.append(list(path_state))
+        result_state.append(root.val)
+
+        if target_remain == root.val and self.is_leaf(root):
+            results.append(copy.deepcopy(result_state))
 
         if root.left:
-            self.searchPathSum(root.left, target_remain - root.val, path_state, result)
+            self.build_results(
+                root.left, target_remain - root.val, result_state, results
+            )
         if root.right:
-            self.searchPathSum(root.right, target_remain - root.val, path_state, result)
+            self.build_results(
+                root.right, target_remain - root.val, result_state, results
+            )
 
-        path_state.pop()
+        result_state.pop()
 
     def is_leaf(self, node: TreeNode) -> bool:
         return not node.left and not node.right
