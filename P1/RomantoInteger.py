@@ -64,11 +64,9 @@ class RomantoInteger:
         char_index = 0
         while char_index < len(s):
             # check two chars first
-            if (
-                char_index + 1 < len(s)
-                and s[char_index] + s[char_index + 1] in self.ROMAN_TO_NUM
-            ):
-                result += self.ROMAN_TO_NUM[s[char_index] + s[char_index + 1]]
+            two_char_roman = s[char_index] + s[char_index + 1]
+            if char_index + 1 < len(s) and two_char_roman in self.ROMAN_TO_NUM:
+                result += self.ROMAN_TO_NUM[two_char_roman]
                 char_index += 2
             else:
                 result += self.ROMAN_TO_NUM[s[char_index]]
