@@ -44,7 +44,6 @@ class AddTwoNumbers:
         current = before_head
         carry = 0
         while head1 and head2:
-            print(head1, head2)
             sum = carry + head1.val + head2.val
             current.next = ListNode(sum % 10)
             carry = sum // 10
