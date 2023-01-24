@@ -32,24 +32,23 @@ class OddEvenLinkedList:
         if not head.next:
             return head
 
-        count = 1
-        odd = head
-        even = head.next
-        even_head = head.next
-        current = head.next.next
-
+        index = 1
+        odd_tail = head
+        even_tail = head.next
+        even_head = even_tail
+        current = even_tail.next
         while current:
-            if count % 2 == 0:
-                even.next = current
-                even = current
+            if index % 2 == 0:
+                even_tail.next = current
+                even_tail = current
             else:
-                odd.next = current
-                odd = current
+                odd_tail.next = current
+                odd_tail = current
             current = current.next
-            count += 1
+            index += 1
 
-        even.next = None
-        odd.next = even_head
+        even_tail.next = None
+        odd_tail.next = even_head
 
         return head
 
@@ -62,17 +61,20 @@ class OddEvenLinkedList2:
         if not head.next:
             return head
 
-        # init based on requirement
-        odd = head
-        even = head.next
-        even_head = even
-        # move odd and even forward by 2 steps
-        while even and even.next:
-            odd.next = odd.next.next
-            even.next = even.next.next
-            odd = odd.next
-            even = even.next
+        odd_tail = head
+        even_tail = head.next
+        even_head = even_tail
+        # move forward by 2 steps
+        while even_tail and even_tail.next:
+            next_odd = odd_tail.next.next
+            next_even = even_tail.next.next
 
-        odd.next = even_head
+            odd_tail.next = next_odd
+            even_tail.next = next_even
+
+            odd_tail = odd_tail.next
+            even_tail = even_tail.next
+
+        odd_tail.next = even_head
 
         return head
