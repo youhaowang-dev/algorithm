@@ -1,5 +1,6 @@
 # Linked List, Two Pointers, Stack, Recursion
-# Amazon 9 Apple 5 Microsoft 4 Adobe 3 Facebook 2 Google 2 Yahoo 2 Spotify 2 Bloomberg 4 Intuit 4 ServiceNow 2 VMware 2 Oracle 3 Grab 2 Nutanix 2 Paypal 2 Qualcomm 2 IXL
+# Amazon 9 Apple 5 Microsoft 4 Adobe 3 Facebook 2 Google 2 Yahoo 2 Spotify 2 Bloomberg 4 Intuit 4 ServiceNow 2 VMware 2
+# Oracle 3 Grab 2 Nutanix 2 Paypal 2 Qualcomm 2 IXL
 # https://leetcode.com/problems/palindrome-linked-list/
 
 # Given the head of a singly linked list, return true if it is a palindrome or false otherwise.
@@ -7,7 +8,6 @@
 # Example 1:
 # Input: head = [1,2,2,1]
 # Output: true
-
 # Example 2:
 # Input: head = [1,2]
 # Output: false
@@ -23,7 +23,7 @@ class ListNode:
 
 # brute force: copy to list then use two pointers
 
-# modify the input to reverse second half, compare, restore
+# partition list, reverse second half, compare, restore, return result
 # 1->2->3->2->1->null
 # 1->2->3->null and 1->2->null
 # compare 1 and 2
@@ -32,25 +32,27 @@ class PalindromeLinkedList:
         if not head:
             return True
 
-        # list1: first half, list2: second half
-        list1_tail = self.list1_tail(head)
-        list2_head = self.reverse_list(list1_tail.next)
+        # partition
+        list1_tail = self.get_mid(head)
+        # reverse list2
+        list2_head = list1_tail.next
+        list2_head = self.reverse_list(list2_head)
 
-        list1_pointer = head
-        list2_pointer = list2_head
-        while list1_pointer and list2_pointer:
-            if list1_pointer.val != list2_pointer.val:
-                # restore
-                list1_tail.next = self.reverse_list(list2_head)
-                return False
-            list1_pointer = list1_pointer.next
-            list2_pointer = list2_pointer.next
+        list1_head = head
+        is_palindrome = True
+        while list1_head and list2_head:
+            if list1_head.val != list2_head.val:
+                is_palindrome = False
+                break
 
-        # restore
+            list1_head = list1_head.next
+            list2_head = list2_head.next
+        # reverse back and reconnect before return
         list1_tail.next = self.reverse_list(list2_head)
-        return True
 
-    def list1_tail(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        return is_palindrome
+
+    def get_mid(self, head: Optional[ListNode]) -> Optional[ListNode]:
         fast = head
         slow = head
         while fast.next and fast.next.next:
@@ -63,9 +65,9 @@ class PalindromeLinkedList:
         prev = None
         current = head
         while current:
-            current_next_copy = current.next
+            current_next = current.next
             current.next = prev
             prev = current
-            current = current_next_copy
+            current = current_next
 
         return prev
