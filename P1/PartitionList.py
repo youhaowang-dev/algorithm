@@ -24,36 +24,34 @@ class ListNode:
         self.next = next
 
 
+# reconstruct the list
+# small/big head nodes for building small/big lists
+# merge them after processing all node
 class PartitionList:
-
-    # reconstruct the list
-    # small/big head nodes for building small/big lists
-    # merge them after processing all node
     def partition(self, head: Optional[ListNode], pivot: int) -> Optional[ListNode]:
-        small_head = ListNode(-1)
+        small_head = ListNode()
         small_head.next = head
-        big_head = ListNode(-1)
+        big_head = ListNode()
 
-        # pointers for inserted node
-        small = small_head
-        big = big_head
+        small_tail = small_head
+        big_tail = big_head
         current = head
         while current:
             if current.val > pivot:
-                big.next = current
-                big = big.next
+                big_tail.next = current
+                big_tail = big_tail.next
             elif current.val < pivot:
-                small.next = current
-                small = small.next
-            else:
+                small_tail.next = current
+                small_tail = small_tail.next
+            elif current.val == pivot:
                 # pivot value must be at the bigger side
-                big.next = current
-                big = big.next
+                big_tail.next = current
+                big_tail = big_tail.next
 
             current = current.next
 
-        # connect 2 lists
-        small.next = big_head.next
-        big.next = None
+        # combine
+        small_tail.next = big_head.next
+        big_tail.next = None
 
         return small_head.next

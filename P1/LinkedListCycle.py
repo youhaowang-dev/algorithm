@@ -1,5 +1,6 @@
 # Hash Table, Linked List, Two Pointers
-# Amazon 8 Apple 7 Adobe 4 Bloomberg 3 Cisco 2 Spotify 5 Google 3 Goldman Sachs 3 Oracle 3 Microsoft 2 Yahoo 2 Visa 6 Nvidia 4 Facebook 3 Intel 3 Salesforce 3 Sprinklr 2 Splunk 2
+# Amazon 8 Apple 7 Adobe 4 Bloomberg 3 Cisco 2 Spotify 5 Google 3 Goldman Sachs 3 Oracle 3 Microsoft 2 Yahoo 2
+# Visa 6 Nvidia 4 Facebook 3 Intel 3 Salesforce 3 Sprinklr 2 Splunk 2
 # https://leetcode.com/problems/linked-list-cycle/
 
 # Given head, the head of a linked list, determine if the linked list has a cycle in it.
@@ -10,24 +11,18 @@
 
 # Return true if there is a cycle in the linked list. Otherwise, return false.
 
-from typing import Optional
-
-
-class ListNode:
-    def __init__(self, x):
-        self.val = x
-        self.next = None
-
 
 class LinkedListCycle:
     def hasCycle(self, head: Optional[ListNode]) -> bool:
+        if not head:
+            return False
+
         slow = head
         fast = head
         while fast and fast.next:
             slow = slow.next
             fast = fast.next.next
-            # init pointers are equal, so check after moving
-            if fast == slow:
+            if slow == fast:
                 return True
 
         return False
@@ -35,6 +30,9 @@ class LinkedListCycle:
 
 class LinkedListCycle2:
     def hasCycle(self, head: Optional[ListNode]) -> bool:
+        if not head:
+            return False
+
         visited = set()
         while head:
             if head in visited:
