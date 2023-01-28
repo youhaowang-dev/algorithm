@@ -14,8 +14,26 @@
 from heapq import heappop, heappush
 from typing import List
 
+class MeetingRoomsII1:
+    def minMeetingRooms(self, intervals: List[List[int]]) -> int:
+        if not intervals:
+            return 0
+        
+        max_count = 0
+        count = 0
+        time_count_deltas = list()
+        for start, end in intervals:
+            time_count_deltas.append((start, 1))
+            time_count_deltas.append((end, -1))
+        
+        time_count_deltas.sort()
+        for _, count_delta in time_count_deltas:
+            count += count_delta
+            max_count = max(max_count, count)
 
-class MeetingRoomsII:
+        return max_count
+
+class MeetingRoomsII2:
     def minMeetingRooms(self, intervals: List[List[int]]) -> int:
         if not intervals:
             return 0
@@ -44,7 +62,7 @@ class MeetingRoomsII:
 # We just have to find room where meeting is already finished
 # If we cannot find such room - just add a new one
 # time O()
-class MeetingRoomsII2:
+class MeetingRoomsII3:
     def minMeetingRooms(self, intervals: List[List[int]]) -> int:
         intervals.sort()
 
