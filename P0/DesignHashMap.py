@@ -19,9 +19,7 @@
 # [null, null, null, 1, -1, null, 1, null, -1]
 
 # There are two main issues that we should tackle, in order to design an efficient hashmap data structure:
-# 1). hash function design and 2). collision handling.
-
-# TODO: use doubly linked list
+# 1). hash function design and 2). collision/conflict handling.
 class ListNode:
     def __init__(self, key, val):
         self.pair = (key, val)
@@ -33,62 +31,59 @@ class MyHashMap:
 
     def __init__(self):
         self.size = self.DEFAULT_SIZE
-        self.buckets = [None for _ in range(self.size)]
+        self.hash_to_head = [None for _ in range(self.size)]
 
-    def put(self, key, value):
+    def put(self, key, val):
         hash = self.get_hash(key)
-        if self.buckets[hash] == None:
-            self.buckets[hash] = ListNode(key, value)
+        if not self.hash_to_head[hash]:
+            self.hash_to_head[hash] = ListNode(key, val)
         else:
-            cur = self.buckets[hash]
-            while True:
-                if cur.pair[0] == key:
-                    cur.pair = (key, value)  # update
+            node = self.hash_to_head[hash]
+            while node.next:  # may need the tail to append
+                # try update node
+                if self.try_update(node, key, val):
                     return
-                if cur.next == None:
-                    break
-                cur = cur.next
-            cur.next = ListNode(key, value)
+                node = node.next
+            # try update tail
+            if self.try_update(node, key, val):
+                return
+            # not found, append
+            node.next = ListNode(key, val)
+
+    def try_update(self, node: ListNode, key: int, val: int) -> bool:
+        if node.pair[0] == key:  # found, so update and return
+            node.pair = (key, val)
+            return True
+
+        return False
 
     def get(self, key):
-        node = self.get_node(key)
-        if not node:
-            return -1
-
-        return node.pair[0]
+        hash = self.get_hash(key)
+        node = self.hash_to_head[hash]
+        while node:
+            if node.pair[0] == key:
+                return node.pair[1]
+            else:
+                node = node.next
+        return -1
 
     def remove(self, key):
-        node = self.get_node(key)
+        hash = self.get_hash(key)
+        node = self.hash_to_head[hash]
         if not node:
             return
-
-        hash = self.get_hash(key)
-        cur = prev = self.buckets[hash]
-        if not cur:
-            return
-        if cur.pair[0] == key:
-            self.buckets[hash] = cur.next
-        else:
-            cur = cur.next
-            while cur:
-                if cur.pair[0] == key:
-                    prev.next = cur.next
-                    break
+        if node.pair[0] == key:  # first node is the target
+            self.hash_to_head[hash] = node.next
+        else:  # two pointers same speed
+            prev = node
+            node = node.next
+            while node:
+                if node.pair[0] == key:
+                    prev.next = node.next  # remove
+                    return
                 else:
-                    cur, prev = cur.next, prev.next
+                    node = node.next
+                    prev = prev.next
 
     def get_hash(self, key):
         return key % self.size
-
-    def get_node(self, key):
-        hash = self.get_hash(key)
-        nodes = self.buckets[hash]
-        if not nodes:
-            return None
-
-        for node in nodes:
-            pair_key, _ = node.pair
-            if pair_key == key:
-                return node
-
-        return None
