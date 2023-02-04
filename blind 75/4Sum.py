@@ -70,7 +70,8 @@ class FourSum2:
         length = len(nums)
         for i in range(length):
             for j in range(i + 1, length):
-                self.twoSum(nums, target, nums[i], nums[j], j + 1, length - 1, results)
+                self.twoSum(nums, target, nums[i],
+                            nums[j], j + 1, length - 1, results)
 
         return list(set(results))
 
