@@ -24,7 +24,7 @@ class MergeTwoSortedLists:  # iterative
         tail = before_head
 
         while head1 and head2:
-            # dont do if... if... as the pointers can go out of bound after one if
+            # elif is needed pointer can be outbound after head1.next or head2.next, if...if...if won't work
             if head1.val < head2.val:
                 tail.next = head1
                 head1 = head1.next
