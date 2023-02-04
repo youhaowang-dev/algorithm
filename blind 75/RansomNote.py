@@ -15,7 +15,7 @@
 # Input: ransomNote = "aa", magazine = "aab"
 # Output: true
 
-
+# if target is a subset of word
 class RansomNote:
     def canConstruct(self, target: str, word: str) -> bool:
         if not word:
