@@ -10,15 +10,8 @@
 
 from typing import Optional
 
-# Definition for singly-linked list.
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
 
-
-# iterative
-class MergeTwoSortedLists:
+class MergeTwoSortedLists:  # iterative
     def mergeTwoLists(
         self, head1: Optional[ListNode], head2: Optional[ListNode]
     ) -> Optional[ListNode]:
@@ -28,32 +21,32 @@ class MergeTwoSortedLists:
             return head1
 
         before_head = ListNode(0)
-        current = before_head
+        tail = before_head
 
         while head1 and head2:
             # dont do if... if... as the pointers can go out of bound after one if
             if head1.val < head2.val:
-                current.next = head1
+                tail.next = head1
                 head1 = head1.next
             elif head1.val > head2.val:
-                current.next = head2
+                tail.next = head2
                 head2 = head2.next
             elif head1.val == head2.val:
-                current.next = head2
+                tail.next = head2
                 head2 = head2.next
 
-            current = current.next
+            tail = tail.next
 
         if head1:
-            current.next = head1
+            tail.next = head1
 
         if head2:
-            current.next = head2
+            tail.next = head2
 
         return before_head.next
 
 
-class MergeTwoSortedLists2:
+class MergeTwoSortedLists2:  # recurisive
     def mergeTwoLists(
         self, head1: Optional[ListNode], head2: Optional[ListNode]
     ) -> Optional[ListNode]:
