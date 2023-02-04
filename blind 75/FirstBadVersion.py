@@ -32,10 +32,10 @@ class FirstBadVersion:
     def firstBadVersion(self, n: int) -> int:
         left = 1
         right = n
-        while left + 1 < right:
+        while left + 1 < right:  # never infinite loop
             mid = (left + right) // 2
             if isBadVersion(mid):
-                right = mid
+                right = mid  # search the leftmost of bad
             else:
                 left = mid
 
