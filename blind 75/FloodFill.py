@@ -18,43 +18,45 @@
 # Explanation: From the center of the image with position (sr, sc) = (1, 1) (i.e., the red pixel), all pixels
 # connected by a path of the same color as the starting pixel (i.e., the blue pixels) are colored with the new color.
 # Note the bottom corner is not colored 2, because it is not 4-directionally connected to the starting pixel.
-
 # Example 2:
 # Input: image = [[0,0,0],[0,0,0]], sr = 0, sc = 0, color = 0
 # Output: [[0,0,0],[0,0,0]]
 # Explanation: The starting pixel is already colored 0, so no changes are made to the image.
 
-from typing import List
-
-
+# dfs, time: O(m*n) for each color can only be replaced once
+# space: O(m*n) for a spiral image
 class FloodFill:
-    def floodFill(
-        self, image: List[List[int]], row: int, col: int, new_color: int
-    ) -> List[List[int]]:
-        if not image or not image[0]:
+    def floodFill(self, image: List[List[int]], row_start: int, col_start: int, new_color: int) -> List[List[int]]:
+        if not image:
+            return list()
+
+        if not image[0]:
+            return list()
+
+        old_color = image[row_start][col_start]
+        if old_color == new_color:
             return image
 
-        if image[row][col] == new_color:
-            return image
-
-        self.dfs_fill(image, row, col, image[row][col], new_color)
+        self.replace_color(image, row_start, col_start, old_color, new_color)
 
         return image
 
-    def dfs_fill(
-        self, image: List[List[int]], row: int, col: int, color: int, new_color: int
-    ) -> None:
+    def replace_color(self, image, row_start, col_start, old_color, new_color) -> None:
+        # check bound
         if (
-            row < 0
-            or row >= len(image)
-            or col < 0
-            or col >= len(image[0])
-            or image[row][col] != color
+            row_start < 0 or
+            row_start >= len(image) or
+            col_start < 0 or
+            col_start >= len(image[0])
         ):
             return
-
-        image[row][col] = new_color
-        self.dfs_fill(image, row + 1, col, color, new_color)
-        self.dfs_fill(image, row - 1, col, color, new_color)
-        self.dfs_fill(image, row, col + 1, color, new_color)
-        self.dfs_fill(image, row, col - 1, color, new_color)
+        # check color
+        if image[row_start][col_start] != old_color:
+            return
+        # replace color
+        image[row_start][col_start] = new_color
+        # replace neighbors
+        for row_delta, col_delta in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
+            next_row = row_start + row_delta
+            next_col = col_start + col_delta
+            self.replace_color(image, next_row, next_col, old_color, new_color)
