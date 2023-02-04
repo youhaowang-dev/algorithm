@@ -20,46 +20,56 @@ from copy import copy
 from typing import List
 
 
+# 4 sum -> n sum -> two sum
+# O(n^4)
 class FourSum:
-
-    # dfs n sum + two sum
-    # depth first search
-    # can easily convert to kth for followup
-    # use long for sum if interviewer say numbers are large and can overflow
     def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
-        results = list()
-        if not nums:
-            return results
         nums.sort()
-        state = list()
-        self.searchSum(nums, state, target, results, 0)
+        return self.n_sum(nums, target, 4)
+
+    def n_sum(self, nums, target, n) -> List[List[int]]:
+        if n == 2:
+            return self.two_sum(nums, target)
+
+        results = list()
+        prev_used_num = None
+        for i in range(len(nums)-n+1):
+            if nums[i] == prev_used_num:
+                continue
+
+            sum_results = self.n_sum(nums[i+1:], target-nums[i], n-1)
+            for sum_result in sum_results:
+                sum_result.append(nums[i])
+            results.extend(sum_results)
+            prev_used_num = nums[i]
 
         return results
 
-    def searchSum(
-        self,
-        nums: List[int],
-        list: List[int],
-        target: int,
-        results: List[List[int]],
-        start: int,
-    ):
-        if len(list) == 4:
-            if target == 0:
-                results.append(copy.deepcopy(list))
+    # two pointers
+    def two_sum(self, nums, target) -> List[List[int]]:
+        left = 0
+        right = len(nums)-1
+        res = list()
+        while left < right:
+            temp = nums[left] + nums[right]
+            if temp == target:
+                res.append([nums[left], nums[right]])
+                left += 1
+                right -= 1
+                while left < right and nums[left] == nums[left-1]:
+                    left += 1
+                while left < right and nums[right] == nums[right+1]:
+                    right -= 1
+            elif temp < target:
+                left += 1
+            elif temp > target:
+                right -= 1
 
-            return
+        return res
 
-        for i in range(start, len(nums)):
-            if i != start and nums[i] == nums[i - 1]:
-                continue
-
-            list.append(nums[i])
-            self.searchSum(nums, list, target - nums[i], results, i + 1)
-            list.pop()
+# sort + four pointers
 
 
-# four pointers
 class FourSum2:
     def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
         results = list()
@@ -96,3 +106,47 @@ class FourSum2:
                 results.append((num1, num2, nums[left], nums[right]))
                 left += 1
                 right -= 1
+
+
+# dfs n sum + two sum
+# depth first search
+# can easily convert to kth for followup
+# use long for sum if interviewer say numbers are large and can overflow
+class FourSum3:
+    def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
+        results = list()
+        if not nums:
+            return results
+
+        nums.sort()  # dedup
+        num_list = list()
+        start_index = 0
+        needed_num_count = 4
+        self.n_sum(nums, target, num_list, results,
+                   start_index, needed_num_count)
+
+        return results
+
+    def n_sum(
+        self,
+        nums: List[int],
+        target: int,
+        num_list: List[int],
+        results: List[List[int]],
+        start_index: int,
+        needed_num_count,
+    ):
+        if len(num_list) == needed_num_count:
+            if target == 0:
+                # results.append(copy.deepcopy(num_list))
+                results.append(list(num_list))
+            return
+
+        for i in range(start_index, len(nums)):
+            if i != start_index and nums[i] == nums[i - 1]:
+                continue
+
+            num_list.append(nums[i])
+            self.n_sum(nums, target - nums[i], num_list,
+                       results, i + 1, needed_num_count)
+            num_list.pop()
