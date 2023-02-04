@@ -11,8 +11,6 @@
 #  Input: nums = [-1,0,3,5,9,12], target = 2
 #  Output: -1
 #  Explanation: 2 does not exist in nums so return -1
-from typing import List
-
 
 class BinarySearch(object):
     def search(self, nums: List[int], target: int) -> int:
@@ -21,17 +19,15 @@ class BinarySearch(object):
 
         left = 0
         right = len(nums) - 1
-        #  + 1 never infinite loop
-        while left + 1 < right:
-            mid = (left + right) // 2
-            mid_val = nums[mid]
-            if mid_val == target:
+        while left + 1 < right:  # never infinite loop, handle left and right later
+            mid = (left + right) // 2  # python has no overflow issue
+            if nums[mid] == target:
                 return mid
-            if mid_val > target:
+            elif nums[mid] > target:
                 right = mid
-            if mid_val < target:
+            elif nums[mid] < target:
                 left = mid
-        #  handle terminated cases
+
         if nums[left] == target:
             return left
         if nums[right] == target:
