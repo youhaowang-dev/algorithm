@@ -1,5 +1,6 @@
 # Array
-# Google 5 Amazon 3 Apple 3 LinkedIn 8 Facebook 7 Robinhood 4 Microsoft 3 Uber 2 Bloomberg 2 ByteDance 2 Walmart Global Tech 2 Twitter 7 Zillow 3 Reddit 3 Dataminr 2 Goldman Sachs 2 Salesforce 2 Citadel 2
+# Google 5 Amazon 3 Apple 3 LinkedIn 8 Facebook 7 Robinhood 4 Microsoft 3 Uber 2 Bloomberg 2 ByteDance 2 Walmart Global Tech 2
+# Twitter 7 Zillow 3 Reddit 3 Dataminr 2 Goldman Sachs 2 Salesforce 2 Citadel 2
 # https://leetcode.com/problems/insert-interval/
 
 # You are given an array of non-overlapping intervals intervals where intervals[i] = [starti, endi]
@@ -12,40 +13,42 @@
 # Example 1:
 # Input: intervals = [[1,3],[6,9]], newInterval = [2,5]
 # Output: [[1,5],[6,9]]
-
 # Example 2:
 # Input: intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
 # Output: [[1,2],[3,10],[12,16]]
 # Explanation: Because the new interval [4,8] overlaps with [3,5],[6,7],[8,10].
-import bisect
-from typing import List
+
 
 # find the newInterval position in intervals (either by binary search or linear search)
 # insert newInterval to intervals
 # iterate through new intervals and merge if needed
+# time search logn + insert n + merge n = n
+# space merged n, space optimize can be done via reversed intervals, merge two by two, and reverse back
 class InsertInterval:
     def insert(
         self, intervals: List[List[int]], newInterval: List[int]
     ) -> List[List[int]]:
-        # O(logN)
-        # The purpose of Bisect algorithm is to find a position in list where an element
-        # needs to be inserted to keep the list sorted
-        position = bisect.bisect(intervals, newInterval)
+        if not intervals:
+            return [newInterval]
 
-        # O(N)
-        intervals.insert(position, newInterval)
+        insert_position = bisect.bisect(intervals, newInterval)  # logn
+        intervals.insert(insert_position, newInterval)  # n
 
-        # O(N)
-        merged = list()
+        merged_intervals = list()
         for interval in intervals:
-            if self.has_overlap(merged, interval):
-                # merge by updating end
-                merged[-1][1] = max(merged[-1][1], interval[1])
+            if self.has_overlap(merged_intervals, interval):
+                new_end = max(merged_intervals[-1][1], interval[1])
+                merged_intervals[-1][1] = new_end
             else:
-                merged.append(interval)
+                merged_intervals.append(interval)
 
-        return merged
+        return merged_intervals
 
-    # last_merged exists and last_merged.end > next.start
-    def has_overlap(self, merged: List[List[int]], interval: List[int]):
-        return merged and merged[-1][1] >= interval[0]
+    def has_overlap(self, merged_intervals: List[List[int]], next_interval: List[int]):
+        if not merged_intervals:
+            return False
+
+        _, last_merged_end = merged_intervals[-1]
+        next_start, _ = next_interval
+
+        return last_merged_end >= next_start
