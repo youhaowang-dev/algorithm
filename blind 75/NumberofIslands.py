@@ -34,6 +34,8 @@ from collections import deque
 from typing import List
 
 # dfs time m*n space m*n
+
+
 class NumberofIslands:
     LAND = "1"
     WATER = "0"
