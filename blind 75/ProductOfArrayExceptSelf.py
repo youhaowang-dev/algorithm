@@ -35,15 +35,15 @@ class ProductOfArrayExceptSelf:
         length = len(nums)
         products = [0 for _ in range(length)]
 
-        left_product = 1
+        prefix_product = 1
         for i in range(0, length):
-            products[i] = left_product
-            left_product = left_product * nums[i]
+            products[i] = prefix_product
+            prefix_product = prefix_product * nums[i]
 
-        right_product = 1
+        suffix_product = 1
         for i in range(length - 1, -1, -1):
-            products[i] = products[i] * right_product
-            right_product = right_product * nums[i]
+            products[i] = products[i] * suffix_product
+            suffix_product = suffix_product * nums[i]
 
         return products
 
