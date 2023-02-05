@@ -9,17 +9,6 @@
 # The right subtree of a node contains only nodes with keys greater than the node's key.
 # Both the left and right subtrees must also be binary search trees.
 
-from collections import deque
-from typing import Optional
-
-
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
-
 # inorder traverse values should be increasing
 class ValidateBinarySearchTree:
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
@@ -40,7 +29,7 @@ class ValidateBinarySearchTree:
 
 class InorderIterator:
     def __init__(self, root: TreeNode):
-        self.stack = deque()
+        self.stack = collections.deque()
         self.push_roots(root)
 
     def has_next(self) -> bool:
@@ -66,9 +55,9 @@ class ValidateBinarySearchTree2:
         min_node = None
         max_node = None
 
-        return self.isValidBSTHelper(root, min_node, max_node)
+        return self.is_valid_bst(root, min_node, max_node)
 
-    def isValidBSTHelper(
+    def is_valid_bst(
         self,
         root: Optional[TreeNode],
         min_node: Optional[TreeNode],
@@ -83,7 +72,7 @@ class ValidateBinarySearchTree2:
         if max_node and max_node.val <= root.val:
             return False
 
-        left_is_valid = self.isValidBSTHelper(root.left, min_node, root)
-        right_is_valid = self.isValidBSTHelper(root.right, root, max_node)
+        left_is_valid = self.is_valid_bst(root.left, min_node, root)
+        right_is_valid = self.is_valid_bst(root.right, root, max_node)
 
         return left_is_valid and right_is_valid
