@@ -13,38 +13,28 @@
 class ValidateBinarySearchTree:
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
         if not root:
-            return False
+            return True
 
-        iterator = InorderIterator(root)
-        prev = iterator.get_next()
-        while iterator.has_next():
-            current = iterator.get_next()
-            if prev.val >= current.val:
+        stack = collections.deque()
+        self.push_lefts(stack, root)  # smaller and smaller...
+        # 0 wont work with if prev_val and ... because 0 is false [0,null,-1] will fail
+        prev_val = -math.inf
+        while stack:
+            node = stack.pop()
+            if prev_val >= node.val:
                 return False
-            else:
-                prev = current
+            prev_val = node.val
+            self.push_lefts(stack, node.right)
 
         return True
 
+    def push_lefts(self, stack, node):
+        while node:
+            stack.append(node)
+            node = node.left
 
-class InorderIterator:
-    def __init__(self, root: TreeNode):
-        self.stack = collections.deque()
-        self.push_roots(root)
 
-    def has_next(self) -> bool:
-        return self.stack
-
-    def get_next(self) -> TreeNode:
-        node = self.stack.pop()
-        self.push_roots(node.right)
-
-        return node
-
-    def push_roots(self, root: TreeNode) -> None:
-        while root:
-            self.stack.append(root)
-            root = root.left
+# every node must fullfil min_val < node.val < max_val
 
 
 class ValidateBinarySearchTree2:
@@ -52,27 +42,23 @@ class ValidateBinarySearchTree2:
         if not root:
             return False
 
-        min_node = None
-        max_node = None
-
-        return self.is_valid_bst(root, min_node, max_node)
+        min_val = -math.inf
+        max_val = math.inf
+        return self.is_valid_bst(root, min_val, max_val)
 
     def is_valid_bst(
         self,
         root: Optional[TreeNode],
-        min_node: Optional[TreeNode],
-        max_node: Optional[TreeNode],
+        min_val: float,
+        max_val: float,
     ):
         if not root:
             return True  # able to reach leaf means valid
 
-        if min_node and min_node.val >= root.val:
+        if not (min_val < root.val < max_val):
             return False
 
-        if max_node and max_node.val <= root.val:
-            return False
-
-        left_is_valid = self.is_valid_bst(root.left, min_node, root)
-        right_is_valid = self.is_valid_bst(root.right, root, max_node)
+        left_is_valid = self.is_valid_bst(root.left, min_val, root.val)
+        right_is_valid = self.is_valid_bst(root.right, root.val, max_val)
 
         return left_is_valid and right_is_valid
