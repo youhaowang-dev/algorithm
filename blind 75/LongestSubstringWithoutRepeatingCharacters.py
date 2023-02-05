@@ -24,25 +24,27 @@
 # Explanation: The answer is "wke", with the length of 3.
 # Notice that the answer must be a substring, "pwke" is a subsequence and not a substring.
 
-# two pointers, the window can increase when fast pointer val is not in current window
+# two pointers, move right when no duplicate and get the length and max_length, move left until no duplicate
+# length is the size of chars in set
 class LongestSubstringWithoutRepeatingCharacters:
     def lengthOfLongestSubstring(self, input_str: str) -> int:
-        max_substr_length = 0
+        if not input_str:
+            return 0
 
-        substr_characters = set()
+        max_length = 0
+        current_chars = set()
         left = 0
         right = 0
         while right < len(input_str):
-            if input_str[right] in substr_characters:
-                substr_characters.remove(input_str[left])
+            if input_str[right] in current_chars:
+                current_chars.remove(input_str[left])
                 left += 1
             else:
-                substr_length = right - left + 1
-                max_substr_length = max(max_substr_length, substr_length)
-                substr_characters.add(input_str[right])
+                current_chars.add(input_str[right])
                 right += 1
+                max_length = max(max_length, len(current_chars))
 
-        return max_substr_length
+        return max_length
 
 
 # brute force: try all substrings and validate them
