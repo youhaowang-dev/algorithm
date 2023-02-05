@@ -7,7 +7,8 @@
 
 # The length of a path between two nodes is represented by the number of edges between them.
 
-# diameter = max node to node distance = max(1 + left_max_depth + right_max_depth, left_max, right_max)
+# diameter = max node to node distance = max(left_max_node_to_node, right_max_node_to_node,
+#                                           left_max_root_to_leaf + right_max_root_to_leaf)
 class DiameterofBinaryTree:
     def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
         if not root:
