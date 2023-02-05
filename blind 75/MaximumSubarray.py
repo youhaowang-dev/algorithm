@@ -4,11 +4,27 @@
 # Given an integer array nums, find the subarray which has the largest sum and return its sum.
 # example: maxSubArray([-2,1,-3,4,-1,2,1,-5,4]) => 6 because [4,-1,2,1] has the largest sum = 6
 
-from typing import List
+# time n space n
+# maintain a prefix sum and a min prefix sum, max sub arr sum = max(prefix sum - min prefix sum)
+class MaximumSubarray0:
+    def maxSubArray(self, nums: List[int]) -> int:
+        if not nums:
+            return 0
+
+        max_subarr_sum = nums[0]  # important for negative number
+        prefix_sum = 0
+        min_prefix_sum = 0
+        for num in nums:
+            prefix_sum += num
+            max_subarr_sum = max(max_subarr_sum, prefix_sum - min_prefix_sum)
+            min_prefix_sum = min(min_prefix_sum, prefix_sum)
+
+        return max_subarr_sum
+
 
 # time n space n
-# build the prefixSum and track the minPrefixSum(0 or lower)
-# maxSum=max(maxSum, currentPrefixSum - minPrefixSum)
+# build the prefix_sum and track the minPrefix_sum(0 or lower)
+# maxSum=max(maxSum, currentPrefix_sum - minPrefix_sum)
 class MaximumSubarray:
     def maxSubArray(self, nums: List[int]) -> int:
         max_sum = -(2**31)
@@ -57,31 +73,3 @@ class MaximumSubarray2:
             sum += nums[i]
 
         return sum
-
-
-# dynamic programming
-# record all the max sums for each index
-# only add the sum if the prev sum is positive
-# time complexity: O(n) for one pass
-# space complexity: O(n) for max sum array, this can be improved because we only need the prev sum
-class MaximumSubarray3:
-    def maxSubArray(self, nums: List[int]) -> int:
-        if not nums:
-            return -(2**31)
-
-        length = len(nums)
-        max_subarray_sum = nums[0]
-        max_sums = [0 for i in range(0, length)]
-        max_sums[0] = nums[0]
-
-        for i in range(1, length):
-            if max_sums[i - 1] > 0:
-                # > 0, add to sum
-                max_sums[i] = nums[i] + max_sums[i - 1]
-            else:
-                # <= 0, no need to add
-                max_sums[i] = nums[i]
-
-            max_subarray_sum = max(max_subarray_sum, max_sums[i])
-
-        return max_subarray_sum
