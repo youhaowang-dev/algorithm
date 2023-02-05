@@ -24,30 +24,46 @@
 # To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
 # All the pairs prerequisites[i] are unique.
 
+# bfs, build course_to_require_count, enqueue 0 course and reduce count by 1 for next
+# {4: 0, 1: 1, 2: 1, 3: 2}, deque([4])
+# {4: 0, 1: 0, 2: 0, 3: 2}, deque([1, 2])
+# {4: 0, 1: 0, 2: 0, 3: 1}, deque([2])
+# {4: 0, 1: 0, 2: 0, 3: 0}, deque([3])
+# {4: 0, 1: 0, 2: 0, 3: 0}, deque([])
 class CourseSchedule:
-    def canFinish(self, course_count: int, prerequisites: List[List[int]]) -> bool:
-        pre_to_nexts: Dict[int, List[int]] = dict()
-        for course in range(course_count):
-            pre_to_nexts[course] = list()
+    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
+        if not prerequisites:
+            return True
 
-        indegrees = [0 for _ in range(0, course_count)]
-        for course, pre in prerequisites:
-            pre_to_nexts.get(pre).append(course)
-            indegrees[course] += 1
+        course_to_nexts = dict()
+        course_to_required_count = dict()
+        for next_course, course in prerequisites:
+            if course not in course_to_nexts:
+                course_to_nexts[course] = list()
+            course_to_nexts[course].append(next_course)
+
+            if course not in course_to_required_count:  # no prerequisite, but need for init
+                course_to_required_count[course] = 0
+
+            if next_course not in course_to_required_count:
+                course_to_required_count[next_course] = 1
+            else:
+                course_to_required_count[next_course] += 1
 
         queue = deque()
-        for course in range(0, course_count):
-            if indegrees[course] == 0:
+        for course, require_count in course_to_required_count.items():
+            if require_count == 0:
                 queue.append(course)
-
-        count = 0
         while queue:
-            pre = queue.popleft()
-            count += 1
-            next_courses = pre_to_nexts.get(pre)
-            for course in next_courses:
-                indegrees[course] -= 1
-                if indegrees[course] == 0:
-                    queue.append(course)
+            course = queue.popleft()
+            next_courses = course_to_nexts.get(course, list())
+            for next_course in next_courses:
+                course_to_required_count[next_course] -= 1
+                if course_to_required_count[next_course] == 0:
+                    queue.append(next_course)
 
-        return count == course_count
+        for require_count in course_to_required_count.values():
+            if require_count != 0:
+                return False
+
+        return True
