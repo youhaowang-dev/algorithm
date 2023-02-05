@@ -16,8 +16,9 @@ class KClosestPointstoOrigin:
         min_heap = list()
 
         for x, y in points:
-            distance = -(x*x + y*y)
-            heapq.heappush(min_heap, (distance, x, y))
+            distance = x*x + y*y
+            # -distance to put max distance at peak, smaller distance not at peak
+            heapq.heappush(min_heap, (-distance, x, y))
             if len(min_heap) > needed:
                 heapq.heappop(min_heap)
 
