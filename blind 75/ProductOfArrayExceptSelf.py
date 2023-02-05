@@ -18,32 +18,34 @@
 # Input: nums = [-1,1,0,-3,3]
 # Output: [0,0,9,0,0]
 
-# Follow up: Can you solve the problem in O(1) extra space complexity? (The output array does not count as extra space for space complexity analysis.)
+# Follow up: Can you solve the problem in O(1) extra space complexity?
+# (The output array does not count as extra space for space complexity analysis.)
 
-from typing import List
-
-
-# space optimized
+# brute force: product of all for each index and divide self
 # keep track of leftProduct and rightProduct
 # two passes to build the result
+# time n, space 1 output does not count
+# [1, 0, 0, 0] => [1, 1, 0, 0] => [1, 1, 2, 0] => [1, 1, 2, 6]
+# [1, 1, 2, 6] => [1, 1, 8, 6] => [1, 12, 8, 6] => [24, 12, 8, 6]
 class ProductOfArrayExceptSelf:
     def productExceptSelf(self, nums: List[int]) -> List[int]:
+        if not nums:
+            return list()
+
         length = len(nums)
-        result = [0 for _ in range(length)]
-        result[0] = nums[0]
-        result[length - 1] = nums[length - 1]
+        products = [0 for _ in range(length)]
 
-        leftProduct = 1
+        left_product = 1
         for i in range(0, length):
-            result[i] = leftProduct
-            leftProduct = leftProduct * nums[i]
+            products[i] = left_product
+            left_product = left_product * nums[i]
 
-        rightProduct = 1
+        right_product = 1
         for i in range(length - 1, -1, -1):
-            result[i] = result[i] * rightProduct
-            rightProduct = rightProduct * nums[i]
+            products[i] = products[i] * right_product
+            right_product = right_product * nums[i]
 
-        return result
+        return products
 
 
 # preprocess data from both ends
