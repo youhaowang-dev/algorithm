@@ -26,36 +26,35 @@
 # Output: [[0,0,0]]
 # Explanation: The only possible triplet sums up to 0.
 
-from typing import List, Set
-
-
 # sort + two pointers, three sum => two sum
 class ThreeSum:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
-        res = list()
+        results = list()
         if not nums:
-            return res
+            return results
 
         nums.sort()
         for i in range(0, len(nums)):
-            if nums[i] > 0:
+            if nums[i] > 0:  # optional
                 break
-            if i == 0 or nums[i - 1] != nums[i]:
-                self.twoSum(nums, i, res)
+            if i != 0 and nums[i - 1] == nums[i]:
+                continue
 
-        return res
+            self.search_sum(nums, i, results)
 
-    def twoSum(self, nums: List[int], i: int, res: List[List[int]]) -> None:
+        return results
+
+    def search_sum(self, nums: List[int], i: int, results: List[List[int]]) -> None:
         left = i + 1
         right = len(nums) - 1
         while left < right:
-            sum = nums[i] + nums[left] + nums[right]
-            if sum < 0:
+            three_sum = nums[i] + nums[left] + nums[right]
+            if three_sum < 0:
                 left += 1
-            elif sum > 0:
+            elif three_sum > 0:
                 right -= 1
-            else:
-                res.append([nums[i], nums[left], nums[right]])
+            elif three_sum == 0:  # find a result, add it, and dedup
+                results.append([nums[i], nums[left], nums[right]])
                 left += 1
                 right -= 1
                 while left < right and nums[left] == nums[left - 1]:
