@@ -29,25 +29,26 @@ class EvaluateReversePolishNotation:
         # assume input is valid
         stack = deque()
         for token in tokens:
-            if token.isnumeric():
+            if token not in "+-*/":  # isnumeric wont work for negative string number
                 stack.append(int(token))
             else:
-                second_num = stack.pop()
-                first_num = stack.pop()
-                result = self.get_result(first_num, second_num, token)
+                stack.append(self.get_result(stack, token))
 
-                stack.append(result)
+        return stack.pop()
 
-    def get_result(self, first_num, second_num, operator) -> int:
-        if operator == '+':
-            return first_num + second_num
-        elif operator == '-':
-            return first_num - second_num
-        elif operator == '*':
-            return first_num * second_num
-        elif operator == '/':
-            # truncate toward zero, // is floor division 3//2=1=floor(1.5), -3//2=-2=floor(-1.5), -3//-2=1
-            if first_num * second_num > 0:
-                return first_num // second_num
+    def get_result(self, stack, operator):
+        second = stack.pop()
+        first = stack.pop()
+        if operator == "+":
+            return first+second
+        elif operator == "-":
+            return first-second
+        elif operator == "*":
+            return first*second
+        elif operator == "/":
+            if first * second >= 0:
+                return first // second
             else:
-                return -(abs(first_num) // abs(second_num))
+                return -(abs(first) // abs(second))
+        else:
+            raise Exception('invalid operator')
