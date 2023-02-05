@@ -14,13 +14,11 @@ class BinaryTreeLevelOrderTraversal:
 
         queue = deque()
         queue.append(root)
-
         while queue:
             nodes = self.get_all_nodes(queue)
             result = list()
             for node in nodes:
                 result.append(node.val)
-
                 if node.left:
                     queue.append(node.left)
                 if node.right:
