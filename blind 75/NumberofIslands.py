@@ -37,42 +37,41 @@ from typing import List
 
 
 class NumberofIslands:
-    LAND = "1"
+    LAND = "1"  # NOTE: str
     WATER = "0"
 
     def numIslands(self, grid: List[List[str]]) -> int:
-        if not grid:
+        if not grid or not grid[0]:
             return 0
 
         row_count = len(grid)
         col_count = len(grid[0])
-        island_count = 0
+
+        count = 0
         for row in range(row_count):
             for col in range(col_count):
-                if grid[row][col] == self.LAND:
-                    island_count += 1
-                    self.dfs(grid, row, col)
+                if grid[row][col] != self.LAND:
+                    continue
+                count += 1
+                self.make_island_water(grid, row, col)
 
-        return island_count
+        return count
 
-    def dfs(self, grid: List[List[str]], row: int, col: int) -> None:
-        row_count = len(grid)
-        col_count = len(grid[0])
-
+    def make_island_water(self, grid, row, col) -> None:
         if (
-            row < 0
-            or col < 0
-            or row >= row_count
-            or col >= col_count
-            or grid[row][col] == self.WATER
+            row < 0 or
+            row >= len(grid) or
+            col < 0 or
+            col >= len(grid[0])
         ):
             return
 
+        if grid[row][col] == self.WATER:
+            return
+
         grid[row][col] = self.WATER
-        self.dfs(grid, row - 1, col)
-        self.dfs(grid, row + 1, col)
-        self.dfs(grid, row, col - 1)
-        self.dfs(grid, row, col + 1)
+        for row_delta, col_delta in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            self.make_island_water(grid, row + row_delta, col + col_delta)
 
 
 # bfs
