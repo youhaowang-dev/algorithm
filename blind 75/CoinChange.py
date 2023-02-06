@@ -42,8 +42,7 @@ class CoinChange:
 
         min_count = math.inf
         for coin in coins:
-            count = self.search_min_count(
-                coins, amount - coin, amount_to_min_count)
+            count = self.search_min_count(coins, amount - coin, amount_to_min_count)
             min_count = min(min_count, 1 + count)
 
         amount_to_min_count[amount] = min_count
