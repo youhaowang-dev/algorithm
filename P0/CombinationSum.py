@@ -26,12 +26,9 @@
 # Input: candidates = [2], target = 1
 # Output: []
 
-# time O(nums_count^(target/min_num)) => O(N^(T/M))
-# each number will fanout O(target/min_num) searches recursively, and each search cost bounded by O(nums_count)
-# space O(target/min_num)
-from ast import List
-
-
+# time O(2^n) where n=target/min_num, each num can be picked n times and each pick can be yes or no
+# so TC can be O(2^target) as min_num can be 1
+# space O(target/min_num) = O(target) where min_num can be 1
 class CombinationSum:
     def combinationSum(self, nums: List[int], target: int) -> List[List[int]]:
         if not nums:
