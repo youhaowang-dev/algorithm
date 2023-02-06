@@ -10,28 +10,24 @@
 
 # LCA = left tree has p/q and right tree has p/q = both search results are non null
 class LowestCommonAncestorOfABinaryTree:
-    def lowestCommonAncestor(
-        self, root: "TreeNode", p: "TreeNode", q: "TreeNode"
-    ) -> "TreeNode":
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
         if not root:
             return None
 
         if root == p or root == q:
             return root
 
-        ancestor_from_left = self.lowestCommonAncestor(root.left, p, q)
-        ancestor_from_right = self.lowestCommonAncestor(root.right, p, q)
-        # both subtrees have found the target
-        if ancestor_from_left and ancestor_from_right:
-            return root
-        # one subtree found the target
-        if ancestor_from_left:
-            return ancestor_from_left
-        # one subtree found the target
-        if ancestor_from_right:
-            return ancestor_from_right
+        left_lca = self.lowestCommonAncestor(root.left, p, q)
+        right_lca = self.lowestCommonAncestor(root.right, p, q)
 
-        return None
+        if left_lca and right_lca:
+            return root
+        elif left_lca:
+            return left_lca
+        elif right_lca:
+            return right_lca
+        else:  # both null
+            return None
 
 
 # bfs build child to parent mapping, then check path from p to root, and q to root, return the first overlap
