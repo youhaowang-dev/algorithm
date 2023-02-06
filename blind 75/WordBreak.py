@@ -21,28 +21,33 @@
 # Output: false
 
 # brute force dfs: if current substring in words, continue the search
-#
+# time n*2^n, for case like "aaa....",[a,aa,aaa....], all subsets will be generated and each subset costs n
+# space n for max recursion depth
+
+# memoized dfs
+# time: O(n^3), O(n^2) substrings and creating each substring costs O(n)
+# space: O(n^2) for all substrings
 class WordBreak:
     def wordBreak(self, word: str, wordDict: List[str]) -> bool:
-        if not word:
+        if not word or not wordDict:
             return False
-        if not wordDict:
+
+        word_has_break = dict()
+        return self.has_break(word, set(wordDict), word_has_break)
+
+    def has_break(self, word, words, word_has_break):
+        if word in word_has_break:
+            return word_has_break[word]
+        if word in words:
+            word_has_break[word] = True
             return True
 
-        end = 0
-        return self.search_break(word, set(wordDict), end)
-
-    def search_break(self, word: str, words: Set[str], prev_end: int) -> bool:
-        length = len(word)
-
-        if prev_end == length:
-            return True
-
-        for end in range(prev_end, length):
-            if word[prev_end:end+1] not in words:
+        for i in range(1, len(word)):
+            if word[i:] not in words:
                 continue
-
-            if self.search_break(word, words, end + 1):
+            if self.has_break(word[:i], words, word_has_break):
+                word_has_break[word] = True
                 return True
 
+        word_has_break[word] = False
         return False
