@@ -18,18 +18,10 @@
 # Input: nums = [2,0,1]
 # Output: [0,1,2]
 
-from typing import List
-
-
+# brute force: counting sort
+# one pass: swap 0 to left and 2 to right, so 1 is in the middle
+# three pointers to track the tail of 0, the head of 2, and the current swap position
 class SortColors:
-
-    # brute force: counting sort
-
-    # easy solution would be two passes
-    # pass1 moves all the 0s and pass2 moves all the 1s
-
-    # one pass: swap 0 to left and 2 to right, so 1 is in the middle
-    # three pointers to track the tail of 0, the head of 2, and the current swap position
     def sortColors(self, nums: List[int]) -> None:
         if not nums:
             return
@@ -38,24 +30,40 @@ class SortColors:
         two_head = len(nums) - 1
         current = 0
         while current <= two_head:
-            current_val = nums[current]
-            # 0, move 0 to zero tail
-            if current_val == 0:
-                zero_tail_val = nums[zero_tail]
-                nums[zero_tail] = current_val
-                nums[current] = zero_tail_val
+            if nums[current] == 0:
+                nums[current], nums[zero_tail] = nums[zero_tail], nums[current]
                 zero_tail += 1
                 current += 1
-                continue
-
-            # 2, move 2 to two head, donot move current as the swapped value coult be 0
-            if current_val == 2:
-                two_head_val = nums[two_head]
-                nums[two_head] = current_val
-                nums[current] = two_head_val
+            elif nums[current] == 2:
+                nums[current], nums[two_head] = nums[two_head], nums[current]
                 two_head -= 1
-                continue
-
-            # 1, noop, move current
-            if current_val == 1:
+                # dont move current as current can be 0 or 1
+            elif nums[current] == 1:  # noop
                 current += 1
+
+
+class SortColors2:  # two passes
+    def sortColors(self, nums: List[int]) -> None:
+        if not nums:
+            return
+        length = len(nums)
+
+        zero_tail = 0
+        current = zero_tail
+        while current < length:
+            if nums[current] == 0:
+                nums[current], nums[zero_tail] = nums[zero_tail], nums[current]
+                zero_tail += 1
+                current += 1
+            else:
+                current += 1
+
+        two_head = length - 1
+        current = two_head
+        while current >= 0:
+            if nums[current] == 2:
+                nums[current], nums[two_head] = nums[two_head], nums[current]
+                two_head -= 1
+                current -= 1
+            else:
+                current -= 1
