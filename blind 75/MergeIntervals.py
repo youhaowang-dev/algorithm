@@ -20,24 +20,22 @@
 # Output: [[1,5]]
 # Explanation: Intervals [1,4] and [4,5] are considered overlapping.
 
-from typing import List
-
-
+# time n space n
 class MergeIntervals:
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
-        get_sort_key = lambda interval: interval[0]
-        sorted_intervals = sorted(intervals, key=get_sort_key)
+        sorted_intervals = sorted(intervals)
 
         merged = list()
         for interval in sorted_intervals:
             if self.has_overlap(merged, interval):
-                # merge by updating end
                 merged[-1][1] = max(merged[-1][1], interval[1])
             else:
                 merged.append(interval)
 
         return merged
 
-    # last_merged exists and last_merged.end > next.start
-    def has_overlap(self, merged: List[List[int]], interval: List[int]):
-        return merged and merged[-1][1] >= interval[0]
+    def has_overlap(self, merged, interval):
+        if not merged:
+            return False
+
+        return merged[-1][1] >= interval[0]
