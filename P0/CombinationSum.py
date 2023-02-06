@@ -34,31 +34,22 @@ from ast import List
 
 class CombinationSum:
     def combinationSum(self, nums: List[int], target: int) -> List[List[int]]:
-        result = list()
         if not nums:
-            return result
+            return list()
 
-        list_state = list()
-        start_index = 0
-        target_remain = target - 0
-        self.combinationSumHelper(nums, target_remain, start_index, list_state, result)
+        results = list()
+        result = list()
+        self.search_results(nums, target, results, result, 0)
 
-        return result
+        return results
 
-    def combinationSumHelper(
-        self, nums, target_remain, start_index, list_state, result
-    ):
-        if target_remain < 0:
+    def search_results(self, nums, target, results, result, start_index):
+        if target < 0:
             return
+        if target == 0:
+            results.append(list(result))
 
-        if target_remain == 0:
-            result.append(list(list_state))
-
-        # target_remain > 0
         for i in range(start_index, len(nums)):
-            list_state.append(nums[i])
-            # no i + 1 for reuse the number
-            self.combinationSumHelper(
-                nums, target_remain - nums[i], i, list_state, result
-            )
-            list_state.pop()
+            result.append(nums[i])
+            self.search_results(nums, target - nums[i], results, result, i)
+            result.pop()
