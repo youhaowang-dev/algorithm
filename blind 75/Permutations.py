@@ -26,25 +26,25 @@ class Permutations:
         if not nums:
             return results
 
-        # permutation is ordered, so need a fast way to mark used number
-        used = set()
         result = list()
-        self.build_results(nums, used, result, results)
+        used = set()
+        self.search_results(nums, used, result, results)
 
         return results
 
-    def build_results(self, nums, used, result, results) -> None:
-        if len(result) == len(nums):
+    def search_results(self, nums, used, result, results) -> None:
+        num_count = len(nums)
+        if len(result) == num_count:
             results.append(list(result))
             return
 
-        for i in range(0, len(nums)):
+        for i in range(num_count):
             if i in used:
                 continue
 
             result.append(nums[i])
             used.add(i)
-            self.build_results(nums, used, result, results)
+            self.search_results(nums, used, result, results)
             result.pop()
             used.remove(i)
 
