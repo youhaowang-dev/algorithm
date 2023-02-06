@@ -8,19 +8,34 @@
 
 # p and q will exist in the tree.
 
-from ast import Dict
-from collections import deque
-
-
-class TreeNode:
-    def __init__(self, x):
-        self.val = x
-        self.left = None
-        self.right = None
-
-
-# bfs
+# LCA = left tree has p/q and right tree has p/q = both search results are non null
 class LowestCommonAncestorOfABinaryTree:
+    def lowestCommonAncestor(
+        self, root: "TreeNode", p: "TreeNode", q: "TreeNode"
+    ) -> "TreeNode":
+        if not root:
+            return None
+
+        if root == p or root == q:
+            return root
+
+        ancestor_from_left = self.lowestCommonAncestor(root.left, p, q)
+        ancestor_from_right = self.lowestCommonAncestor(root.right, p, q)
+        # both subtrees have found the target
+        if ancestor_from_left and ancestor_from_right:
+            return root
+        # one subtree found the target
+        if ancestor_from_left:
+            return ancestor_from_left
+        # one subtree found the target
+        if ancestor_from_right:
+            return ancestor_from_right
+
+        return None
+
+
+# bfs build child to parent mapping, then check path from p to root, and q to root, return the first overlap
+class LowestCommonAncestorOfABinaryTree2:
     def lowestCommonAncestor(
         self, root: "TreeNode", p: "TreeNode", q: "TreeNode"
     ) -> "TreeNode":
@@ -55,32 +70,3 @@ class LowestCommonAncestorOfABinaryTree:
                 child_to_parent[parent.right] = parent
 
         return child_to_parent
-
-
-# divide and conquer, search LCA in subtrees
-# if found both in subtree, return the root
-# if found one, return the one
-# if found none, return null
-class LowestCommonAncestorOfABinaryTree2:
-    def lowestCommonAncestor(
-        self, root: "TreeNode", p: "TreeNode", q: "TreeNode"
-    ) -> "TreeNode":
-        if not root:
-            return None
-
-        if root == p or root == q:
-            return root
-
-        ancestor_from_left = self.lowestCommonAncestor(root.left, p, q)
-        ancestor_from_right = self.lowestCommonAncestor(root.right, p, q)
-        # both subtrees have found the target
-        if ancestor_from_left and ancestor_from_right:
-            return root
-        # one subtree found the target
-        if ancestor_from_left:
-            return ancestor_from_left
-        # one subtree found the target
-        if ancestor_from_right:
-            return ancestor_from_right
-
-        return None
