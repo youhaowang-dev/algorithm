@@ -38,11 +38,11 @@ class WordBreak:
         if prev_end == length:
             return True
 
-        for end in range(prev_end + 1, length):
-            if word[prev_end:end + 1] not in words:
+        for end in range(prev_end, length):
+            if word[prev_end:end+1] not in words:
                 continue
 
-            if self.search_break(word, words, end):
+            if self.search_break(word, words, end + 1):
                 return True
 
         return False
