@@ -14,8 +14,6 @@
 # Example 3:
 # Input: nums = [1]
 # Output: [[1]]
-from ast import List
-from collections import deque
 
 # time O(n*n!) space O(n*n!)
 # we have N choices, each choice has (N - 1) choices, and so on.
@@ -24,31 +22,31 @@ from collections import deque
 # since we have N! solutions and each of them requires N space to store elements.
 class Permutations:
     def permute(self, nums: List[int]) -> List[List[int]]:
-        result = list()
+        results = list()
         if not nums:
-            return result
+            return results
 
         # permutation is ordered, so need a fast way to mark used number
-        used = [False for _ in range(len(nums))]
-        list_state = list()
-        self.permuteHelper(nums, used, list_state, result)
+        used = set()
+        result = list()
+        self.build_results(nums, used, result, results)
 
-        return result
+        return results
 
-    def permuteHelper(self, nums, used, list_state, result) -> None:
-        if len(list_state) == len(nums):
-            result.append(list(list_state))
+    def build_results(self, nums, used, result, results) -> None:
+        if len(result) == len(nums):
+            results.append(list(result))
             return
 
         for i in range(0, len(nums)):
-            if used[i]:
+            if i in used:
                 continue
 
-            list_state.append(nums[i])
-            used[i] = True
-            self.permuteHelper(nums, used, list_state, result)
-            list_state.pop()
-            used[i] = False
+            result.append(nums[i])
+            used.add(i)
+            self.build_results(nums, used, result, results)
+            result.pop()
+            used.remove(i)
 
 
 # build permutation while iteratively dfs
@@ -72,14 +70,14 @@ class Permutations2:
             return result
 
         permutation_state = list()
-        stack = deque()
+        stack = collections.deque()
         stack.append((nums, permutation_state))
         while stack:
             nums, path = stack.pop()
             if not nums:
                 result.append(path)
             for i in range(len(nums)):
-                new_nums = nums[:i] + nums[i + 1 :]
+                new_nums = nums[:i] + nums[i + 1:]
                 stack.append((new_nums, path + [nums[i]]))
 
         return result
