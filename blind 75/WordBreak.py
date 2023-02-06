@@ -20,75 +20,29 @@
 # Input: s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
 # Output: false
 
-from ast import List, Set
-from collections import deque
-
-# bfs: time n^3 For every starting index, the search can continue till the end of the given string.
-# space n for queue size can be up to n
-# "abc", ["ab","cd","a","bc"]
-# deque([0]) substrings are: [a ab abc]
-# deque([1, 2]) substrings are [b bc]
-class WordBreak2:
-    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-        word_set = set(wordDict)
-        queue = deque()
-        queue.append(0)
-        visited = set()  # dedup by substring start index
-
-        while queue:
-            substring_start = queue.popleft()
-            if substring_start in visited:
-                continue
-            for substring_end in range(substring_start + 1, len(s) + 1):
-                substring = s[substring_start:substring_end]
-                if substring in word_set:
-                    queue.append(substring_end)
-                    if substring_end == len(s):
-                        return True
-            visited.add(substring_start)
-
-        return False
-
-
-# brute force: time O(2^n), split or not split. space: O(n) depth of recrusion tree can go up to n
+# brute force dfs: if current substring in words, continue the search
+#
 class WordBreak:
-    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-        substring_start = 0
-        return self.wordBreakHelper(s, set(wordDict), substring_start)
-
-    def wordBreakHelper(self, s: str, word_dict: Set[str], substring_start: int):
-        if substring_start == len(s):
+    def wordBreak(self, word: str, wordDict: List[str]) -> bool:
+        if not word:
+            return False
+        if not wordDict:
             return True
 
-        for end in range(substring_start + 1, len(s) + 1):
-            if s[substring_start:end] in word_dict and self.wordBreakHelper(
-                s, word_dict, end
-            ):
+        end = 0
+        return self.search_break(word, set(wordDict), end)
+
+    def search_break(self, word: str, words: Set[str], prev_end: int) -> bool:
+        length = len(word)
+
+        if prev_end == length:
+            return True
+
+        for end in range(prev_end + 1, length):
+            if word[prev_end:end + 1] not in words:
+                continue
+
+            if self.search_break(word, words, end):
                 return True
 
-        return False
-
-
-# BFS/DFS
-# time n^3, substr operation costs n and totally n^2 substrings
-# space n Queue of at most n size is needed.
-class WordBreak3:
-    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-        if not s or not wordDict:
-            return False
-
-        queue = deque()
-        queue.append(s)
-        seen = set()
-        while queue:
-            s = queue.popleft()  # for dfs use pop()
-            for word in wordDict:
-                # check prefix
-                if s.startswith(word):
-                    rest = s[len(word) :]
-                    if rest == "":
-                        return True
-                    if rest not in seen:
-                        queue.append(rest)
-                        seen.add(rest)
         return False
