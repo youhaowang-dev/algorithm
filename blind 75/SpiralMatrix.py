@@ -14,8 +14,6 @@
 # Output: [1,2,3,4,8,12,11,10,9,5,6,7]
 
 
-from ast import List
-
 # top bottom left right as boundaries
 class SpiralMatrix:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
@@ -80,4 +78,5 @@ class SpiralMatrix2:
                 results.append(matrix[i][left])
             left += 1
 
-        return results[: row_count * col_count]  # trim, only take first m*n element
+        # trim, only take first m*n element
+        return results[: row_count * col_count]
