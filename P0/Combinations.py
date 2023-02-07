@@ -19,21 +19,22 @@
 # copy list takes O(k), so C(n,k) * k.
 class Combinations:
     def combine(self, n: int, k: int) -> List[List[int]]:
+        if n < k or k == 0:
+            return list()
+
+        results = list()
         result = list()
-        if n < k or n < 1:
-            return result
-
         n_start = 1
-        combine_state = list()
-        self.combine_helper(n, k, n_start, combine_state, result)
+        self.search_result(n, k, n_start, result, results)
 
-        return result
+        return results
 
-    def combine_helper(self, n, k, n_start, combine_state, result):
-        if k == 0:
-            result.append(list(combine_state))
+    def search_result(self, n, k, n_start, result, results):
+        if len(result) == k:
+            results.append(list(result))
+            return
 
         for i in range(n_start, n + 1):
-            combine_state.append(i)
-            self.combine_helper(n, k - 1, i + 1, combine_state, result)
-            combine_state.pop()
+            result.append(i)
+            self.search_result(n, k, i + 1, result, results)
+            result.pop()
