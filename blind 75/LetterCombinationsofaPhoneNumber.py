@@ -3,11 +3,10 @@
 # Walmart Global Tech 2 Twitch 2 Swiggy 2 DE Shaw 2 Epic Systems 6 Twitter 5 Intuit 5 Cisco 5 Goldman Sachs 5
 # Tesla 4 Duolingo 4 Morgan Stanley 3 Nutanix 3 Snapchat 2 Square 2 LinkedIn 2 Samsung 2 JPMorgan 2 ServiceNow 2 Capital One 2 Dropbox
 # https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+# Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could
+# represent. Return the answer in any order.
 
-
-from ast import List
-from collections import deque
-
+# A mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
 
 # "23"
 # [''] => ['a', 'b', 'c'] => ['ad', 'ae', 'af', 'bd', 'be', 'bf', 'cd', 'ce', 'cf']
@@ -24,21 +23,22 @@ class LetterCombinationsofaPhoneNumber:
     }
 
     def letterCombinations(self, digits: str) -> List[str]:
-        results = list()
         if not digits:
-            return results
+            return list()
 
-        results.append("")
+        queue = deque()
+        queue.append(list())
         for digit in digits:
-            results = self.update_results(results, digit)
+            prev_results = self.get_all_results(queue)
+            for prev_result in prev_results:
+                for letter in self.DIGIT_TO_LETTERS[digit]:
+                    queue.append(prev_result + [letter])
+
+        return ["".join(result) for result in queue]
+
+    def get_all_results(self, queue):
+        results = list()
+        while queue:
+            results.append(queue.popleft())
 
         return results
-
-    def update_results(self, results: List[int], digit: str):
-        new_results = list()
-        letters = self.DIGIT_TO_LETTERS.get(digit)
-        for result in results:
-            for letter in letters:
-                new_results.append(result + letter)
-
-        return new_results
