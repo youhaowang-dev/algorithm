@@ -8,16 +8,16 @@
 
 class BinaryTreeRightSideView:
     def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
-        result = list()
         if not root:
-            return result
+            return list()
 
+        result = list()
         queue = deque()
         queue.append(root)
         while queue:
-            current_level_nodes = self.get_current_level_nodes(queue)
-            result.append(current_level_nodes[-1].val)
-            for node in current_level_nodes:
+            all_nodes = self.get_all_nodes(queue)
+            result.append(all_nodes[-1].val)
+            for node in all_nodes:
                 if node.left:
                     queue.append(node.left)
                 if node.right:
@@ -25,7 +25,7 @@ class BinaryTreeRightSideView:
 
         return result
 
-    def get_current_level_nodes(self, queue: Deque[TreeNode]) -> List[TreeNode]:
+    def get_all_nodes(self, queue) -> List[TreeNode]:
         nodes = list()
         while queue:
             nodes.append(queue.popleft())
