@@ -5,17 +5,6 @@
 
 # Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the
 # nodes you can see ordered from top to bottom.
-from ast import List
-from collections import deque
-from typing import Deque, Optional
-
-
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
 
 class BinaryTreeRightSideView:
     def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
