@@ -33,6 +33,8 @@ class Subsets:
     def build_subsets(self, nums, start, subset, subsets):
         subsets.append(list(subset))
         for i in range(start, len(nums)):
+            # if i > start and nums[i] == nums[i - 1]:
+            #     continue
             subset.append(nums[i])
             self.build_subsets(nums, i + 1, subset, subsets)
             subset.pop()
