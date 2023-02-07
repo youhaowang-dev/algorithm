@@ -17,32 +17,31 @@
 # top bottom left right as boundaries
 class SpiralMatrix:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
-        results = list()
-        if not matrix:
-            return results
+        if not matrix or not matrix[0]:
+            return list()
 
-        top = 0
-        bottom = len(matrix) - 1
-        left = 0
-        right = len(matrix[0]) - 1
-        while top <= bottom and left <= right:
-            # process top row
-            for i in range(left, right + 1):
-                results.append(matrix[top][i])
-            top += 1
-            # process right col
-            for i in range(top, bottom + 1):
-                results.append(matrix[i][right])
-            right -= 1
-            # process bottom row
-            if top <= bottom:  # avoid duplicate
-                for i in range(right, left - 1, -1):
-                    results.append(matrix[bottom][i])
-                bottom -= 1
-            # process left col
-            if left <= right:  # avoid duplicate
-                for i in range(bottom, top - 1, -1):
-                    results.append(matrix[i][left])
-                left += 1
+        result = list()
+        min_row = 0
+        max_row = len(matrix) - 1
+        min_col = 0
+        max_col = len(matrix[0]) - 1
+        while min_row <= max_row and min_col <= max_col:
+            for i in range(min_col, max_col + 1):
+                result.append(matrix[min_row][i])
+            min_row += 1
 
-        return results
+            for i in range(min_row, max_row + 1):
+                result.append(matrix[i][max_col])
+            max_col -= 1
+
+            if min_row <= max_row:
+                for i in range(max_col, min_col - 1, -1):
+                    result.append(matrix[max_row][i])
+                max_row -= 1
+
+            if min_col <= max_col:
+                for i in range(max_row, min_row - 1, -1):
+                    result.append(matrix[i][min_col])
+                min_col += 1
+
+        return result
