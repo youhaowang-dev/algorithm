@@ -42,9 +42,9 @@ class WordBreak:
             return True
 
         for i in range(len(word)):
-            if word[i:] not in words:
+            if word[:i] not in words:
                 continue
-            if self.has_break(word[:i], words, word_has_break):
+            if self.has_break(word[i:], words, word_has_break):
                 word_has_break[word] = True
                 return True
 
