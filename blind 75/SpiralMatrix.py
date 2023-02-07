@@ -46,37 +46,3 @@ class SpiralMatrix:
                 left += 1
 
         return results
-
-
-# same logic, trim the output, only take first n*m elements
-class SpiralMatrix2:
-    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
-        results = list()
-        if not matrix:
-            return results
-        row_count = len(matrix)
-        col_count = len(matrix[0])
-        top = 0
-        bottom = row_count - 1
-        left = 0
-        right = col_count - 1
-        while top <= bottom and left <= right:
-            # process top row
-            for i in range(left, right + 1):
-                results.append(matrix[top][i])
-            top += 1
-            # process right col
-            for i in range(top, bottom + 1):
-                results.append(matrix[i][right])
-            right -= 1
-            # process bottom row
-            for i in range(right, left - 1, -1):
-                results.append(matrix[bottom][i])
-            bottom -= 1
-            # process left col
-            for i in range(bottom, top - 1, -1):
-                results.append(matrix[i][left])
-            left += 1
-
-        # trim, only take first m*n element
-        return results[: row_count * col_count]
