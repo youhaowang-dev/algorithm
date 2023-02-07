@@ -42,7 +42,7 @@ class WordBreak:
             word_has_break[word] = True
             return True
 
-        for i in range(1, len(word)):
+        for i in range(len(word)):
             if word[i:] not in words:
                 continue
             if self.has_break(word[:i], words, word_has_break):
