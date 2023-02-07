@@ -15,10 +15,8 @@
 # Output: [[1]]
 # Explanation: There is 1 choose 1 = 1 total combination.
 
-
-from ast import List
-
-
+# time complexity = O(C(n,k) * k) = O((n!/(k! * (n - k)!)) * k)
+# copy list takes O(k), so C(n,k) * k.
 class Combinations:
     def combine(self, n: int, k: int) -> List[List[int]]:
         result = list()
