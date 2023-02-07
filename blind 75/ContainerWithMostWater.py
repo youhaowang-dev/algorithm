@@ -18,9 +18,7 @@
 # Input: height = [1,1]
 # Output: 1
 
-from typing import List
-
-# brute force: try all pairs
+# brute force: try all pairs, n^2
 class ContainerWithMostWater:
     def maxArea(self, height: List[int]) -> int:
         max_area = 0
@@ -34,19 +32,21 @@ class ContainerWithMostWater:
         return max_area
 
 
+# area is bound by smaller height, move smaller height and calculate the area
 # two pointers: left and right, move smaller height towards mid while calculating area
-# area is bound by smaller height, so the farther the lines, the more will be the area obtained.
 class ContainerWithMostWater2:
     def maxArea(self, height: List[int]) -> int:
-        max_area = 0
+        if not height:
+            return 0
+
         left = 0
         right = len(height) - 1
-
+        max_area = 0
         while left < right:
             width = right - left
             min_height = min(height[left], height[right])
-            max_area = max(max_area, min_height * width)
-            if height[left] <= height[right]:
+            max_area = max(max_area, width * min_height)
+            if height[left] < height[right]:
                 left += 1
             else:
                 right -= 1
