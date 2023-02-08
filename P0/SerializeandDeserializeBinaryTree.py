@@ -17,18 +17,8 @@
 # Input: root = []
 # Output: []
 
-# Definition for a binary tree node.
-from collections import deque
 
-
-class TreeNode(object):
-    def __init__(self, x):
-        self.val = x
-        self.left = None
-        self.right = None
-
-
-# level order traversal
+# BFS to serialize, BFS to deserialize by processing two nodes each time
 class Codec:
     DELIMITER = "."
     NULL = "null"
