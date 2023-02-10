@@ -33,7 +33,7 @@ class BestTimetoBuyandSellStock:
         right = 0
         while right < len(prices):
             profit = prices[right] - prices[left]
-            if profit < 0:  # unable to buy low sell high in [left, right]
+            if profit < 0:  # unable to buy low sell high because right is lower
                 left = right
                 right += 1
             else:
