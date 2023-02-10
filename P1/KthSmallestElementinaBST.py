@@ -12,17 +12,6 @@
 # Input: root = [5,3,6,2,4,null,null,1], k = 3
 # Output: 3
 
-from collections import deque
-from typing import Optional
-
-
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
-
 class KthSmallestElementinaBST:
     def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
         iterator = BSTIterator(root)
