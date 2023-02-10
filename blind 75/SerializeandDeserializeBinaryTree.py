@@ -4,11 +4,16 @@
 # Goldman Sachs 3 Coupang 2 Salesforce 2 Citadel 2 Splunk 2 Qualcomm 2 Yahoo
 # https://leetcode.com/problems/serialize-and-deserialize-binary-tree/
 
-# Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
+# Serialization is the process of converting a data structure or object into a sequence of bits so that it can be
+# stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later
+# in the same or another computer environment.
 
-# Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.
+# Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your
+# serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized
+# to a string and this string can be deserialized to the original tree structure.
 
-# Clarification: The input/output format is the same as how LeetCode serializes a binary tree. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.
+# Clarification: The input/output format is the same as how LeetCode serializes a binary tree. You do not necessarily
+# need to follow this format, so please be creative and come up with different approaches yourself.
 
 # Example 1:
 # Input: root = [1,2,3,null,null,4,5]
@@ -21,50 +26,47 @@
 # BFS to serialize, BFS to deserialize by processing two nodes each time
 class Codec:
     DELIMITER = "."
-    NULL = "null"
+    NULL = "#"
 
-    def serialize(self, root):
+    def serialize(self, root) -> str:
         if not root:
             return ""
+        queue = deque()
+        queue.append(root)
+        result = list()
+        while queue:
+            node = queue.popleft()
+            if node:
+                result.append(str(node.val))
+                queue.append(node.left)
+                queue.append(node.right)
+            else:
+                result.append(self.NULL)
 
-        res = list()
-        q = deque()
-        q.append(root)
-        while q:
-            node = q.popleft()
-            if not node:
-                res.append(self.NULL + self.DELIMITER)
-                continue
+        return self.DELIMITER.join(result)
 
-            res.append(str(node.val) + self.DELIMITER)
-            q.append(node.left)
-            q.append(node.right)
-
-        return "".join(res)
-
-    def deserialize(self, data):
+    def deserialize(self, data) -> "TreeNode":
         if not data:
             return None
+        vals = data.split(self.DELIMITER)
+        if not vals:
+            return None
 
-        values = data.split(self.DELIMITER)
-        root = TreeNode(int(values[0]))
+        root = TreeNode(vals[0])
+        queue = deque()
+        queue.append(root)
+        index = 0
+        while index < len(vals) and queue:
 
-        q = deque()
-        q.append(root)
-
-        i = 1
-        while i < len(values) and q:
-            parent = q.popleft()
-            if values[i] != self.NULL:
-                left = TreeNode(int(values[i]))
-                parent.left = left
-                q.append(left)
-
-            if values[i + 1] != self.NULL:
-                right = TreeNode(int(values[i + 1]))
-                parent.right = right
-                q.append(right)
-
-            i += 2
+            node = queue.popleft()
+            left_val = vals[index + 1]
+            right_val = vals[index + 2]
+            if left_val != self.NULL:
+                node.left = TreeNode(left_val)
+                queue.append(node.left)
+            if right_val != self.NULL:
+                node.right = TreeNode(right_val)
+                queue.append(node.right)
+            index += 2
 
         return root
