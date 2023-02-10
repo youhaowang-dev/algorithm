@@ -12,7 +12,31 @@
 # Input: root = [5,3,6,2,4,null,null,1], k = 3
 # Output: 3
 
+# inorder traversal, recurisive will need global variable
+# time n space n for unbalanced tree where only left exists
 class KthSmallestElementinaBST:
+    def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+        if not root:
+            return -1
+
+        stack = collections.deque()
+        self.push_lefts(stack, root)
+        prev_val = -1
+        while stack and k > 0:
+            node = stack.pop()
+            self.push_lefts(stack, node.right)
+            prev_val = node.val
+            k -= 1
+
+        return prev_val
+
+    def push_lefts(self, stack, node):
+        while node:
+            stack.append(node)
+            node = node.left
+
+
+class KthSmallestElementinaBST2:
     def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
         iterator = BSTIterator(root)
         while k > 1:
