@@ -54,37 +54,27 @@ class TrappingRainWater:
 
 
 # time : O(n) space : O(1)
-# move low bar towards high bar
-# [0,1,0,2,1] expect 1 water
-# states when entering loop
-# left 0 right 4 left_max 0 right_max 0 result 0        move left
-# left 1 right 4 left_max 0 right_max 1 result 0        move right
-# left 1 right 3 left_max 1 right_max 1 result 0        move left
-# left 2 right 3 left_max 1 right_max 2 result 0        move left and add water
-# left 3 right 3 left_max 1 right_max 2 result 1        exit loop
+# because we only need the min of max_left and max_right
+# we can use two pointers to track them
+# by only moving the pointer with smaller max, we can still get the min of max_left and max_right
 class TrappingRainWater2:
-    def trap(self, height: List[int]) -> int:
-        result = 0
-        if not height:
+    def trap(self, heights: List[int]) -> int:
+        if not heights:
             return 0
 
         left = 0
-        right = len(height) - 1
-        left_max = 0
-        right_max = 0
+        right = len(heights) - 1
+        left_max = heights[left]  # NOTE: not 0
+        right_max = heights[right]  # NOTE: not 0
+        total = 0
         while left < right:
-
-            if height[left] > left_max:
-                left_max = height[left]
-
-            if height[right] > right_max:
-                right_max = height[right]
-
             if left_max < right_max:
-                result += max(0, left_max - height[left])
                 left += 1
+                left_max = max(left_max, heights[left])
+                total += max(0, left_max - heights[left])
             else:
-                result += max(0, right_max - height[right])
                 right -= 1
+                right_max = max(right_max, heights[right])
+                total += max(0, right_max - heights[right])
 
-        return result
+        return total
