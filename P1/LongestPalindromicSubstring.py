@@ -26,27 +26,32 @@ from typing import Tuple
 # time O(n^2) space 1
 class LongestPalindromicSubstring:
     def longestPalindrome(self, s: str) -> str:
-        start, end = 0, 0
+        if not s:
+            return 0
+
+        start = 0
+        end = 0
         for i in range(len(s)):
-            left1, right1 = self.expand(s, i, i)
-            left2, right2 = self.expand(s, i, i + 1)
+            start1, end1 = self.get_range(s, i, i)
+            start2, end2 = self.get_range(s, i, i + 1)
+            if end1 - start1 > end - start:  # compare distance
+                start, end = start1, end1
+            if end2 - start2 > end - start:
+                start, end = start2, end2
 
-            if right1 - left1 > end - start:
-                start = left1
-                end = right1
+        return s[start:end + 1]
 
-            if right2 - left2 > end - start:
-                start = left2
-                end = right2
+    def get_range(self, s: str, start: int, end: int) -> Tuple[int, int]:
+        while start >= 0 and end < len(s):
+            if s[start] == s[end]:
+                start -= 1
+                end += 1
+            else:
+                break
+        start += 1  # different char, revert back one step
+        end -= 1
 
-        return s[start : end + 1]
-
-    def expand(self, s: str, left: int, right: int) -> Tuple[int, int]:
-        while left >= 0 and right < len(s) and s[left] == s[right]:
-            left -= 1
-            right += 1
-
-        return left + 1, right - 1
+        return start, end
 
 
 # dp O(n^2)
@@ -69,5 +74,5 @@ class LongestPalindromicSubstring2:
                             longest_palindrome_start = start
                             longest_palindrome_len = palindrome_len
         return input[
-            longest_palindrome_start : longest_palindrome_start + longest_palindrome_len
+            longest_palindrome_start: longest_palindrome_start + longest_palindrome_len
         ]

@@ -26,39 +26,30 @@
 # Input: candidates = [2], target = 1
 # Output: []
 
-# time O(nums_count^(target/min_num)) => O(N^(T/M))
-# each number will fanout O(target/min_num) searches recursively, and each search cost bounded by O(nums_count)
-# space O(target/min_num)
-from ast import List
-
-
+# time O(2^n) where n=target/min_num, each num can be picked n times and each pick can be yes or no
+# so TC can be O(2^target) as min_num can be 1
+# space O(target/min_num) = O(target) where min_num can be 1
 class CombinationSum:
     def combinationSum(self, nums: List[int], target: int) -> List[List[int]]:
-        result = list()
         if not nums:
-            return result
+            return list()
 
-        list_state = list()
-        start_index = 0
-        target_remain = target - 0
-        self.combinationSumHelper(nums, target_remain, start_index, list_state, result)
+        results = list()
+        result = list()
+        start = 0
+        self.search_result(nums, target, result, results, start)
 
-        return result
+        return results
 
-    def combinationSumHelper(
-        self, nums, target_remain, start_index, list_state, result
-    ):
-        if target_remain < 0:
+    def search_result(self, nums, target, result, results, start):
+        if target < 0:
             return
 
-        if target_remain == 0:
-            result.append(list(list_state))
+        if target == 0:
+            results.append(list(result))
+            return
 
-        # target_remain > 0
-        for i in range(start_index, len(nums)):
-            list_state.append(nums[i])
-            # no i + 1 for reuse the number
-            self.combinationSumHelper(
-                nums, target_remain - nums[i], i, list_state, result
-            )
-            list_state.pop()
+        for i in range(start, len(nums)):
+            result.append(nums[i])
+            self.search_result(nums, target - nums[i], result, results, i)
+            result.pop()
