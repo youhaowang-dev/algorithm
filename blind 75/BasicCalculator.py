@@ -39,11 +39,10 @@ class BasicCalculator:
         for token in tokens:
             if token.isdigit():
                 number_stack.append(int(token))
-            elif token in "()":
-                if token == "(":
-                    operator_level += 1
-                if token == ")":
-                    operator_level -= 1
+            elif token == "(":
+                operator_level += 1
+            elif token == ")":
+                operator_level -= 1
             elif token in "+-":
                 while operator_stack and operator_stack[-1][1] >= operator_level:
                     self.merge(operator_stack, number_stack)
