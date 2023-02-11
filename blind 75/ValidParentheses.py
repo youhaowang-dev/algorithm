@@ -30,18 +30,15 @@ class ValidParentheses:
         if not letters:
             return True
 
-        closes = self.OPEN_TO_CLOSE.values()
         stack = deque()
         for letter in letters:
             if letter in self.OPEN_TO_CLOSE:
                 stack.append(letter)
-            elif letter in closes:
+            else:  # or in self.OPEN_TO_CLOSE.values()
                 if not stack:
-                    return False  # input like ")"
-                expected_close = self.OPEN_TO_CLOSE[stack.pop()]
-                if expected_close != letter:
                     return False
-            else:
-                pass
+                expected_letter = self.OPEN_TO_CLOSE[stack.pop()]
+                if letter != expected_letter:
+                    return False
 
-        return not stack  # should not have leftover
+        return len(stack) == 0
