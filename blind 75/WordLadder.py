@@ -26,62 +26,52 @@ from typing import Deque, List, Set
 # breadth first search in a graph where each char of the beginWord can be replaced by a-z(except self)
 # if next word in set, continue until the end word is reached
 class WordLadder:
-    CHARACTERS = "abcdefghijklmnopqrstuvwxyz"
+    LETTERS = "abcdefghijklmnopqrstuvwxyz"
 
-    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
-        if not wordList:
+    def ladderLength(self, start_word: str, end_word: str, wordList: List[str]) -> int:
+        if not wordList or not start_word or not end_word:
             return 0
 
         words = set(wordList)
-
-        if endWord not in words:
+        if end_word not in words:
             return 0
 
         queue = deque()
-        queue.append(beginWord)
-
-        visited = set()
-        visited.add(beginWord)
-
-        distance = 0
+        used = set()
+        queue.append(start_word)
+        used.add(start_word)
+        word_count = 1
         while queue:
-            distance += 1
-            current_words = self.get_current_words(queue)
-            for current_word in current_words:
-                if current_word == endWord:
-                    return distance
+            all_words = self.get_all_words(queue)
+            for word in all_words:
+                if word == end_word:
+                    return word_count
+                else:
+                    neighbor_words = self.get_neighbor_words(word, words, used)
+                    for neighbor_word in neighbor_words:
+                        queue.append(neighbor_word)
+                        used.add(neighbor_word)
 
-                next_words = self.get_next_words(current_word, words)
-                for next_word in next_words:
-                    if next_word in visited:
-                        continue
+            word_count += 1
 
-                    if next_word in words:
-                        queue.append(next_word)
-                        visited.add(next_word)
+        return 0
 
-        return 0  # not found
-
-    def get_current_words(self, queue: Deque[str]) -> List[str]:
-        words = list()
+    def get_all_words(self, queue):
+        all_words = list()
         while queue:
-            words.append(queue.popleft())
+            all_words.append(queue.popleft())
 
-        return words
+        return all_words
 
-    def get_next_words(self, word: str, words: Set[str]):
-        next_words = list()
-
-        word_chars = list(word)
-        for i, character in enumerate(word_chars):
-            for new_character in self.CHARACTERS:
-                if character == new_character:
+    def get_neighbor_words(self, word, words, used):
+        neighbor_words = list()
+        for i in range(len(word)):
+            old_letter = word[i]
+            for new_letter in self.LETTERS:
+                if new_letter == old_letter:
                     continue
+                new_word = word[:i] + new_letter + word[i+1:]
+                if new_word in words and new_word not in used:
+                    neighbor_words.append(new_word)
 
-                word_chars[i] = new_character
-                new_word = "".join(word_chars)
-                next_words.append(new_word)
-
-            word_chars[i] = character
-
-        return next_words
+        return neighbor_words
