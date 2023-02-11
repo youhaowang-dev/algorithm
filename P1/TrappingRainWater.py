@@ -19,31 +19,38 @@
 # Input: height = [4,2,0,3,2,5]
 # Output: 9
 
-from typing import List
-
-
-# brute force: for index find left and right max then calculate water
-# time O(n^2) space O(1)
-# For each element in the array, we find the maximum level of water it can trap after the rain,
-# which is equal to the minimum of maximum height of bars on both the sides minus its own height.
+# total = sum(min(i max left height, i max right height) - i height), ignore 0
+# height                0, 1, 0, 3, 0, 2, 1
+# left max              0, 0, 1, 1, 3, 3, 3
+# right max             3, 3, 3, 2, 2, 1, 0
+# min left and right    0, 0, 1, 1, 2, 1, 0
+# min - height          0,-1, 1,-2, 2,-1,-1
+# positive sum = 1+2 = 3
 class TrappingRainWater:
     def trap(self, heights: List[int]) -> int:
-        result = 0
         if not heights:
-            return result
+            return 0
+        length = len(heights)
 
-        for i, height in enumerate(heights):
-            left_max = 0
-            if i != 0:
-                left_max = max(heights[:i])
+        left_maxes = [0 for _ in range(length)]
+        current_left_max = 0
+        for i in range(length):
+            left_maxes[i] = current_left_max
+            current_left_max = max(current_left_max, heights[i])
 
-            right_max = 0
-            if i != len(heights) - 1:
-                right_max = max(heights[i + 1 :])
+        right_maxes = [0 for _ in range(length)]
+        current_right_max = 0
+        for i in range(length - 1, -1, -1):
+            right_maxes[i] = current_right_max
+            current_right_max = max(current_right_max, heights[i])
 
-            result += max(0, min(left_max, right_max) - height)
+        total = 0
+        for height, left_max, right_max in zip(heights, left_maxes, right_maxes):
+            min_height = min(left_max, right_max)
+            water = max(0, min_height - height)
+            total += water
 
-        return result
+        return total
 
 
 # time : O(n) space : O(1)
