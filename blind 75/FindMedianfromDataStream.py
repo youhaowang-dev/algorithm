@@ -29,13 +29,8 @@
 # medianFinder.addNum(3);    // arr[1, 2, 3]
 # medianFinder.findMedian(); // return 2.0
 
-from heapq import heappush, heappop
-
 
 # brute force: insert in list, when getting median, sort the list and return
-
-# min heap stores bigger numbers, max heap stores smaller numbers
-# balancing the two heaps,
 
 # Follow up:
 # If all integer numbers from the stream are in the range [0, 100], how would you optimize your solution?
@@ -45,43 +40,26 @@ from heapq import heappush, heappop
 # If 99% of all integer numbers from the stream are in the range [0, 100], how would you optimize your solution?
 # we just keep a count of how many numbers are above 100 and how many numbers are below 0, since these numbers
 # could never get to be the median and are therefore not important to keep
-class MedianFinder:
+class MedianFinder:  # two heaps
     def __init__(self):
-        self.min_heap = list()  # stores bigger numbers
-        self.max_heap = list()  # stores smaller numbers
+        # smaller == bigger or smaller == bigger + 1
+        self.smaller_half = list()
+        self.bigger_half = list()
 
-    # balance the size, small == big or small + 1 = big
     def addNum(self, num: int) -> None:
-        # same size, put in min(put in max, pop from max, put in min)
-        if len(self.max_heap) == len(self.min_heap):
-            self.max_heap_push(num)
-            biggest_small = self.max_heap_pop()
-            self.min_heap_push(biggest_small)
+        if len(self.smaller_half) == len(self.bigger_half):
+            # add to smaller but num could belong to bigger
+            smaller_from_bigger_half = heapq.heappushpop(self.bigger_half, num)
+            heapq.heappush(self.smaller_half, -smaller_from_bigger_half)
         else:
-            self.min_heap_push(num)
-            smallest_big = self.min_heap_pop()
-            self.max_heap_push(smallest_big)
+            # add to bigger but num could belong to smaller
+            bigger_from_smaller_half = heapq.heappushpop(
+                self.smaller_half, -num)
+            heapq.heappush(self.bigger_half, -bigger_from_smaller_half)
 
     def findMedian(self) -> float:
-        if len(self.max_heap) == len(self.min_heap):
-            return float(self.min_heap_peek() + self.max_heap_peek()) / 2.0
+        num_count = len(self.smaller_half) + len(self.bigger_half)
+        if num_count % 2 == 0:
+            return (-self.smaller_half[0] + self.bigger_half[0]) / 2
         else:
-            return float(self.min_heap_peek())
-
-    def min_heap_push(self, val: int) -> None:
-        heappush(self.min_heap, val)
-
-    def min_heap_pop(self) -> int:
-        return heappop(self.min_heap)
-
-    def min_heap_peek(self) -> int:
-        return self.min_heap[0]
-
-    def max_heap_push(self, val: int) -> None:
-        heappush(self.max_heap, -val)
-
-    def max_heap_pop(self) -> int:
-        return -heappop(self.max_heap)
-
-    def max_heap_peek(self) -> int:
-        return -self.max_heap[0]
+            return -self.smaller_half[0]
