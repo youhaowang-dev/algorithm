@@ -37,26 +37,20 @@
 class MinStack:
 
     def __init__(self):
-        # val and current min, current min can only decrease or equal
-        self.stack: Deque[Tuple[int, int]] = deque()
+        self.stack = deque()  # Tuple[val, min_val] min can only decreasing
 
     def push(self, val: int) -> None:
-        min_val = self._get_min_val(val)
-        self.stack.append((val, min_val))
-
-    def _get_min_val(self, val) -> int:
-        if not self.stack:
-            return val
-        _, min_val = self.stack[-1]
-        return min(val, min_val)
+        if self.stack:
+            min_val = min(val, self.getMin())
+            self.stack.append((val, min_val))
+        else:
+            self.stack.append((val, val))
 
     def pop(self) -> None:
         self.stack.pop()
 
     def top(self) -> int:
-        val, _ = self.stack[-1]
-        return val
+        return self.stack[-1][0]
 
     def getMin(self) -> int:
-        _, min_val = self.stack[-1]
-        return min_val
+        return self.stack[-1][1]
