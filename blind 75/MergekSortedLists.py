@@ -27,11 +27,47 @@
 # Input: lists = [[]]
 # Output: []
 
-from heapq import heappush, heappop
-# min heap O(nlogk)
 
-
+# divide and conquer, time nlogk for logk merges, space
 class MergeKSortedLists:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        if not lists:
+            return None
+        if len(lists) == 1:
+            return lists[0]
+
+        mid = len(lists) // 2
+        list1 = self.mergeKLists(lists[:mid])
+        list2 = self.mergeKLists(lists[mid:])
+
+        return self.merge_two_lists(list1, list2)
+
+    def merge_two_lists(self, head1, head2):
+        if not head1:
+            return head2
+        if not head2:
+            return head1
+
+        before_head = ListNode()
+        tail = before_head
+        while head1 and head2:
+            if head1.val < head2.val:
+                tail.next = head1
+                head1 = head1.next
+                tail = tail.next
+            else:
+                tail.next = head2
+                head2 = head2.next
+                tail = tail.next
+        if head1:
+            tail.next = head1
+        if head2:
+            tail.next = head2
+
+        return before_head.next
+
+# min heap O(nlogk), can also use (val, node) instead of __lt
+class MergeKSortedLists2:
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
         ListNode.__lt__ = lambda self, other: self.val < other.val
 
@@ -49,40 +85,5 @@ class MergeKSortedLists:
             tail = tail.next
             if min_node.next:
                 heappush(min_heap, min_node.next)
-
-        return before_head.next
-
-
-# divide and conquer
-class MergeKSortedLists2:
-    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
-        if not lists:
-            return None
-
-        if len(lists) == 1:
-            return lists[0]
-
-        mid = len(lists) // 2
-        head1 = self.mergeKLists(lists[:mid])
-        head2 = self.mergeKLists(lists[mid:])
-
-        return self.mergeTwoLists(head1, head2)
-
-    def mergeTwoLists(self, head1: Optional[ListNode], head2: Optional[ListNode]) -> Optional[ListNode]:
-        before_head = ListNode()
-        tail = before_head
-        while head1 and head2:
-            if head1.val < head2.val:
-                tail.next = head1
-                head1 = head1.next
-            else:
-                tail.next = head2
-                head2 = head2.next
-            tail = tail.next
-
-        if head1:
-            tail.next = head1
-        if head2:
-            tail.next = head2
 
         return before_head.next
