@@ -30,14 +30,14 @@ class BestTimetoBuyandSellStock:
 
         max_profit = 0
         left = 0
-        right = 0
+        right = 1
         while right < len(prices):
-            profit = prices[right] - prices[left]
-            if profit < 0:  # unable to buy low sell high because right is lower
+            # right is smaller, so the profit from left will never be greater than right, so move left to right
+            if prices[right] < prices[left]:
                 left = right
                 right += 1
-            else:
-                max_profit = max(max_profit, profit)
+            else:  # have a profit
+                max_profit = max(max_profit, prices[right] - prices[left])
                 right += 1
 
         return max_profit
