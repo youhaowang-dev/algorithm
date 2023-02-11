@@ -23,10 +23,10 @@ class LargestRectangleinHistogram:
         for i, height in enumerate(heights):
             start = i  # rectangle area start position
             while stack and stack[-1][1] > height:
-                bigger_height_index, bigger_height = stack.pop()
+                bigger_height_start_index, bigger_height = stack.pop()
                 max_area = max(
-                    max_area, (i - bigger_height_index) * bigger_height)
-                start = bigger_height_index
+                    max_area, (i - bigger_height_start_index) * bigger_height)
+                start = bigger_height_start_index
             # push in stack when can make stack elements increasing
             stack.append((start, height))
 
