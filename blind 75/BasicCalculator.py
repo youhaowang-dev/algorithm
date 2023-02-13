@@ -18,6 +18,7 @@
 # 1  2  3 4   5 => 3+4, 2-7, 1+-5, -4-5 => 9
 # get the priority of each operator
 class BasicCalculator:
+    # TODO: https://leetcode.com/problems/basic-calculator/solutions/1456850/python-basic-calculator-i-ii-iii-easy-solution-detailed-explanation/?orderBy=most_votes
     def calculate(self, s: str) -> int:
         # pre-processing to tokenize input
         s = s.replace(" ", "")  # remote white space
