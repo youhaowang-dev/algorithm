@@ -35,6 +35,7 @@ class ThreeSum:
 
         nums.sort()  # so the sum is predictable, so pointers can move accordingly
         for i in range(len(nums)):
+            # if i > 0 and nums[i] == nums[i-1]: continue
             self.build_results(nums, i, results)
 
         return map(list, results)
@@ -52,3 +53,5 @@ class ThreeSum:
                 results.add((nums[start], nums[left], nums[right]))
                 left += 1
                 right -= 1
+                # while left < right and nums[left] == nums[left-1]: left += 1
+                # while left < right and nums[right] == nums[right+1]: right -= 1
