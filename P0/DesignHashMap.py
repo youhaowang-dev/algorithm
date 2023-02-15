@@ -18,8 +18,53 @@
 # Output
 # [null, null, null, 1, -1, null, 1, null, -1]
 
+# https://github.com/donnemartin/system-design-primer/blob/master/solutions/object_oriented_design/hash_table/hash_map.ipynb
+# For simplicity, are the keys integers only? Yes
+# For collision resolution, can we use chaining? Yes
+# Do we have to worry about load factors? No
+# Can we assume inputs are valid or do we have to validate them? Yes, Assume they're valid
+# Can we assume this fits memory? Yes
+class Item:
+    def __init__(self, key, val):
+        self.key = key
+        self.val = val
+
+
+class MyHashMap:
+    def __init__(self, size=997):
+        self.size = size
+        self.buckets = [list() for _ in range(size)]
+
+    def put(self, key: int, value: int) -> None:
+        items = self.buckets[self._hash(key)]
+        for item in items:
+            if item.key == key:
+                item.val = value
+                return
+        items.append(Item(key, value))
+
+    def get(self, key: int) -> int:
+        items = self.buckets[self._hash(key)]
+        for item in items:
+            if item.key == key:
+                return item.val
+
+        return -1
+
+    def remove(self, key: int) -> None:
+        items = self.buckets[self._hash(key)]
+        for i, item in enumerate(items):
+            if item.key == key:
+                del items[i]
+        # raise KeyError("Key not found")
+
+    def _hash(self, key: int) -> int:
+        return key % self.size
+
 # There are two main issues that we should tackle, in order to design an efficient hashmap data structure:
 # 1). hash function design and 2). collision/conflict handling.
+
+
 class ListNode:
     def __init__(self, key, val):
         self.pair = (key, val)
