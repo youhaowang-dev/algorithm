@@ -27,6 +27,8 @@
 # Explanation: The only possible triplet sums up to 0.
 
 # sort + three pointers
+# time O(n^2) = O(n^2) traverse + O(n^2) hashings + O(n^2) build results
+# space O(n^2) for every index is legit
 class ThreeSum:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
         results = set()
