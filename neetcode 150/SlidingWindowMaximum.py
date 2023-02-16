@@ -34,6 +34,8 @@ from collections import deque
 from typing import List
 
 # brute force: get max for all windows
+
+
 class SlidingWindowMaximum:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
         max_of_windows = list()
@@ -42,7 +44,7 @@ class SlidingWindowMaximum:
             return max_of_windows
 
         for i in range(0, len(nums) - k + 1):
-            window = nums[i : i + k]
+            window = nums[i: i + k]
             max_of_windows.append(max(window))
 
         return max_of_windows
