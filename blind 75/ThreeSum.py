@@ -26,67 +26,34 @@
 # Output: [[0,0,0]]
 # Explanation: The only possible triplet sums up to 0.
 
-# sort + two pointers, three sum => two sum
+# sort + three pointers
+# time O(n^2) = O(n^2) traverse + O(n^2) hashings + O(n^2) build results
+# space O(n^2) for every index is legit
 class ThreeSum:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
-        results = list()
-        if not nums:
+        results = set()
+        if not nums or len(nums) < 3:
             return results
 
-        nums.sort()
-        for i in range(0, len(nums)):
-            if nums[i] > 0:  # optional
-                break
-            if i != 0 and nums[i - 1] == nums[i]:
-                continue
+        nums.sort()  # so the sum is predictable, so pointers can move accordingly
+        for i in range(len(nums)):
+            # if i > 0 and nums[i] == nums[i-1]: continue
+            self.build_results(nums, i, results)
 
-            self.search_sum(nums, i, results)
+        return map(list, results)
 
-        return results
-
-    def search_sum(self, nums: List[int], i: int, results: List[List[int]]) -> None:
-        left = i + 1
+    def build_results(self, nums, start, results):
+        left = start + 1
         right = len(nums) - 1
         while left < right:
-            three_sum = nums[i] + nums[left] + nums[right]
-            if three_sum < 0:
+            total = nums[start] + nums[left] + nums[right]
+            if total < 0:
                 left += 1
-            elif three_sum > 0:
+            elif total > 0:
                 right -= 1
-            elif three_sum == 0:  # find a result, add it, and dedup
-                results.append([nums[i], nums[left], nums[right]])
+            elif total == 0:
+                results.add((nums[start], nums[left], nums[right]))
                 left += 1
                 right -= 1
-                while left < right and nums[left] == nums[left - 1]:
-                    left += 1
-
-
-# sort + hashset, three sum => two sum
-class ThreeSum2:
-    def threeSum(self, nums: List[int]) -> List[List[int]]:
-        res = list()
-        if not nums:
-            return res
-
-        nums.sort()
-        for i in range(len(nums)):
-            if nums[i] > 0:
-                break
-            if i == 0 or nums[i - 1] != nums[i]:
-                self.twoSum(nums, i, res)
-        return res
-
-    def twoSum(self, nums: List[int], i: int, res: List[List[int]]):
-        seen = set()
-        first_num = nums[i]
-        j = i + 1
-        while j < len(nums):
-            sum = first_num + nums[j]
-            target = 0 - sum
-            if target in seen:
-                res.append([first_num, nums[j], target])
-                while j + 1 < len(nums) and nums[j] == nums[j + 1]:
-                    j += 1
-
-            seen.add(nums[j])
-            j += 1
+                # while left < right and nums[left] == nums[left-1]: left += 1
+                # while left < right and nums[right] == nums[right+1]: right -= 1

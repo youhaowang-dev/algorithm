@@ -18,6 +18,7 @@
 # 1  2  3 4   5 => 3+4, 2-7, 1+-5, -4-5 => 9
 # get the priority of each operator
 class BasicCalculator:
+    # TODO: https://leetcode.com/problems/basic-calculator/solutions/1456850/python-basic-calculator-i-ii-iii-easy-solution-detailed-explanation/?orderBy=most_votes
     def calculate(self, s: str) -> int:
         # pre-processing to tokenize input
         s = s.replace(" ", "")  # remote white space
@@ -39,11 +40,10 @@ class BasicCalculator:
         for token in tokens:
             if token.isdigit():
                 number_stack.append(int(token))
-            elif token in "()":
-                if token == "(":
-                    operator_level += 1
-                if token == ")":
-                    operator_level -= 1
+            elif token == "(":
+                operator_level += 1
+            elif token == ")":
+                operator_level -= 1
             elif token in "+-":
                 while operator_stack and operator_stack[-1][1] >= operator_level:
                     self.merge(operator_stack, number_stack)

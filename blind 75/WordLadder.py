@@ -19,21 +19,17 @@
 # Input: beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log"]
 # Output: 0
 # Explanation: The endWord "cog" is not in wordList, therefore there is no valid transformation sequence.
-from collections import deque
-from typing import Deque, List, Set
 
-
-# breadth first search in a graph where each char of the beginWord can be replaced by a-z(except self)
-# if next word in set, continue until the end word is reached
+# BFS for shortest path
 class WordLadder:
     LETTERS = "abcdefghijklmnopqrstuvwxyz"
 
     def ladderLength(self, start_word: str, end_word: str, wordList: List[str]) -> int:
-        if not wordList or not start_word or not end_word:
+        if not start_word or not end_word or not wordList:
             return 0
 
-        words = set(wordList)
-        if end_word not in words:
+        word_set = set(wordList)
+        if end_word not in word_set:
             return 0
 
         queue = deque()
@@ -42,36 +38,36 @@ class WordLadder:
         used.add(start_word)
         word_count = 1
         while queue:
-            all_words = self.get_all_words(queue)
-            for word in all_words:
+            words = self.get_all_words(queue)
+            for word in words:
                 if word == end_word:
                     return word_count
                 else:
-                    neighbor_words = self.get_neighbor_words(word, words, used)
-                    for neighbor_word in neighbor_words:
-                        queue.append(neighbor_word)
-                        used.add(neighbor_word)
-
+                    next_words = self.get_next_words(word, word_set)
+                    for next_word in next_words:
+                        if next_word in used:
+                            continue
+                        queue.append(next_word)
+                        used.add(next_word)
             word_count += 1
 
         return 0
 
     def get_all_words(self, queue):
-        all_words = list()
+        words = list()
         while queue:
-            all_words.append(queue.popleft())
+            words.append(queue.popleft())
 
-        return all_words
+        return words
 
-    def get_neighbor_words(self, word, words, used):
-        neighbor_words = list()
-        for i in range(len(word)):
-            old_letter = word[i]
+    def get_next_words(self, word, word_set):
+        words = list()
+        for i, letter in enumerate(word):
             for new_letter in self.LETTERS:
-                if new_letter == old_letter:
+                if letter == new_letter:
                     continue
                 new_word = word[:i] + new_letter + word[i+1:]
-                if new_word in words and new_word not in used:
-                    neighbor_words.append(new_word)
+                if new_word in word_set:
+                    words.append(new_word)
 
-        return neighbor_words
+        return words

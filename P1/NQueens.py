@@ -20,99 +20,47 @@
 # O((n*n)!)
 # There are 62 * 61 * ... * 57 = 44,261,653,680 possible ways to place the remaining 6 queens
 
-# dfs
-# time O(n!) factorial
-# space O(n^2)
-# index formular
-# [0,Q,0] Q at [0,1], so same row and col is under attack
-# [0,0,0] for diagnoals, [1,0] and [1,2] are under attack, so col index 0 and 2 cannot be used
-# [0,0,0] as a result the formulars are row(1)+1 and row(1)-1
-# no row can have more than one queen
-# if we are able to put n queens in n rows, that is a solution
-from ast import List
-
-
+# dfs try to put a queen in every row because same row cannot have 2 queens
+# time O(n^2*n!) factorial, putting a queen reduces the choices for next queen, so n!, n^2 is for building the output
+# space O(n^2) for board
 class NQueens:
-    DEFAULT_INDEX = -1
-    DEFAULT_CELL = "."
-    QUEEN_CELL = "Q"
+    QUEEN = "Q"
+    SPACE = "."
 
     def solveNQueens(self, n: int) -> List[List[str]]:
-        results = list()
-        if not n:
-            return results
+        if n == 0:
+            return []
+        if n == 1:
+            return [[self.QUEEN]]
 
-        # indices for col, row indices are 0,1,2,...n-1
-        queens_col_indices = [self.DEFAULT_INDEX for _ in range(n)]
-        col_underattack = set()
-        diagonal1_col_underattack = set()
-        diagonal2_col_underattack = set()
-        start_row_index = 0
-        self.put_queens(
-            results,
-            queens_col_indices,
-            n,
-            col_underattack,
-            diagonal1_col_underattack,
-            diagonal2_col_underattack,
-            start_row_index,
-        )
+        row = [self.SPACE for _ in range(n)]
+        board = [list(row) for _ in range(n)]
+        start_row = 0
+        results = list()
+        col_used = set()
+        diagonal1_col_used = set()  # row + col
+        diagonal2_col_used = set()  # row - col
+        self.build_results(n, start_row, results, board,
+                           col_used, diagonal1_col_used, diagonal2_col_used)
 
         return results
 
-    def put_queens(
-        self,
-        results,
-        queens_col_indices,
-        queens_count,
-        col_underattack,
-        diagonal1_col_underattack,
-        diagonal2_col_underattack,
-        start_row_index,
-    ):
-        # of course no row can have more than one queen
-        # if we are able to put n queens in n rows, that is a solution
-        if start_row_index == queens_count:
-            result = self.get_result(queens_col_indices)
+    def build_results(self, n, row, results, board, col_used, diagonal1_col_used, diagonal2_col_used):
+        if row == n:
+            # outbound means we are able to put all queens in all rows
+            result = ["".join(row) for row in board]
             results.append(result)
-        # try put queen in the row
-        for col_index in range(queens_count):
-            if col_index in col_underattack:
-                continue
-            diagonal1_col = start_row_index - col_index
-            if diagonal1_col in diagonal1_col_underattack:
-                continue
-            diagonal2_col = start_row_index + col_index
-            if diagonal2_col in diagonal2_col_underattack:
-                continue
-            # put queen
-            queens_col_indices[start_row_index] = col_index
-            col_underattack.add(col_index)
-            diagonal1_col_underattack.add(diagonal1_col)
-            diagonal2_col_underattack.add(diagonal2_col)
 
-            self.put_queens(
-                results,
-                queens_col_indices,
-                queens_count,
-                col_underattack,
-                diagonal1_col_underattack,
-                diagonal2_col_underattack,
-                start_row_index + 1,
-            )
-            # unput queen
-            queens_col_indices[start_row_index] = self.DEFAULT_INDEX
-            col_underattack.remove(col_index)
-            diagonal1_col_underattack.remove(diagonal1_col)
-            diagonal2_col_underattack.remove(diagonal2_col)
-
-    # put one queen on each row based on the col indices
-    def get_result(self, queens_col_indices):
-        result = list()
-        default_row = row = [self.DEFAULT_CELL for _ in range(len(queens_col_indices))]
-        for queen_col_index in queens_col_indices:
-            row = list(default_row)
-            row[queen_col_index] = self.QUEEN_CELL
-            result.append("".join(row))
-
-        return result
+        for col in range(n):
+            if col in col_used or row + col in diagonal1_col_used or row - col in diagonal2_col_used:
+                continue
+            board[row][col] = self.QUEEN
+            col_used.add(col)
+            diagonal1_col_used.add(row + col)
+            diagonal2_col_used.add(row - col)
+            self.build_results(n, row + 1, results, board,
+                               col_used, diagonal1_col_used, diagonal2_col_used)
+            board[row][col] = self.SPACE
+            col_used.remove(col)
+            diagonal1_col_used.remove(row + col)
+            diagonal2_col_used.remove(row - col)

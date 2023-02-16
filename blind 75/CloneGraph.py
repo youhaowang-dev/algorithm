@@ -19,33 +19,30 @@ class CloneGraph:
 
         return node_to_copy[node]
 
-    def get_all_nodes(self, node: 'Node') -> List['Node']:
-        visisted = set()
-        nodes = list()
-
+    def get_all_nodes(self, start_node):
         queue = deque()
-        queue.append(node)
-        visisted.add(node)
+        visited = set()
+        queue.append(start_node)
+        visited.add(start_node)
         while queue:
             node = queue.popleft()
-            nodes.append(node)
             for neighbor in node.neighbors:
-                if neighbor in visisted:
+                if neighbor in visited:
                     continue
+
                 queue.append(neighbor)
-                visisted.add(neighbor)
+                visited.add(neighbor)
 
-        return nodes
+        return visited
 
-    def copy_nodes(self, nodes: List['Node']) -> Dict['Node', 'Node']:
+    def copy_nodes(self, nodes):
         node_to_copy = dict()
         for node in nodes:
-            copy = Node(node.val)
-            node_to_copy[node] = copy
+            node_to_copy[node] = Node(node.val)
 
         return node_to_copy
 
-    def copy_edges(self, nodes: List['Node'], node_to_copy: Dict['Node', 'Node']) -> None:
+    def copy_edges(self, nodes, node_to_copy):
         for node in nodes:
             copy = node_to_copy[node]
             for neighbor in node.neighbors:
