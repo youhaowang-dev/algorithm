@@ -48,7 +48,7 @@ class Sort:
         return nums
 
     @staticmethod
-    def custom_sort(nums: List[int], custom_order: Dict[int, int]):
+    def custom_sort_by_weight(nums: List[int], custom_order: Dict[int, int]):
         def get_sort_key(num):
             return custom_order[num]
 
@@ -57,14 +57,40 @@ class Sort:
 
         return nums
 
+    @staticmethod
+    def custom_sort_by_length(strings: List[str]):
+        def get_sort_key(string):
+            return len(string)
+
+        strings.sort(key=get_sort_key)
+        # strings.sort(key=lambda string: len(string))
+
+        return strings
+
 
 class TestSort(unittest.TestCase):
     def test_regular_sort(self):
-        self.assertEqual(Sort.regular_sort([3, 1, 2]), [1, 2, 3])
+        self.assertEqual(
+            Sort.regular_sort([3, 1, 2]),
+            [1, 2, 3]
+        )
+        self.assertEqual(
+            Sort.custom_sort_by_length(["aaa", "bb", "a", "b", "c"]),
+            ['a', 'b', 'c', 'bb', 'aaa']
+        )
 
-    def test_custom_sort(self):
+    def test_custom_sort_by_weight(self):
         custom_order = {1: 3, 2: 2, 3: 1}
-        self.assertEqual(Sort.custom_sort([3, 1, 2], custom_order), [3, 2, 1])
+        self.assertEqual(
+            Sort.custom_sort_by_weight([3, 1, 2], custom_order),
+            [3, 2, 1]
+        )
+
+    def test_custom_sort_by_length(self):
+        self.assertEqual(
+            Sort.custom_sort_by_length(["aaa", "bb", "a", "b", "c"]),
+            ["a", "b", "c", "bb", "aaa"]
+        )
 
 
 unittest.main()
