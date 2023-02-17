@@ -93,4 +93,15 @@ class TestSort(unittest.TestCase):
         )
 
 
+def list_or_dict_pop_by_key():
+    nums = [1, 2, 3]
+    nums.pop(1)
+    assert nums == [1, 3]
+    num_to_val = {num: num for num in nums}  # dict comprehension
+    assert num_to_val == {1: 1, 3: 3}
+    num_to_val.pop(1)
+    assert num_to_val == {3: 3}
+
+
+list_or_dict_pop_by_key()
 unittest.main()
