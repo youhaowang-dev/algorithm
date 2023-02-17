@@ -33,6 +33,19 @@ class Dog(Animal):
         return "Dog" + str(self.age) + self.get_name()
 
 
+class Bird(Animal):
+    NAME_SUFFIX = "#"
+
+    def __init__(self, age: int, name: str):
+        super().__init__(age, name)
+
+    def get_description(self) -> str:
+        return "Bird" + str(self.age) + self.get_name()
+
+    def get_name(self) -> str:
+        return super().get_name() + self.NAME_SUFFIX
+
+
 class AbstractClassTest(unittest.TestCase):
 
     def test_abstract_class_init(self):
@@ -42,6 +55,8 @@ class AbstractClassTest(unittest.TestCase):
     def test_concrete_class(self):
         self.assertEqual(Dog(1, 'lily').get_description(), "Dog1lily")
         self.assertEqual(Cat(2, 'mark').get_description(), "Cat2mark")
+        self.assertEqual(Bird(2, 'bob').get_description(),
+                         "Bird2bob"+Bird.NAME_SUFFIX)
 
 
 class Sort:
