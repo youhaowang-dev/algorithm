@@ -47,6 +47,24 @@ class MedianOfTwoSortedArrays:
                 self.get_kth(nums1, 0, nums2, 0, kth + 1)
             ) / 2
 
+    def get_kth(self, nums1, nums2, k) -> int:
+        if not nums1:
+            return nums2[k - 1]
+        if not nums2:
+            return nums1[k - 1]
+        if k == 1:
+            return min(nums1[0], nums2[0])
+
+        drop_count = k // 2
+        drop_end = drop_count - 1
+        drop_end_val1 = math.inf if drop_end >= len(nums1) else nums1[drop_end]
+        drop_end_val2 = math.inf if drop_end >= len(nums2) else nums2[drop_end]
+
+        if drop_end_val1 <= drop_end_val2:
+            return self.get_kth(nums1[drop_end + 1:], nums2, k - drop_count)
+        else:
+            return self.get_kth(nums1, nums2[drop_end + 1:], k - drop_count)
+
     def get_kth(self, nums1, start1, nums2, start2, k) -> int:
         if start1 >= len(nums1):
             return nums2[start2 + k - 1]
@@ -55,13 +73,13 @@ class MedianOfTwoSortedArrays:
         if k == 1:
             return min(nums1[start1], nums2[start2])
 
-        drop_count = k // 2
-        new_start1 = start1 + drop_count - 1
-        new_start2 = start2 + drop_count - 1
+        half_k = k // 2
+        new_start1 = start1 + half_k - 1
+        new_start2 = start2 + half_k - 1
         val1 = math.inf if new_start1 >= len(nums1) else nums1[new_start1]
         val2 = math.inf if new_start2 >= len(nums2) else nums2[new_start2]
 
         if val1 <= val2:
-            return self.get_kth(nums1, new_start1 + 1, nums2, start2, k - drop_count)
+            return self.get_kth(nums1, new_start1 + 1, nums2, start2, k - half_k)
         else:
-            return self.get_kth(nums1, start1, nums2, new_start2 + 1, k - drop_count)
+            return self.get_kth(nums1, start1, nums2, new_start2 + 1, k - half_k)
