@@ -4,6 +4,7 @@ import unittest
 
 
 class Animal(abc.ABC):
+    # abstractmethod means cannot init object if child does not override all the abstractmethod
     @abc.abstractmethod
     def __init__(self, age: int, name: str):
         self.age = age
