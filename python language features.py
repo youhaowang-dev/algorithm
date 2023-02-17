@@ -5,28 +5,32 @@ import unittest
 
 class Animal(abc.ABC):
     @abc.abstractmethod
-    def __init__(self, age):
+    def __init__(self, age: int, name: str):
         self.age = age
+        self.name = name
 
     @abc.abstractmethod
     def get_description(self) -> str:
         pass
 
+    def get_name(self) -> str:
+        return self.name
+
 
 class Cat(Animal):
-    def __init__(self, age):
-        super().__init__(age)
+    def __init__(self, age: int, name: str):
+        super().__init__(age, name)
 
     def get_description(self) -> str:
-        return "Cat" + str(self.age)
+        return "Cat" + str(self.age) + self.get_name()
 
 
 class Dog(Animal):
-    def __init__(self, age):
-        super().__init__(age)
+    def __init__(self, age: int, name: str):
+        super().__init__(age, name)
 
     def get_description(self) -> str:
-        return "Dog" + str(self.age)
+        return "Dog" + str(self.age) + self.get_name()
 
 
 class AbstractClassTest(unittest.TestCase):
@@ -36,8 +40,8 @@ class AbstractClassTest(unittest.TestCase):
             Animal(1)
 
     def test_concrete_class(self):
-        self.assertEqual(Dog(1).get_description(), "Dog1")
-        self.assertEqual(Cat(2).get_description(), "Cat2")
+        self.assertEqual(Dog(1, 'lily').get_description(), "Dog1lily")
+        self.assertEqual(Cat(2, 'mark').get_description(), "Cat2mark")
 
 
 class Sort:
