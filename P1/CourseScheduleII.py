@@ -17,40 +17,50 @@
 # Example 3:
 # Input: course_count = 1, prerequisites = []
 # Output: [0]
-from collections import deque
-from typing import Dict, List
-
 
 class CourseScheduleII:
+    def findOrder(self, course_count: int, next_course_pairs: List[List[int]]) -> List[int]:
+        if not course_count:
+            return [0]
 
-    # All the pairs [ai, bi] are distinct.
-    def findOrder(self, course_count: int, prerequisites: List[List[int]]) -> List[int]:
-        pre_to_nexts: Dict[int, List[int]] = dict()
-        for course in range(0, course_count):
-            pre_to_nexts[course] = list()
+        if not next_course_pairs:
+            return [course for course in range(course_count)]
 
-        indegrees = [0 for _ in range(course_count)]
-        for course, pre in prerequisites:
-            pre_to_nexts.get(pre).append(course)
-            indegrees[course] += 1
+        course_to_nexts = collections.defaultdict(list)
+        indegrees = collections.defaultdict(int)
+        for next, course in next_course_pairs:
+            course_to_nexts[course].append(next)
+            indegrees[next] += 1
 
         queue = deque()
-        for course in range(0, course_count):
+        for course in range(course_count):
             if indegrees[course] == 0:
                 queue.append(course)
 
-        # traverse courses in topological order
-        result = list()
+        results = list()
         while queue:
-            pre = queue.popleft()
-            result.append(pre)
-            next_courses = pre_to_nexts.get(pre)
-            for course in next_courses:
-                indegrees[course] -= 1
-                if indegrees[course] == 0:
-                    queue.append(course)
+            courses = self.get_all_courses(queue)
+            results.extend(courses)
+            for course in courses:
+                nexts = course_to_nexts[course]
+                self.update_queue(nexts, indegrees, queue)
 
-        if len(result) == course_count:
-            return result
+        # still need to check if can take all
+        for indegree in indegrees.values():
+            if indegree != 0:
+                return list()
 
-        return list()
+        return results
+
+    def get_all_courses(self, queue):
+        courses = list()
+        while queue:
+            courses.append(queue.popleft())
+
+        return courses
+
+    def update_queue(self, nexts, indegrees, queue):
+        for next in nexts:
+            indegrees[next] -= 1
+            if indegrees[next] == 0:
+                queue.append(next)
