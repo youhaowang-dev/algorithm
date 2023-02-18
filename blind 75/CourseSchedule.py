@@ -24,46 +24,46 @@
 # To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
 # All the pairs prerequisites[i] are unique.
 
-# bfs, build course_to_require_count, enqueue 0 course and reduce count by 1 for next
-# {4: 0, 1: 1, 2: 1, 3: 2}, deque([4])
-# {4: 0, 1: 0, 2: 0, 3: 2}, deque([1, 2])
-# {4: 0, 1: 0, 2: 0, 3: 1}, deque([2])
-# {4: 0, 1: 0, 2: 0, 3: 0}, deque([3])
-# {4: 0, 1: 0, 2: 0, 3: 0}, deque([])
+# topological sort, time course_count^2 for dense graph, space course_count^2 for dense graph
 class CourseSchedule:
-    def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        if not prerequisites:
+    def canFinish(self, course_count: int, next_course_pairs: List[List[int]]) -> bool:
+        if not course_count or not next_course_pairs:
             return True
 
-        course_to_nexts = dict()
-        course_to_required_count = dict()
-        for next_course, course in prerequisites:
-            if course not in course_to_nexts:
-                course_to_nexts[course] = list()
-            course_to_nexts[course].append(next_course)
-
-            if course not in course_to_required_count:  # no prerequisite, but need for init
-                course_to_required_count[course] = 0
-
-            if next_course not in course_to_required_count:
-                course_to_required_count[next_course] = 1
-            else:
-                course_to_required_count[next_course] += 1
+        course_to_nexts = collections.defaultdict(list)
+        indegrees = collections.defaultdict(int)
+        for next, course in next_course_pairs:
+            course_to_nexts[course].append(next)
+            indegrees[next] += 1
 
         queue = deque()
-        for course, require_count in course_to_required_count.items():
-            if require_count == 0:
+        # no need to dedup as 0 indegree can only happen once unless bad input
+        # for course, indegree in indegrees.items(): # wont work because items has no default key
+        for course in range(course_count):
+            if indegrees[course] == 0:
                 queue.append(course)
-        while queue:
-            course = queue.popleft()
-            next_courses = course_to_nexts.get(course, list())
-            for next_course in next_courses:
-                course_to_required_count[next_course] -= 1
-                if course_to_required_count[next_course] == 0:
-                    queue.append(next_course)
 
-        for require_count in course_to_required_count.values():
-            if require_count != 0:
+        while queue:
+            courses = self.get_all_courses(queue)
+            for course in courses:
+                self.update_next_courses(
+                    course_to_nexts[course], queue, indegrees)
+
+        for indegree in indegrees.values():
+            if indegree != 0:
                 return False
 
         return True
+
+    def get_all_courses(self, queue):
+        courses = list()
+        while queue:
+            courses.append(queue.popleft())
+
+        return courses
+
+    def update_next_courses(self, nexts, queue, indegrees):
+        for next in nexts:
+            indegrees[next] -= 1
+            if indegrees[next] == 0:
+                queue.append(next)
