@@ -13,7 +13,7 @@
 class Node:
     def __init__(self):
         self.is_word = False
-        self.children = dict()
+        self.letter_to_node = dict()
 
 
 class Trie:
@@ -24,25 +24,26 @@ class Trie:
     def insert(self, word: str) -> None:
         node = self.root
         for letter in word:
-            if letter not in node.children:
-                node.children[letter] = Node()
-            node = node.children[letter]
+            if letter not in node.letter_to_node:
+                node.letter_to_node[letter] = Node()
+            node = node.letter_to_node[letter]
+
         node.is_word = True
 
     def search(self, word: str) -> bool:
         node = self.root
         for letter in word:
-            if letter not in node.children:
+            if letter not in node.letter_to_node:
                 return False
-            node = node.children[letter]
+            node = node.letter_to_node[letter]
 
         return node.is_word
 
     def startsWith(self, prefix: str) -> bool:
         node = self.root
         for letter in prefix:
-            if letter not in node.children:
+            if letter not in node.letter_to_node:
                 return False
-            node = node.children[letter]
+            node = node.letter_to_node[letter]
 
         return True
