@@ -1,6 +1,7 @@
 from typing import List, Dict
 import abc
 import unittest
+import heapq
 
 
 class Animal(abc.ABC):
@@ -122,6 +123,47 @@ class ListDict(unittest.TestCase):
         self.assertEqual(num_to_val, {1: 1, 3: 3})
         num_to_val.pop(1)
         self.assertEqual(num_to_val, {3: 3})
+
+
+class Vals:  # ObjectWithCustomComparator
+    def __init__(self, val1, val2):
+        self.val1 = val1
+        self.val2 = val2
+
+    # override the <, __gt__ is the inverse
+    def __lt__(self, other):
+        if self.val1 == other.val1:
+            return self.val2 < other.val2
+
+        return self.val1 < other.val1
+
+    def __str__(self):
+        return "val1: %d val2: %d" % (self.val1, self.val2)
+
+
+class TestCustomComparator(unittest.TestCase):
+    def test_sort(self):
+        val1 = Vals(1, 2)
+        val2 = Vals(1, 1)
+        val3 = Vals(2, 0)
+        vals = [val1, val2, val3]
+        print(val1)
+        print(val2)
+        print(val3)
+        vals.sort()
+        self.assertEqual(vals, [val2, val1, val3])
+
+    def test_heap(self):
+        val1 = Vals(1, 2)
+        val2 = Vals(1, 1)
+        val3 = Vals(2, 0)
+        min_heap = list()
+        heapq.heappush(min_heap, val1)
+        heapq.heappush(min_heap, val2)
+        heapq.heappush(min_heap, val3)
+        self.assertEqual(heapq.heappop(min_heap), val2)
+        self.assertEqual(heapq.heappop(min_heap), val1)
+        self.assertEqual(heapq.heappop(min_heap), val3)
 
 
 unittest.main()
