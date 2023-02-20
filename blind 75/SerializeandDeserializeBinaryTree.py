@@ -23,50 +23,55 @@
 # Output: []
 
 
-# BFS to serialize, BFS to deserialize by processing two nodes each time
+# preorder to serialize and deserialize
 class Codec:
     DELIMITER = "."
     NULL = "#"
 
-    def serialize(self, root) -> str:
-        if not root:
-            return ""
-        queue = deque()
-        queue.append(root)
-        result = list()
-        while queue:
-            node = queue.popleft()
-            if node:
-                result.append(str(node.val))
-                queue.append(node.left)
-                queue.append(node.right)
-            else:
-                result.append(self.NULL)
+    def serialize(self, root):
+        preorder_vals = list()
 
-        return self.DELIMITER.join(result)
+        def build_preorder_vals(node):
+            if not node:
+                preorder_vals.append(self.NULL)
+                return
 
-    def deserialize(self, data) -> "TreeNode":
-        if not data:
-            return None
-        vals = data.split(self.DELIMITER)
-        if not vals:
-            return None
+            preorder_vals.append(str(node.val))
+            build_preorder_vals(node.left)
+            build_preorder_vals(node.right)
 
-        root = TreeNode(vals[0])
-        queue = deque()
-        queue.append(root)
-        index = 0
-        while index < len(vals) and queue:
+        build_preorder_vals(root)
+        return self.DELIMITER.join(preorder_vals)
 
-            node = queue.popleft()
-            left_val = vals[index + 1]
-            right_val = vals[index + 2]
-            if left_val != self.NULL:
-                node.left = TreeNode(left_val)
-                queue.append(node.left)
-            if right_val != self.NULL:
-                node.right = TreeNode(right_val)
-                queue.append(node.right)
-            index += 2
+    def deserialize(self, data):
+        preorder_vals = deque(data.split(self.DELIMITER))
 
-        return root
+        def build_from_preorder_vals():
+            if preorder_vals[0] == self.NULL:
+                preorder_vals.popleft()
+                return None
+
+            root = TreeNode(preorder_vals.popleft())
+            root.left = build_from_preorder_vals()
+            root.right = build_from_preorder_vals()
+
+            return root
+
+        return build_from_preorder_vals()
+
+    # def deserialize(self, data):
+    #     preorder_vals = data.split(self.DELIMITER)
+    #     self.index = 0
+    #     def build_from_preorder_vals():
+    #         if preorder_vals[self.index] == self.NULL:
+    #             self.index += 1
+    #             return None
+
+    #         root = TreeNode(int(preorder_vals[self.index]))
+    #         self.index += 1
+    #         root.left = build_from_preorder_vals()
+    #         root.right = build_from_preorder_vals()
+
+    #         return root
+
+    #     return build_from_preorder_vals()
