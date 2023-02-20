@@ -19,101 +19,44 @@
 # Input: root = []
 # Output: []
 
-
-from ast import List
-from collections import deque
-import collections
-from typing import Deque, Optional
-
-
-class TreeNode:
-    def __init__(self, x):
-        self.val = x
-        self.left = None
-        self.right = None
-
-
-# O( N ) since each val run build once
+# preorder to serialize and deserialize, null == val out of bound of min and max
 class Codec:
-    DELIMITER = ","
-    MIN = -(2**31)
-    MAX = 2**31 - 1
+    DELIMITER = "."
 
     def serialize(self, root: Optional[TreeNode]) -> str:
-        node_vals = list()
+        preorder_vals = list()
 
-        self.get_node_vals(root, node_vals)
-        node_val_strs = map(str, node_vals)
+        def build_preorder_vals(node):
+            if not node:
+                return
 
-        return self.DELIMITER.join(node_val_strs)
+            preorder_vals.append(str(node.val))
+            build_preorder_vals(node.left)
+            build_preorder_vals(node.right)
 
-    def get_node_vals(self, node: Optional[TreeNode], node_vals: List[int]) -> None:
-        if not node:
-            return
-
-        node_vals.append(node.val)
-        self.get_node_vals(node.left, node_vals)
-        self.get_node_vals(node.right, node_vals)
+        build_preorder_vals(root)
+        return self.DELIMITER.join(preorder_vals)
 
     def deserialize(self, data: str) -> Optional[TreeNode]:
         if not data:
             return None
 
-        nodes = deque(map(int, data.split(self.DELIMITER)))
-        return self.build_tree(nodes, self.MIN, self.MAX)
+        preorder_vals = deque(map(int, data.split(self.DELIMITER)))
+        min_val = min(preorder_vals) - 1
+        max_val = max(preorder_vals) + 1
 
-    def build_tree(self, nodes: Deque[int], min: int, max: int) -> Optional[TreeNode]:
-        if not nodes:
-            return None
+        def build_from_preorder_vals(min_val, max_val):
+            if not preorder_vals:
+                return None
 
-        # dont pop it now because some branches are invalid and should return None
-        node_val = nodes[0]
-        if node_val > max:
-            return None
-        # pop now
-        nodes.popleft()
+            if not (min_val < preorder_vals[0] < max_val):
+                # val shoud not be the root, so fill this node with null
+                return None
 
-        root = TreeNode(node_val)
-        root.left = self.build_tree(nodes, min, node_val)
-        root.right = self.build_tree(nodes, node_val, max)
+            root = TreeNode(preorder_vals.popleft())
+            root.left = build_from_preorder_vals(min_val, root.val)
+            root.right = build_from_preorder_vals(root.val, max_val)
 
-        return root
+            return root
 
-
-# O( N ) since each val run build once
-class Codec2:
-    DELIMITER = ","
-    MIN = -(2**31)
-    MAX = 2**31 - 1
-
-    def serialize(self, root):
-        vals = list()
-
-        def preorder(node):
-            if node:
-                vals.append(node.val)
-                preorder(node.left)
-                preorder(node.right)
-
-        preorder(root)
-
-        return self.DELIMITER.join(map(str, vals))
-
-    def deserialize(self, data):
-        if not data:
-            return None
-        val_strs = data.split(self.DELIMITER)
-        if not val_strs:
-            return None
-
-        vals = deque(map(int, val_strs))
-
-        def build(min, max):
-            if vals and min < vals[0] < max:
-                val = vals.popleft()
-                node = TreeNode(val)
-                node.left = build(min, val)
-                node.right = build(val, max)
-                return node
-
-        return build(self.MIN, self.MAX)
+        return build_from_preorder_vals(min_val, max_val)
