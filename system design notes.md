@@ -197,9 +197,16 @@ Client=>LB Cluster=>Server Cluster=>Cache Cluster=>DB Cluster
 
 # Design Location Based Service
 * Examples: Uber, Lyft, Google Map
+* geo hash: base32 to chunk world map recursively
+  * longer hash == more accurate
+* city data model: use a few geo hash points
 
 # Design Booking System
 * Examples: Airbnb, Hotel
+* high level design
+  * owner<>listing service<>inventory db
+  * renter<>searching service<>search engine<>inventory db
+  * renter<>reservation service<>[inventory db, reservation db, payment db] need transaction to ensure data consistency
 
 # Design Typeahead (Autocomplete)
 * Q and A:
