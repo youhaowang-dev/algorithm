@@ -50,6 +50,7 @@ Client=>LB Cluster=>Server Cluster=>Cache Cluster=>DB Cluster
     * sum(HH, HHMM, HHMMSS) requires less than 200 cache reads.
 
 # Desgin Key Value Store
+* hash table
 * A lot of data need to be evenly distributed to different dbs.
   * use consistent hashing
 * hot data push to cache, rest stay in db
@@ -74,6 +75,28 @@ Client=>LB Cluster=>Server Cluster=>Cache Cluster=>DB Cluster
 * High availability. Since an ID generator is a mission-critical system, it must be highly available.
 
 # Design URL Shortener
+* hash table
+* read
+  * client=>server: get_long(short_url)
+  * server=>db: find long url
+  * server=>client: redirect to long_rul
+* write
+  * client=>server: get_short(long_url)
+  * server=>db: hash the long_url to short, save in db
+  * server=>client: return short_url
+* 26*2 + 10 = 62 available chars, so 62^6=56B is enough
+* hash
+  * md5 suffix can have conflict, we can retry to resolve
+  * Base62 <=> auto incremental ID
+    * 62^6 * n + 62^5 * n + ... + 62^0 * n = auto incremental ID
+* 301/302
+  * 301: moved permanently, so the browser caches the response
+  * 302: moved temporarily, no cache
+  * Each redirection method has its pros and cons. If the priority is to reduce the server load, using 301 redirect makes sense as only the first request of the same URL is sent to URL shortening servers. However, if analytics is important, 302 redirect is a better choice as it can track click rate and source of the click more easily.
+* Rate limiter: A potential security problem we could face is that malicious users send an overwhelmingly large number of URL shortening requests. Rate limiter helps to filter out requests based on IP address or other filtering rules. If you want to refresh your memory about rate limiting, refer to “Chapter 4: Design a rate limiter”.
+* Web server scaling: Since the web tier is stateless, it is easy to scale the web tier by adding or removing web servers.
+* Database scaling: Database replication and sharding are common techniques.
+* Analytics: Data is increasingly important for business success. Integrating an analytics solution to the URL shortener could help to answer important questions like how many people click on a link? When do they click the link? etc.
 
 # Design Web Crawler
 
