@@ -9,6 +9,11 @@ Q: any requirement for data consistency and service availability?
 A: yes...
 Q: any addiitonal requirements we want to add? Otherwise, we can start the high level design
 
+Let's desgin for single server first. Then we can use other techniques to handle bigger traffics.
+
+Client=>Server=>DB
+Client=>LB Cluster=>Server Cluster=>Cache Cluster=>DB Cluster
+
 # Design Consistent Hashing
 * inconsistent hashing
   * id % 100 db shards
@@ -38,17 +43,35 @@ Q: any addiitonal requirements we want to add? Otherwise, we can start the high 
     * cons: consumes a lot of memory because even if a request is rejected, its timestamp might still be stored in memory
 
 * Checking a day will have 86400 memcached reads. How to reduce it?
-
-When checking by day, round the timestamp to hour, so 24 reads.
-When checking by hour, round the timestamp to minute, so 60 reads.
-What if we still want to know the exact time?
-Save the HHMMSS, HHMM, HH for each log
-sum(HH, HHMM, HHMMSS) requires less than 200 cache reads.
-
+    * When checking by day, round the timestamp to hour, so 24 reads.
+    * When checking by hour, round the timestamp to minute, so 60 reads.
+    * What if we still want to know the exact time?
+    * Save the HHMMSS, HHMM, HH for each log
+    * sum(HH, HHMM, HHMMSS) requires less than 200 cache reads.
 
 # Desgin Key Value Store
+* A lot of data need to be evenly distributed to different dbs.
+  * use consistent hashing
+* hot data push to cache, rest stay in db
+* Replication is for high availability and consistency.
 
 # Design Unique ID Generator
+* UUID
+  * pros: simple, no need to handle distributed system
+  * cons: 128 bits long, cannot be sorted by time, not numeric
+* Sequential ID from one server
+  * pros: sorted numeric IDs, work for small medium scale
+  * cons: single point of failure
+* Twitter snowflake approach
+  * Sign bit + Timestamp + Datacenter ID + Machine ID + Sequence ID
+  * Sign bit: 1 bit. It will always be 0. This is reserved for future uses. It can potentially be used to distinguish between signed and unsigned numbers.
+  * Timestamp: 41 bits. Milliseconds since the epoch or custom epoch. We use Twitter snowflake default epoch 1288834974657, equivalent to Nov 04, 2010, 01:42:54 UTC.
+  * Datacenter ID: 5 bits, which gives us 2 ^ 5 = 32 datacenters.
+  * Machine ID: 5 bits, which gives us 2 ^ 5 = 32 machines per datacenter.
+  * Sequence number: 12 bits. For every ID generated on that machine/process, the sequence number is incremented by 1. The number is reset to 0 every millisecond.
+* Clock synchronization. In our design, we assume ID generation servers have the same clock. This assumption might not be true when a server is running on multiple cores. The same challenge exists in multi-machine scenarios. Solutions to clock synchronization are out of the scope of this book; however, it is important to understand the problem exists. Network Time Protocol is the most popular solution to this problem. For interested readers, refer to the reference material [4].
+* Section length tuning. For example, fewer sequence numbers but more timestamp bits are effective for low concurrency and long-term applications.
+* High availability. Since an ID generator is a mission-critical system, it must be highly available.
 
 # Design URL Shortener
 
@@ -82,5 +105,18 @@ sum(HH, HHMM, HHMMSS) requires less than 200 cache reads.
 * Data centers are usually in different regions, and it takes time to send data between them.
 
 # Important Concepts
-Cache
 
+
+
+## CAP theorem
+* CAP theorem states it is impossible for a distributed system to simultaneously provide more than two of these three guarantees: consistency, availability, and partition tolerance. 
+* Consistency: consistency means all clients see the same data at the same time no matter which node they connect to.
+* Availability: availability means any client which requests data gets a response even if some of the nodes are down.
+* Partition Tolerance: a partition indicates a communication break between two nodes. Partition tolerance means the system continues to operate despite network partitions.
+
+## Consistency models
+* Consistency model is other important factor to consider when designing a key-value store. A consistency model defines the degree of data consistency, and a wide spectrum of possible consistency models exist:
+* Strong consistency: any read operation returns a value corresponding to the result of the most updated write data item. A client never sees out-of-date data.
+* Weak consistency: subsequent read operations may not see the most updated value.
+* Eventual consistency: this is a specific form of weak consistency. Given enough time, all updates are propagated, and all replicas are consistent.
+* Strong consistency is usually achieved by forcing a replica not to accept new reads/writes until every replica has agreed on current write. This approach is not ideal for highly available systems because it could block new operations. Dynamo and Cassandra adopt eventual consistency, which is our recommended consistency model for our key-value store. From concurrent writes, eventual consistency allows inconsistent values to enter the system and force the client to read the values to reconcile. The next section explains how reconciliation works with versioning.
