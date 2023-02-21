@@ -99,6 +99,30 @@ Client=>LB Cluster=>Server Cluster=>Cache Cluster=>DB Cluster
 * Analytics: Data is increasingly important for business success. Integrating an analytics solution to the URL shortener could help to answer important questions like how many people click on a link? When do they click the link? etc.
 
 # Design Web Crawler
+* Use cases: Search engine indexing, Web archiving, Web mining, Web monitoring
+* web crawler algorithm
+  1. Given a set of URLs, download all the web pages addressed by the URLs. 
+  2. Extract URLs from these web pages
+  3. Add new URLs to the list of URLs to be downloaded. Repeat these 3 steps.
+* Q and A
+  * Candidate: What is the main purpose of the crawler? Is it used for search engine indexing, data mining, or something else?
+  * Interviewer: Search engine indexing.
+* characteristics of a good web crawler:
+  * Scalability: The web is very large. There are billions of web pages out there. Web crawling should be extremely efficient using parallelization.
+  * Robustness: The web is full of traps. Bad HTML, unresponsive servers, crashes, malicious links, etc. are all common. The crawler must handle all those edge cases.
+  * Politeness: The crawler should not make too many requests to a website within a short time interval.
+  * Extensibility: The system is flexible so that minimal changes are needed to support new content types. For example, if we want to crawl image files in the future, we should not need to redesign the entire system.
+* flow
+  * seed urls add to queue => DNS Resolver => download HTML => parser => dedup => add unvisited urls to queue => save content in db
+* DNS Resolver
+  * To download a web page, a URL must be translated into an IP address. The HTML Downloader calls the DNS Resolver to get the corresponding IP address for the URL. For instance, URL www.wikipedia.org is converted to IP address 198.35.26.96 as of 3/5/2019.
+* DFS/BFS
+  * DFS may cause frequent visits for the same domain
+  * BFS won't hammer the domain but it does not consider priorities.
+* Server-side rendering: Numerous websites use scripts like JavaScript, AJAX, etc to generate links on the fly. If we download and parse web pages directly, we will not be able to retrieve dynamically generated links. To solve this problem, we perform server-side rendering (also called dynamic rendering) first before parsing a page [12].
+* Filter out unwanted pages: With finite storage capacity and crawl resources, an anti-spam component is beneficial in filtering out low quality and spam pages [13] [14].
+* Database replication and sharding: Techniques like replication and sharding are used to improve the data layer availability, scalability, and reliability.
+* Horizontal scaling: For large scale crawl, hundreds or even thousands of servers are needed to perform download tasks. The key is to keep servers stateless.
 
 # Design Notification
 
