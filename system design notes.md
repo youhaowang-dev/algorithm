@@ -125,8 +125,43 @@ Client=>LB Cluster=>Server Cluster=>Cache Cluster=>DB Cluster
 * Horizontal scaling: For large scale crawl, hundreds or even thousands of servers are needed to perform download tasks. The key is to keep servers stateless.
 
 # Design Notification
+* Q and A
+  * Candidate: What types of notifications does the system support? 
+  * Interviewer: Push notification, SMS message, and email.
+  * Candidate: Is it a real-time system?
+  * Interviewer: Let us say it is a soft real-time system. We want a user to receive notifications as soon as possible. However, if the system is under a high workload, a slight delay is acceptable.
+  * Candidate: What are the supported devices?
+  * Interviewer: iOS devices, android devices, and laptop/desktop.
+  * Candidate: What triggers notifications?
+  * Interviewer: Notifications can be triggered by client applications. They can also be scheduled on the server-side.
+  * Candidate: Will users be able to opt-out?
+  * Interviewer: Yes, users who choose to opt-out will no longer receive notifications.
+  * Candidate: How many notifications are sent out each day?
+  * Interviewer: 10 million mobile push notifications, 1 million SMS messages, and 5 million emails.
+* flow
+  * fanout server => message queue => ios/android/email servers => pull template from db and send notification
+* Cache: User info, device info, notification templates are cached. 
+* DB: It stores data about user, notification, settings, etc.
+* Message queues: They remove dependencies between components. Message queues serve as buffers when high volumes of notifications are to be sent out. Each notification type is assigned with a distinct message queue so an outage in one third-party service will not affect other notification types.
+* Reliability: We proposed a robust retry mechanism to minimize the failure rate.
+* Security: AppKey/appSecret pair is used to ensure only verified clients can send notifications.
+* Tracking and monitoring: These are implemented in any stage of a notification flow to capture important stats.
+* Respect user settings: Users may opt-out of receiving notifications. Our system checks user settings first before sending notifications.
+* Rate limiting: Users will appreciate a frequency capping on the number of notifications they receive.
 
 # Design News Feed
+* auth and rate limiting are enforced
+* flow
+  * client => server: get_feed()
+  * server => db: query friend table to get all friend ids, then query post db to get all posts, aggregate all posts
+  * server => client: return all posts
+* pre-process to build new_feed table
+  * news_feed_table: uid, post_id
+  * pros: fast
+  * cons: many writes if many followers, have delays, costs disk spaces, inactive users
+* push posts in cache
+  * pros: fast
+  * cons: cache is limited resource
 
 # Design Chat
 
