@@ -164,6 +164,36 @@ Client=>LB Cluster=>Server Cluster=>Cache Cluster=>DB Cluster
   * cons: cache is limited resource
 
 # Design Chat
+* assume auth is done
+* Q and A
+  * Candidate: What kind of chat app shall we design? 1 on 1 or group based?
+  * Interviewer: It should support both 1 on 1 and group chat.
+* flow
+  * user1 => server: send_message(uid2, message)
+    * uid2 can be group_id for group message
+  * server: save message in db
+  * user2 => server: poll every n seconds get_message()
+  * server => user2: return all messages
+* issues
+  * no ways to tell if a user is online
+  * poll is not efficient because not always a user will have a message
+* socket connection
+  * bi-directional and persistent
+  * design is simplified for 2-way connection
+* message table
+  * id, from_uid, to_uid, content, ctime
+* group message table
+  * id, from_uid, group_id, content, ctime
+* message id should be unqiue and sortable
+  * can use distributed ID generator
+  * can also use local sequential ID as the group_id + sequential ID will be unique in the scope of the same group
+* Online presence
+  * An online presence indicator is an essential feature of many chat applications. Usually, you can see a green dot next to a user’s profile picture or username.
+  * Periodically, an online client sends a heartbeat event to presence servers. If presence servers receive a heartbeat event within a certain time, say x seconds from the client, a user is considered as online. Otherwise, it is offline.
+* Extend the chat app to support media files such as photos and videos. Media files are significantly larger than text in size. Compression, cloud storage, and thumbnails are interesting topics to talk about.
+* End-to-end encryption. Whatsapp supports end-to-end encryption for messages. Only the sender and the recipient can read messages. Interested readers should refer to the article in the reference materials [9].
+* Caching messages on the client-side is effective to reduce the data transfer between the client and server.
+* Improve load time. Slack built a geographically distributed network to cache users’ data, channels, etc. for better load time [10].
 
 # Design Location Based Service
 * Examples: Uber, Lyft, Google Map
