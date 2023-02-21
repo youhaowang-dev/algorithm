@@ -202,6 +202,44 @@ Client=>LB Cluster=>Server Cluster=>Cache Cluster=>DB Cluster
 * Examples: Airbnb, Hotel
 
 # Design Typeahead (Autocomplete)
+* Q and A:
+  * Candidate: Is the matching only supported at the beginning of a search query or in the middle as well?
+  * Interviewer: Only at the beginning of a search query.
+  * Candidate: How many autocomplete suggestions should the system return?
+  * Interviewer: 5
+  * Candidate: How does the system know which 5 suggestions to return?
+  * Interviewer: This is determined by popularity, decided by the historical query frequency.
+  * Candidate: Does the system support spell check? * Interviewer: No, spell check or autocorrect is not supported.
+  * Candidate: Are search queries in English?
+  * Interviewer: Yes. If time allows at the end, we can discuss multi-language support.
+  * Candidate: Do we allow capitalization and special characters?
+  * Interviewer: No, we assume all search queries have lowercase alphabetic characters.
+* flow
+  * aggregator server: use the data from analytic db to create a trie tree, save the the trie tree in db and push it to cache
+  * query server: get all matches for the prefix from the trie tree, then return the top 5 frequent queries
+    1. Find the prefix takes O(len(prefix))
+    2. Find all queries takes O(node_count)
+    3. Get top k takes O(node_count * logk)
+    4. this result can be cached
+
+* Trie DB. Trie DB is the persistent storage. Two options are available to store the data:
+  * blob store: Since a new trie is built weekly, we can periodically take a snapshot of it, serialize it, and store the serialized data in the database.
+  * Key-value store: A trie can be represented in a hash table form [4] by applying the following logic:
+    * Every prefix in the trie is mapped to a key in a hash table.
+    * Data on each trie node is mapped to a value in a hash table.
+    * we can directly query from db if need to save cache
+* when the trie grows too large to fit in one server
+  * there are a lot more words that start with the letter ‘c’ than ‘x’. This creates uneven distribution.
+  * do a data analysis, then shard by prefix
+* Followup
+  * Interviewer: How do you extend your design to support multiple languages?
+  * To support other non-English queries, we store Unicode characters in trie nodes. If you are not familiar with Unicode, here is the definition: “an encoding standard covers all the characters for all the writing systems of the world, modern and ancient” [5].
+  * Interviewer: What if top search queries in one country are different from others?
+  * In this case, we might build different tries for different countries. To improve the response time, we can store tries in CDNs.
+  * Interviewer: How can we support the trending (real-time) search queries?
+  * Assuming a news event breaks out, a search query suddenly becomes popular. Our original design will not work because:
+    * Offline workers are not scheduled to update the trie yet because this is scheduled to run on weekly basis.
+    * Even if it is scheduled, it takes too long to build the trie.
 
 # Design Youtube
 
