@@ -264,7 +264,50 @@ Client=>LB Cluster=>Server Cluster=>Cache Cluster=>DB Cluster
 
 # Important Concepts
 
+## Isolation Levels from low to high
+* Read Uncommitted: Can read data when other Transactions are writing/reading
+* Read Committed: Can only read after another Transaction finished commit
+* Repeatable Read: Cannot write after another Transaction reads the data
+* Serializable: Cannot read/write when another Transaction locks the data
+* MySQL default=Repeatable Read, Oracle default=Read Committed
+* 
+| Isolation Level  | Issues                                        |
+| ---------------- | --------------------------------------------- |
+| Read Uncommitted | phantom read, non-repeatable read, dirty read |
+| Read Committed   | phantom read, non-repeatable read             |
+| Repeatable Read  | phantom read                                  |
+| Serializable     | no inconsistency                              |
 
+
+* NOTE: All isolation levels do not allow Dirty Write.
+* Dirty Write
+  * Time: [-------------------------------------------------------->]
+  * T1:   [Read X=1				Write X=3 Rollback X=1]
+  * T2:   [Read X=1 Write X=2 Commit X=2]
+  * The rollback of T1 rollbacks the submission of T2. 
+  * All isolation levels do not allow Dirty Write.
+
+* Dirty Read
+  * Time: [-------------------------------------------------------->]
+  * T1: [Read X=1 Write X=2 			Rollback X=1]
+  * T2:	[                   Read X=2                ]
+  * The rollback of T1 causes T2 to read the uncommitted X=2.
+  * Read Uncommitted will cause dirty reads.
+  * Increasing isolation level to Read Committed can avoid dirty reads.
+* Non-repeatable Read
+  * Reads get different values for a same transaction.
+  * Time: [-------------------------------------------------------->]
+  * T1:   [Read X=1 						         Read X=2]
+  * T2:   [         Read X=1 Write X=2 Commit X=2]
+  * T1 is still being executed and T2 submitted. Two reads of T1 have different results, so the reads are not repeatable.
+  * Read Committed isolation level can cause Non-repeatable Reads. Increasing the isolation level to Repeatable Read can fix this problem.
+* Phantom Reads
+  * Time: [-------------------------------------------------------->]
+  * T1:   [Read(x<5)=[1,2,3]			    Read(x<5)=[1,2,3,4]]
+  * T2:	  [	                Insert 4 Commit]
+  * 1,2,3 are locked for write by Repeatable Read, but 4 can still be inserted. 
+  * Phantom Reads can happen for non-determined multi-row reads like range query. Repeatable Road only locks determined rows.
+  * Repeatable Read allows Phantom Read. Increase isolation level to Serializable to avoid this.
 
 ## CAP theorem
 * CAP theorem states it is impossible for a distributed system to simultaneously provide more than two of these three guarantees: consistency, availability, and partition tolerance. 
