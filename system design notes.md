@@ -216,7 +216,8 @@ Client=>LB Cluster=>Server Cluster=>Cache Cluster=>DB Cluster
   * Interviewer: 5
   * Candidate: How does the system know which 5 suggestions to return?
   * Interviewer: This is determined by popularity, decided by the historical query frequency.
-  * Candidate: Does the system support spell check? * Interviewer: No, spell check or autocorrect is not supported.
+  * Candidate: Does the system support spell check? 
+  * Interviewer: No, spell check or autocorrect is not supported.
   * Candidate: Are search queries in English?
   * Interviewer: Yes. If time allows at the end, we can discuss multi-language support.
   * Candidate: Do we allow capitalization and special characters?
