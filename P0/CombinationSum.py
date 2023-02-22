@@ -36,20 +36,19 @@ class CombinationSum:
 
         results = list()
         result = list()
-        start = 0
-        self.search_result(nums, target, result, results, start)
+        start_index = 0
+        self.build_results(nums, results, result, target, start_index)
 
         return results
 
-    def search_result(self, nums, target, result, results, start):
-        if target < 0:
-            return
-
+    def build_results(self, nums, results, result, target, start_index):
         if target == 0:
             results.append(list(result))
             return
+        if target < 0:
+            return
 
-        for i in range(start, len(nums)):
+        for i in range(start_index, len(nums)):
             result.append(nums[i])
-            self.search_result(nums, target - nums[i], result, results, i)
+            self.build_results(nums, results, result, target - nums[i], i)
             result.pop()
