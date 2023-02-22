@@ -20,6 +20,7 @@ A: yes...
 Q: any addiitonal requirements we want to add? Otherwise, we can start the high level design  
 ## high level design
 Let's do a high level design first. Then we can deep dive into the details.
+APIs: create_xxx get_xxx  
 Client<>Server<>Cache<>DB  
 Client<>LB Cluster<>Server Cluster<>Cache Cluster<>DB Cluster  
 
