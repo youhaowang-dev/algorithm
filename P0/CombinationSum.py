@@ -26,8 +26,8 @@
 # Input: candidates = [2], target = 1
 # Output: []
 
-# time O(2^n) where n=target/min_num, each num can be picked n times and each pick can be yes or no
-# so TC can be O(2^target) as min_num can be 1
+# time O(n*2^n) where n=target/min_num, each num can be picked n times and choices are 2(pick/not pick). copy takes n
+# so TC can be O(n*2^target) as min_num can be 1
 # space O(target/min_num) = O(target) where min_num can be 1
 class CombinationSum:
     def combinationSum(self, nums: List[int], target: int) -> List[List[int]]:
@@ -36,19 +36,19 @@ class CombinationSum:
 
         results = list()
         result = list()
-        start_index = 0  # we don't go backward to produce [2,3,2]
-        self.build_results(nums, results, result, target, start_index)
+        start = 0  # we don't go backward to produce [2,3,2]
+        self.build_results(nums, results, result, target, start)
 
         return results
 
-    def build_results(self, nums, results, result, target, start_index):
+    def build_results(self, nums, results, result, target, start):
         if target == 0:
             results.append(list(result))
             return
         if target < 0:
             return
 
-        for i in range(start_index, len(nums)):
+        for i in range(start, len(nums)):
             result.append(nums[i])
             self.build_results(nums, results, result, target - nums[i], i)
             result.pop()
