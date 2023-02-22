@@ -36,7 +36,7 @@ class CombinationSum:
 
         results = list()
         result = list()
-        start_index = 0
+        start_index = 0  # we don't go backward to produce [2,3,2]
         self.build_results(nums, results, result, target, start_index)
 
         return results
