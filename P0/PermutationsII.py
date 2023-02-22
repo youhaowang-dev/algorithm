@@ -14,43 +14,58 @@
 # Input: nums = [1,2,3]
 # Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
 
-from ast import List
-
-# [2,1,1] print(permutation_state)
-# []
-# [1]
-# [1, 1], [1, 2]
-# [1, 1, 2], [1, 2, 1]
-# [2]
-# [2, 1]
-# [2, 1, 1]
+# worse case is no duplication
+# n*n! each choice will reduce next choice count by 1, copy and hash takes n
 class PermutationsII:
     def permuteUnique(self, nums: List[int]) -> List[List[int]]:
-        result = list()
         if not nums:
-            return result
+            return list()
 
-        nums.sort()  # required for dedup
-        used = [False for _ in range(0, len(nums))]
-        permutation_state = list()
-        self.permuteUniqueHelper(nums, permutation_state, result, used)
+        num_to_count = collections.Counter(nums)
+        results = list()
+        result = list()
+        self.build_results(results, result, num_to_count, len(nums))
 
-        return result
+        return results
 
-    def permuteUniqueHelper(self, nums, permutation_state, result, used):
-        if len(permutation_state) == len(nums):
-            result.append(list(permutation_state))
+    def build_results(self, results, result, num_to_count, expected_result_length):
+        if len(result) == expected_result_length:
+            results.append(list(result))
             return
 
-        for i in range(0, len(nums)):
-            if used[i]:
-                continue
-            # dont skip if prev is not used yet
-            if i > 0 and nums[i] == nums[i - 1] and not used[i - 1]:
+        for num in num_to_count.keys():
+            if num_to_count[num] == 0:
                 continue
 
-            permutation_state.append(nums[i])
-            used[i] = True
-            self.permuteUniqueHelper(nums, permutation_state, result, used)
-            permutation_state.pop()
-            used[i] = False
+            result.append(num)
+            num_to_count[num] -= 1
+            self.build_results(results, result, num_to_count,
+                               expected_result_length)
+            num_to_count[num] += 1
+            result.pop()
+
+    def permuteUnique2(self, nums: List[int]) -> List[List[int]]:
+        if not nums:
+            return list()
+
+        results = set()  # Set[Tuple[int]]
+        result = list()
+        used = set()
+        self.build_results(nums, results, result, used)
+        # return list(map(list, results))
+        return results
+
+    def build_results(self, nums, results, result, used):
+        if len(result) == len(nums):
+            results.add(tuple(result))
+            return
+
+        for i, num in enumerate(nums):
+            if i in used:
+                continue
+
+            result.append(num)
+            used.add(i)
+            self.build_results(nums, results, result, used)
+            result.pop()
+            used.remove(i)
