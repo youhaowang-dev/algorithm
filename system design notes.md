@@ -1,18 +1,43 @@
-# ask questions
-Q: What features do we want to design in this meeting?
-A: feature1 and feature2
-Q: Can we assume we are only designing the backend of the features?
-A: yes/no
-Q: What is the traffic for feature1/feature2?
-A: n per day/week/month
-Q: any requirement for data consistency and service availability?
-A: yes...
-Q: any addiitonal requirements we want to add? Otherwise, we can start the high level design
+# process
+1. features
+2. traffic/QPS for each feature
+3. availability and consistency
+4. high level design
+5. data flow for each feature
+6. db table design
+7. scale discussion
+## features
+Q: What features do we want to design in this meeting?  
+A: feature1 and feature2  
+Q: Can we assume we are only designing the backend of the features?  
+A: yes/no  
+## traffic
+Q: What is the traffic for feature1/feature2?  
+A: n per day/week/month  
+## availability and consistency
+Q: any requirement for data consistency and service availability?  
+A: yes...  
+Q: any addiitonal requirements we want to add? Otherwise, we can start the high level design  
+## high level design
+Let's do a high level design first. Then we can deep dive into the details.
+Client<>Server<>Cache<>DB  
+Client<>LB Cluster<>Server Cluster<>Cache Cluster<>DB Cluster  
 
-Let's desgin for single server first. Then we can use other techniques to handle bigger traffics.
+## data flow
+### Data flow for feature1:  
+Client->Server: do something  
+Server: do something  
+Server->DB: save something  
+Server->Client: return something  
 
-Client=>Server=>DB
-Client=>LB Cluster=>Server Cluster=>Cache Cluster=>DB Cluster
+## db table design
+table_name_table  
+id  PK  
+uid FK  
+...  
+
+## scale discussion
+cache, replica, sharding, consistent hashing...
 
 # Design Consistent Hashing
 * inconsistent hashing
