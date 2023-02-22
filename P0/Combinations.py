@@ -24,17 +24,17 @@ class Combinations:
 
         results = list()
         result = list()
-        n_start = 1
-        self.search_result(n, k, n_start, result, results)
+        start_num = 1
+        self.build_results(n, k, results, result, start_num)
 
         return results
 
-    def search_result(self, n, k, n_start, result, results):
+    def build_results(self, n, k, results, result, start_num):
         if len(result) == k:
             results.append(list(result))
             return
 
-        for i in range(n_start, n + 1):
-            result.append(i)
-            self.search_result(n, k, i + 1, result, results)
+        for num in range(start_num, n + 1):
+            result.append(num)
+            self.build_results(n, k, results, result, num + 1)
             result.pop()
