@@ -227,7 +227,7 @@ cache, replica, sharding, consistent hashing...
 * city data model: use a few geo hash points
 
 # Design Booking System
-* Examples: Airbnb, Hotel
+* Examples: airbnb, hotel
 * high level design
   * owner<>listing service<>inventory db
   * renter<>searching service<>search engine<>inventory db
