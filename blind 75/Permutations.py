@@ -22,62 +22,27 @@
 # since we have N! solutions and each of them requires N space to store elements.
 class Permutations:
     def permute(self, nums: List[int]) -> List[List[int]]:
-        results = list()
         if not nums:
-            return results
+            return list()
 
+        results = list()
         result = list()
         used = set()
-        self.search_results(nums, used, result, results)
+        self.build_results(nums, results, result, used)
 
         return results
 
-    def search_results(self, nums, used, result, results) -> None:
-        num_count = len(nums)
-        if len(result) == num_count:
+    def build_results(self, nums, results, result, used):
+        if len(result) == len(nums):
             results.append(list(result))
             return
 
-        for i in range(num_count):
+        for i, num in enumerate(nums):
             if i in used:
                 continue
 
-            result.append(nums[i])
+            result.append(num)
             used.add(i)
-            self.search_results(nums, used, result, results)
+            self.build_results(nums, results, result, used)
             result.pop()
             used.remove(i)
-
-
-# build permutation while iteratively dfs
-# deque([([1, 2, 3], [])])
-# deque([([2, 3], [1]), ([1, 3], [2]), ([1, 2], [3])])
-# ...
-# deque([([2, 3], [1]), ([1, 3], [2]), ([2], [3, 1]), ([], [3, 2, 1])])
-# ...
-# deque([([2, 3], [1]), ([1, 3], [2]), ([], [3, 1, 2])])
-# ...
-# deque([([2, 3], [1]), ([3], [2, 1]), ([], [2, 3, 1])])
-# ...
-# deque([([2, 3], [1]), ([], [2, 1, 3])])
-# ...
-# deque([([3], [1, 2]), ([], [1, 3, 2])])
-# ...
-class Permutations2:
-    def permute(self, nums: List[int]) -> List[List[int]]:
-        result = list()
-        if not nums:
-            return result
-
-        permutation_state = list()
-        stack = collections.deque()
-        stack.append((nums, permutation_state))
-        while stack:
-            nums, path = stack.pop()
-            if not nums:
-                result.append(path)
-            for i in range(len(nums)):
-                new_nums = nums[:i] + nums[i + 1:]
-                stack.append((new_nums, path + [nums[i]]))
-
-        return result
