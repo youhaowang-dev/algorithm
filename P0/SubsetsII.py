@@ -14,39 +14,34 @@
 # Input: nums = [0]
 # Output: [[],[0]]
 
-from ast import List
-
 # time O(n * 2^n) generate all subsets and then copy them into output list
 # space O(n * 2^n) This is exactly the number of solutions for subsets multiplied by the number N of elements to keep for each subset.
 # For a given number, it could be present or absent (i.e. binary choice) in a subset solution.
 # As as result, for N numbers, we would have in total 2^N choices (solutions).
-# print(subset_state) for [2,1,2] => [1,2,2]
-# []
-# [1]
-# [1, 2]
-# [1, 2, 2]
-# [2]
-# [2, 2]
 class SubsetsII:
     def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
-        result = list()
         if not nums:
-            return result
-        # sort is need for dedup because same number need to be ordered
-        # For example input is {2,1,2}. In the backtrack we can have {2,1} and {1,2}.
-        # To avoid this we sort first. Making the list {1,2,2}, so in the backtrack we can skip the second {1, 2}
-        nums.sort()  # for dedup
-        subset_state = list()
-        start_index = 0
-        self.subsetsWithDupHelper(nums, subset_state, result, start_index)
+            return list()
 
-        return result
+        num_to_count = collections.Counter(nums)
+        results = list()
+        result = list()
+        unique_nums = list(num_to_count.keys())
+        start = 0
+        self.build_results(results, result, unique_nums, num_to_count, start)
 
-    def subsetsWithDupHelper(self, nums, subset_state, result, start_index):
-        result.append(list(subset_state))
-        for i in range(start_index, len(nums)):
-            if i > start_index and nums[i] == nums[i - 1]:
+        return results
+
+    def build_results(self, results, result, nums, num_to_count, start):
+        results.append(list(result))
+
+        for i in range(start, len(nums)):
+            num = nums[i]
+            if num_to_count[num] == 0:
                 continue
-            subset_state.append(nums[i])
-            self.subsetsWithDupHelper(nums, subset_state, result, i + 1)
-            subset_state.pop()
+
+            result.append(num)
+            num_to_count[num] -= 1
+            self.build_results(results, result, nums, num_to_count, i)
+            result.pop()
+            num_to_count[num] += 1
