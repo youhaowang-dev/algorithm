@@ -6,16 +6,6 @@
 # IMPORTANT: do not try to reverse during the traversal because tree left right will not make it work
 # only reverse the level value results before adding to the master list
 
-from collections import deque
-from typing import List, Optional
-
-
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
 
 class BinaryTreeZigzagLevelOrderTraversal:
     def zigzagLevelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
@@ -23,28 +13,30 @@ class BinaryTreeZigzagLevelOrderTraversal:
         if not root:
             return results
 
+        to_right = True
         queue = deque()
         queue.append(root)
-        is_reverse_order = False
         while queue:
-            temp = list()
-            nodes = self.get_current_level_nodes(queue)
+            nodes = self.get_all_nodes(queue)
+            result = list()
             for node in nodes:
-                temp.append(node.val)
+                result.append(node.val)
                 if node.left:
                     queue.append(node.left)
                 if node.right:
                     queue.append(node.right)
 
-            if is_reverse_order:
-                temp = reversed(temp)
+            if to_right:
+                to_right = False
+            else:
+                result = reversed(result)
+                to_right = True
 
-            is_reverse_order = not is_reverse_order
-            results.append(temp)
+            results.append(result)
 
         return results
 
-    def get_current_level_nodes(self, queue):
+    def get_all_nodes(self, queue):
         nodes = list()
         while queue:
             nodes.append(queue.popleft())

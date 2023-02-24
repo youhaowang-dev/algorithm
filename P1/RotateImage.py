@@ -16,7 +16,8 @@
 # Input: matrix = [[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]
 # Output: [[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]
 
-from ast import List
+from typing import List
+import copy
 
 
 # clockwise rotation, swap rows then swap diagonal cells
@@ -28,23 +29,13 @@ class RotateImage:
         if not matrix:
             return
 
-        self.swap_rows(matrix)
-        self.swap_diagonals(matrix)
+        matrix.reverse()
+        self.swap_diag(matrix)
 
-    def swap_rows(self, matrix: List[List[int]]) -> None:
-        length = len(matrix)
-        for left in range(length // 2):
-            right = length - 1 - left
-            (matrix[left], matrix[right]) = (matrix[right], matrix[left])
-
-    def swap_diagonals(self, matrix: List[List[int]]) -> None:
-        length = len(matrix)
-        for row in range(length):
-            for col in range(row + 1):
-                (matrix[row][col], matrix[col][row]) = (
-                    matrix[col][row],
-                    matrix[row][col],
-                )
+    def swap_diag(self, matrix):
+        for row in range(len(matrix)):
+            for col in range(row):
+                matrix[row][col], matrix[col][row] = matrix[col][row], matrix[row][col]
 
 
 # counter clockwise rotate, swap cols then swap digonal cells
@@ -61,10 +52,24 @@ class RotateImage2:
             row.reverse()
 
     def swap_diagonals(self, matrix: List[List[int]]):
-        length = len(matrix)
-        for row in range(length):
-            for col in range(row + 1):
-                (matrix[row][col], matrix[col][row]) = (
-                    matrix[col][row],
-                    matrix[row][col],
-                )
+        for row in range(len(matrix)):
+            for col in range(row):
+                matrix[row][col], matrix[col][row] = matrix[col][row], matrix[row][col]
+
+
+matrix = [[1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9]]
+
+copy1 = copy.deepcopy(matrix)
+assert RotateImage().rotate(copy1) == None
+assert copy1 == [[7, 4, 1],
+                 [8, 5, 2],
+                 [9, 6, 3]]
+
+copy2 = copy.deepcopy(matrix)
+assert RotateImage2().rotate(copy2) == None
+assert copy2 == [[3, 6, 9],
+                 [2, 5, 8],
+                 [1, 4, 7]]
+print("DONE")

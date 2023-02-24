@@ -1,6 +1,7 @@
 # Array, String, Depth-First Search, Breadth-First Search, Graph, Topological Sort
 # Airbnb 15 Amazon 2 Facebook 2 Bloomberg 2 Google 6 Microsoft 6 Uber 5 Snapchat 3 Rubrik 12 Pinterest 6 Apple 4 Twitter 3 eBay 3 ByteDance 3 Coupang 2 Pocket Gems Wix
 # https://leetcode.com/problems/alien-dictionary/description/
+# https://www.lintcode.com/problem/892/
 # There is a new alien language that uses the English alphabet. However, the order among the letters is unknown to you.
 
 # You are given a list of strings words from the alien language's dictionary, where the strings in words are
@@ -19,79 +20,75 @@
 # Input: words = ["z","x","z"]
 # Output: ""
 # Explanation: The order is invalid, so return "".
-from collections import deque
-from typing import Dict, List, Set
-
 
 class AlienDictionary:
-
-    # the first different char of two words can form an edge
-    # for example, "wrt","wrf" => t > f => t -> f
-    # there could be more chars between t and f, so we need to get all edges and do topological sort
     def alienOrder(self, words: List[str]) -> str:
         if not words:
             return ""
 
-        charToChars: Dict[str, Set[str]] = self.build_graph(words)
-        if not charToChars:
+        order_pairs = self.get_order_pairs(words)
+        if order_pairs == None:
             return ""
+        node_to_indegree, node_to_nodes = self.build_graph(words, order_pairs)
 
-        return self.get_topological_order(charToChars)
-
-    def build_graph(self, words: List[str]) -> Dict[str, Set[str]]:
-        graph = dict()
-        # build nodes
-        for word in words:
-            for character in word:
-                if character not in graph:
-                    graph[character] = set()
-
-        # build edges
-        for i in range(0, len(words) - 1):
-            index = 0
-            while index < len(words[i]) and index < len(words[i + 1]):
-                currentChar = words[i][index]
-                nextChar = words[i + 1][index]
-                if currentChar != nextChar:
-                    graph.get(currentChar).add(nextChar)
-                    break  # only need the first diff chars
-                index += 1
-
-            # check invalid input
-            if index == min(len(words[i]), len(words[i + 1])):
-                if len(words[i]) > len(words[i + 1]):
-                    return None
-
-        return graph
-
-    def get_topological_order(self, graph) -> str:
-        indegree: Dict[str, int] = self.get_indegree(graph)
         queue = deque()
-        for char in indegree.keys():
-            if indegree.get(char) == 0:
-                queue.append(char)
+        for letter, indegree in node_to_indegree.items():
+            if indegree == 0:
+                queue.append(letter)
 
         result = list()
         while queue:
-            head = queue.popleft()
-            result.append(head)
-            for neighbor in graph.get(head):
-                indegree[neighbor] = -1 + indegree.get(neighbor)
-                if indegree.get(neighbor) == 0:
-                    queue.append(neighbor)
+            all_nodes = self.get_all_nodes(queue)
+            result.extend(all_nodes)
+            for node in all_nodes:
+                for child in node_to_nodes[node]:
+                    node_to_indegree[child] -= 1
+                    if node_to_indegree[child] == 0:
+                        queue.append(child)
 
-        if len(result) == len(indegree):
-            return "".join(result)
+        for letter, indegree in node_to_indegree.items():
+            if indegree != 0:
+                return ""
 
-        return ""
+        return "".join(result)
 
-    def get_indegree(self, graph) -> Dict[str, int]:
-        indegree: Dict[str, int] = dict()
-        for from_char in graph.keys():
-            indegree[from_char] = 0
+    def get_order_pairs(self, words):
+        pairs = list()
+        for i in range(len(words) - 1):
+            word1 = words[i]
+            word2 = words[i + 1]
+            has_same_prefix = False
+            for letter1, letter2 in zip(word1, word2):
+                if letter1 != letter2:
+                    pairs.append((letter1, letter2))
+                    has_same_prefix = False
+                    break
+                else:
+                    has_same_prefix = True
 
-        for from_char in graph.keys():
-            for to_char in graph.get(from_char):
-                indegree[to_char] = 1 + indegree.get(to_char, 0)
+            if has_same_prefix and len(word1) > len(word2):
+                return None
 
-        return indegree
+        return pairs
+
+    def build_graph(self, words, order_pairs):
+        node_to_indegree = dict()
+        node_to_nodes = dict()
+        # all chars are needed otherwise "xy","xz" will output "yz" instead of "xyz"
+        for word in words:
+            for letter in word:
+                node_to_indegree[letter] = 0
+                node_to_nodes[letter] = list()
+
+        for from_letter, to_letter in order_pairs:
+            node_to_indegree[to_letter] += 1
+            node_to_nodes[from_letter].append(to_letter)
+
+        return node_to_indegree, node_to_nodes
+
+    def get_all_nodes(self, queue):
+        nodes = list()
+        while queue:
+            nodes.append(queue.popleft())
+
+        return nodes

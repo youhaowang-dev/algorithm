@@ -27,31 +27,35 @@ from typing import Tuple
 class LongestPalindromicSubstring:
     def longestPalindrome(self, s: str) -> str:
         if not s:
-            return 0
+            return ""
 
-        start = 0
-        end = 0
+        left = 0
+        right = 0
         for i in range(len(s)):
-            start1, end1 = self.get_range(s, i, i)
-            start2, end2 = self.get_range(s, i, i + 1)
-            if end1 - start1 > end - start:  # compare distance
-                start, end = start1, end1
-            if end2 - start2 > end - start:
-                start, end = start2, end2
+            left1, right1 = self.get_max_range(s, i, i)
+            length1 = right1 - left1
+            left2, right2 = self.get_max_range(s, i, i+1)
+            length2 = right2 - left2
+            if length1 > right - left:
+                left = left1
+                right = right1
+            if length2 > right - left:
+                left = left2
+                right = right2
 
-        return s[start:end + 1]
+        return s[left:right+1]
 
-    def get_range(self, s: str, start: int, end: int) -> Tuple[int, int]:
-        while start >= 0 and end < len(s):
-            if s[start] == s[end]:
-                start -= 1
-                end += 1
+    def get_max_range(self, s, left, right) -> Tuple[int, int]:
+        while left >= 0 and right < len(s):
+            if s[left] == s[right]:
+                left -= 1
+                right += 1
             else:
                 break
-        start += 1  # different char, revert back one step
-        end -= 1
 
-        return start, end
+        left += 1
+        right -= 1
+        return (left, right)
 
 
 # dp O(n^2)

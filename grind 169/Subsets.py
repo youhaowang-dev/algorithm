@@ -20,21 +20,20 @@
 # As as result, for N numbers, we would have in total 2^N choices (solutions).
 class Subsets:
     def subsets(self, nums: List[int]) -> List[List[int]]:
-        subsets = list()
         if not nums:
-            return subsets
+            return list()
 
-        subset = list()
+        results = list()
+        result = list()
         start = 0
-        self.build_subsets(nums, start, subset, subsets)
+        self.build_results(nums, results, result, start)
+        return results
 
-        return subsets
+    def build_results(self, nums, results, result, start):
+        results.append(list(result))
 
-    def build_subsets(self, nums, start, subset, subsets):
-        subsets.append(list(subset))
         for i in range(start, len(nums)):
-            # if i > start and nums[i] == nums[i - 1]:
-            #     continue
-            subset.append(nums[i])
-            self.build_subsets(nums, i + 1, subset, subsets)
-            subset.pop()
+            num = nums[i]
+            result.append(num)
+            self.build_results(nums, results, result, i + 1)
+            result.pop()

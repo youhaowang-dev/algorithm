@@ -30,67 +30,46 @@
 # Input: nums = [1], k = 1
 # Output: [1]
 
-from collections import deque
-from typing import List
-
 # brute force: get max for all windows
+# build max queue
 class SlidingWindowMaximum:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
-        max_of_windows = list()
-
-        if not nums or k == 0:
-            return max_of_windows
-
-        for i in range(0, len(nums) - k + 1):
-            window = nums[i : i + k]
-            max_of_windows.append(max(window))
-
-        return max_of_windows
-
-
-# build max queue
-class SlidingWindowMaximum1:
-    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
-        window_maxes = list()
-        if not nums or k == 0:
-            return window_maxes
+        if not nums or not k:
+            return 0
 
         max_queue = MaxQueue()
         for i in range(k):
             max_queue.enqueue(nums[i])
 
-        window_maxes.append(max_queue.max())
-
+        results = list()
+        results.append(max_queue.get_max())
         for i in range(k, len(nums)):
             max_queue.dequeue()
             max_queue.enqueue(nums[i])
-            window_maxes.append(max_queue.max())
+            results.append(max_queue.get_max())
 
-        return window_maxes
+        return results
 
 
 class MaxQueue:
     def __init__(self):
         self.queue = deque()
+        # [-1] always greater than new val, can only decrease, [0] is the max
         self.maxes = deque()
 
-    def enqueue(self, val: int) -> None:
+    def enqueue(self, val) -> None:
         self.queue.append(val)
-
-        #  remove tail if less than val to ensure monotone of the queue
         while self.maxes and self.maxes[-1] < val:
-            self.maxes.pop()
+            self.maxes.pop()  # not popleft as we try to keep the max
 
         self.maxes.append(val)
 
     def dequeue(self) -> int:
-        result = self.queue.popleft()
-
-        if result == self.maxes[0]:
+        val = self.queue.popleft()
+        if val == self.get_max():
             self.maxes.popleft()
 
-        return result
+        return val
 
-    def max(self) -> int:
-        # max element appears at the head of the queue
+    def get_max(self) -> int:
         return self.maxes[0]

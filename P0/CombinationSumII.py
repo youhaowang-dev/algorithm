@@ -26,44 +26,40 @@
 # [1,2,2],
 # [5]
 # ]
-from ast import List
 
-# Time complexity is O(2^n). Space complexity O(n). For each num you have two choices, pick it or not.
+# time O(n*2^n) where n=target/min_num=max_picks, For each num you have two choices, pick it or not. copy takes n
+# space O(n) for recursion depth and hash table and output
 class CombinationSumII:
     def combinationSum2(self, nums: List[int], target: int) -> List[List[int]]:
-        result = list()
         if not nums:
-            return result
+            return list()
 
-        list_state = list()
-        start_index = 0
-        # Sort removes dups, for example, 1,2a,2b,5, to get 7,
-        # cur pointer is on 1, then 1, 2a, 5, and 1, 2b, 5, would be dups.
-        # select multi values, for example 1,2,2, it will be covered when cur pointer is 2a
-        self.combinationSum2Helper(
-            sorted(nums), target, list_state, start_index, result
-        )
+        num_to_count = collections.Counter(nums)
+        results = list()
+        result = list()
+        unique_nums = list(num_to_count.keys())
+        start = 0
+        self.build_results(results, result, target,
+                           num_to_count, unique_nums, start)
 
-        return result
+        return results
 
-    def combinationSum2Helper(self, nums, target, list_state, start_index, result):
+    def build_results(self, results, result, target, num_to_count, nums, start):
+        if target == 0:
+            results.append(list(result))
+            return
+
         if target < 0:
             return
 
-        if target == 0:
-            result.append(list(list_state))
-            return
-
-        # target > 0
-        for i in range(start_index, len(nums)):
-            # dedup
-            # i > startIndex is for NOT skipping the first number as it should always be picked
-            # i > startIndex also handles edge cases where i == 0
-            if i > start_index and nums[i] == nums[i - 1]:
+        for i in range(start, len(nums)):
+            num = nums[i]
+            if num_to_count[num] == 0:
                 continue
 
-            list_state.append(nums[i])
-            self.combinationSum2Helper(
-                nums, target - nums[i], list_state, i + 1, result
-            )
-            list_state.pop()
+            result.append(num)
+            num_to_count[num] -= 1
+            self.build_results(results, result, target -
+                               num, num_to_count, nums, i)
+            result.pop()
+            num_to_count[num] += 1
