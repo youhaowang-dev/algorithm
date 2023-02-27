@@ -51,21 +51,19 @@ class MyQueue:
     def push(self, x: int) -> None:
         self.in_stack.append(x)
 
-    def pop(self) -> int:  # assume non empty
+    def pop(self) -> int:
         if not self.out_stack:
-            self.move_in_to_out()
-
+            self._move_in_to_out()
         return self.out_stack.pop()
 
-    def peek(self) -> int:  # assume non empty
+    def peek(self) -> int:
         if not self.out_stack:
-            self.move_in_to_out()
-
+            self._move_in_to_out()
         return self.out_stack[-1]
 
-    def empty(self) -> bool:
-        return not self.in_stack and not self.out_stack
-
-    def move_in_to_out(self) -> None:
+    def _move_in_to_out(self):
         while self.in_stack:
             self.out_stack.append(self.in_stack.pop())
+
+    def empty(self) -> bool:
+        return len(self.in_stack) == 0 and len(self.out_stack) == 0
