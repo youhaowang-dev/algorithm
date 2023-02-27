@@ -36,57 +36,67 @@
 
 # dict to save key to (key, val), (key, val) is connected by linked list
 # dict size will be used for max size control
-class LRUCache:
-    def __init__(self, max_size):
-        self.max_size = max_size
-        self.key_to_node = dict()
-        self.head = Node()
-        self.tail = Node()
+class Node:
+    def __init__(self, key: int, val: int):
+        self.key = key
+        self.val = val
+        self.prev = None
+        self.next = None
+
+    def remove_self(self):
+        prev = self.prev
+        next = self.next
+        prev.next = next
+        next.prev = prev
+
+        return self
+
+
+class DLinkedList:
+    def __init__(self):
+        self.head = Node(0, 0)
+        self.tail = Node(0, 0)
         self.head.next = self.tail
         self.tail.prev = self.head
 
+    def append_first(self, node: Node):
+        head_next = self.head.next
+        self.head.next = node
+        node.prev = self.head
+        node.next = head_next
+        head_next.prev = node
+
+    def remove_last(self) -> Node:
+        return self.tail.prev.remove_self()
+
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.capacity = capacity
+        self.key_to_node = dict()
+        self.nodes = DLinkedList()
+
     def get(self, key: int) -> int:
-        if key not in self.key_to_node:
+        node = self.key_to_node.get(key, None)
+        if not node:
             return -1
 
-        node = self.key_to_node[key]
-        self.remove_self(node)
-        self.insert_at_head(node)
+        node.remove_self()
+        self.nodes.append_first(node)
 
         return node.val
 
-    def remove_self(self, node):
-        node.prev.next = node.next
-        node.next.prev = node.prev
+    def put(self, key: int, value: int) -> None:
+        node = self.key_to_node.get(key, None)
+        if node:
+            node.val = value
+            node.remove_self()
+            self.nodes.append_first(node)
+            return
 
-    def insert_at_head(self, node):
-        node.next = self.head.next
-        node.prev = self.head
-        self.head.next.prev = node
-        self.head.next = node
-
-    def put(self, key: int, val: int) -> None:
-        if key not in self.key_to_node:
-            node = Node(key, val)
-            self.insert_at_head(node)
-            self.key_to_node[key] = node
-            if self.max_size < len(self.key_to_node):
-                self.remove_last()
-        else:
-            node = self.key_to_node[key]
-            node.val = val
-            self.remove_self(node)
-            self.insert_at_head(node)
-
-    def remove_last(self):
-        node = self.tail.prev
-        self.remove_self(node)
-        del self.key_to_node[node.key]
-
-
-class Node:
-    def __init__(self, key=0, val=0):
-        self.key = key
-        self.val = val
-        self.next = None
-        self.prev = None
+        new_node = Node(key, value)
+        self.key_to_node[key] = new_node
+        self.nodes.append_first(new_node)
+        if len(self.key_to_node) > self.capacity:
+            removed_node = self.nodes.remove_last()
+            self.key_to_node.pop(removed_node.key)
