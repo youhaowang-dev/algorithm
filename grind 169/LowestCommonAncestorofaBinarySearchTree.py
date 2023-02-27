@@ -10,6 +10,20 @@
 # use BST property, if both are bigger than root.val, move to root.right
 # if both are smaller than root.val, move to root.left, otherwise return the root
 # time: O(n) for unbalanced tree, space: O(1)
+class LowestCommonAncestorofaBinarySearchTree2:  # use BST property, recursion
+    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        if not root:
+            return None
+
+        root_val = root.val
+        if root_val > p.val and root_val > q.val:
+            return self.lowestCommonAncestor(root.left, p, q)
+        elif root_val < p.val and root_val < q.val:
+            return self.lowestCommonAncestor(root.right, p, q)
+        else:
+            return root
+
+
 class LowestCommonAncestorofaBinarySearchTree:
     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
         if not p:
@@ -29,29 +43,9 @@ class LowestCommonAncestorofaBinarySearchTree:
         return None
 
 
-class LowestCommonAncestorofaBinarySearchTree2:  # use BST property, recursion
-    def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
-        if not p:
-            return None
-        if not q:
-            return None
-
-        if p.val > root.val and q.val > root.val:
-            return self.lowestCommonAncestor(root.right, p, q)
-        elif p.val < root.val and q.val < root.val:
-            return self.lowestCommonAncestor(root.left, p, q)
-        else:  # root.val is between
-            return root
-
-
 # divide and conquer, not using BST property, but can handle p and/or q not in tree case
 class LowestCommonAncestorofaBinarySearchTree3:
     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
-        if not p:
-            return None
-        if not q:
-            return None
-
         if not root:
             return None
 
@@ -61,77 +55,14 @@ class LowestCommonAncestorofaBinarySearchTree3:
         if root == q:
             return root
 
-        left_lca = self.lowestCommonAncestor(root.left, p, q)
-        right_lca = self.lowestCommonAncestor(root.right, p, q)
-        if left_lca and right_lca:
+        left_result = self.lowestCommonAncestor(root.left, p, q)
+        right_result = self.lowestCommonAncestor(root.right, p, q)
+
+        if left_result and right_result:
             return root
-        elif left_lca:
-            return left_lca
-        elif right_lca:
-            return right_lca
+        elif left_result:
+            return left_result
+        elif right_result:
+            return right_result
         else:
             return None
-
-
-# class LowestCommonAncestorofaBinarySearchTree {
-
-#     #     6
-#     #    / \
-#     #   2   8
-#     #  / \
-#     # 0   4
-#     #    / \
-#     #   3   5
-#     # find LCA for 0 and 5
-#     # both are smaller, so go to left,
-#     # now 2 is between 0 and 5, we found the LCA
-
-#     # evaluate the root node, if both are in left or right, move root until not
-#     # when not, the root is the LCA
-#     # can use an example to prove
-#     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-#         int pVal = p.val
-#         int qVal = q.val
-
-#         TreeNode current = root  # current parent
-
-#         while (current != null) {
-#             int currentVal = current.val
-
-#             if (pVal > currentVal & & qVal > currentVal) {
-#                 # both in right subtree, drop left subtree
-#                 current = current.right
-#                 continue
-#             }
-#             if (pVal < currentVal & & qVal < currentVal) {
-#                 # both in left subtree, drop right subtree
-#                 current = current.left
-#                 continue
-#             }
-#             # one in left subtree and one in right subtree, so this is the LCA
-#             return current
-#         }
-
-#         return null
-#     }
-
-#     # recursion uses BST property
-#     # binary search an answer
-#     # time n space n
-#     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-#         int rootVal = root.val
-#         int pVal = p.val
-#         int qVal = q.val
-
-#         if (pVal > rootVal & & qVal > rootVal) {
-#             # both in right subtree, drop left subtree
-#             return lowestCommonAncestor(root.right, p, q)
-#         }
-#         if (pVal < rootVal & & qVal < rootVal) {
-#             # both in left subtree, drop right subtree
-#             return lowestCommonAncestor(root.left, p, q)
-#         }
-#         # one in left subtree and one in right subtree, so this is the LCA
-#         return root
-#     }
-# }
