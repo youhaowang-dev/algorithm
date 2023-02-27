@@ -9,29 +9,26 @@
 # time O(n), space(n) for unbalanced tree
 class BalancedBinaryTree:
     def isBalanced(self, root: Optional[TreeNode]) -> bool:
-        if not root:
-            return True
+        is_balanced, _ = self.is_balanced_helper(root)
 
-        return self.is_balanced_helper(root)[0]
+        return is_balanced
 
-    # Tuple(is_balanced, max_depth)
-    def is_balanced_helper(self, root: Optional[TreeNode]) -> Tuple[bool, int]:
+    def is_balanced_helper(self, root) -> Tuple[bool, int]:
         if not root:
             return (True, 0)
 
-        left_balanced, left_max_depth = self.is_balanced_helper(root.left)
-        right_balanced, right_max_depth = self.is_balanced_helper(root.right)
-
-        root_balanced = abs(left_max_depth - right_max_depth) < 2
-        root_max_depth = 1 + max(left_max_depth, right_max_depth)
+        left_is_balanced, left_max_depth = self.is_balanced_helper(root.left)
+        right_is_balanced, right_max_depth = self.is_balanced_helper(
+            root.right)
+        root_is_balanced = abs(left_max_depth - right_max_depth) < 2
 
         return (
-            left_balanced and right_balanced and root_balanced,
-            root_max_depth
+            left_is_balanced and right_is_balanced and root_is_balanced,
+            1 + max(left_max_depth, right_max_depth)
         )
 
 
-# iterative post order traversal
+# solution2: iterative post order traversal, just know this
 class BalancedBinaryTree2:
     def isBalanced(self, root: Optional[TreeNode]) -> bool:
         stack, node, last, depths = deque(), root, None, dict()
