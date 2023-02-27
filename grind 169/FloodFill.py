@@ -28,35 +28,27 @@
 class FloodFill:
     def floodFill(self, image: List[List[int]], row_start: int, col_start: int, new_color: int) -> List[List[int]]:
         if not image:
-            return list()
-
-        if not image[0]:
-            return list()
+            return image
 
         old_color = image[row_start][col_start]
         if old_color == new_color:
             return image
 
-        self.replace_color(image, row_start, col_start, old_color, new_color)
+        self.fill(image, row_start, col_start, old_color, new_color)
 
         return image
 
-    def replace_color(self, image, row_start, col_start, old_color, new_color) -> None:
-        # check bound
-        if (
-            row_start < 0 or
-            row_start >= len(image) or
-            col_start < 0 or
-            col_start >= len(image[0])
+    def fill(self, image, row, col, old_color, new_color):
+        if not (
+            0 <= row < len(image) and
+            0 <= col < len(image[0])
         ):
             return
-        # check color
-        if image[row_start][col_start] != old_color:
+        if image[row][col] != old_color:
             return
-        # replace color
-        image[row_start][col_start] = new_color
-        # replace neighbors
-        for row_delta, col_delta in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-            next_row = row_start + row_delta
-            next_col = col_start + col_delta
-            self.replace_color(image, next_row, next_col, old_color, new_color)
+
+        image[row][col] = new_color
+
+        for row_delta, col_delta in [(1, 0), (0, 1), (-1, 0), (0, -1)]:
+            self.fill(image, row + row_delta, col +
+                      col_delta, old_color, new_color)
