@@ -9,43 +9,40 @@
 # time O(m*n*3^k), k=len(word) and m and n are sizes of our board, max search depth is k and each search can branch 3 searches
 # space k
 class WordSearch:
-    USED = "USED"
-
     def exist(self, board: List[List[str]], word: str) -> bool:
-        if not board or not board[0]:
+        if not board or not board[0] or not word:
             return False
 
-        for row in range(len(board)):
-            for col in range(len(board[0])):
-                current_word = ""
-                if self.has_word(board, word, row, col, current_word):
-                    return True
+        row_count = len(board)
+        col_count = len(board[0])
+        used = set()
 
-        return False
-
-    def has_word(self, board, word, row, col, current_word):
-        if current_word == word:
-            return True
-
-        if (
-            row < 0 or
-            row >= len(board) or
-            col < 0 or
-            col >= len(board[0])
-        ):
-            return False
-
-        char = board[row][col]
-        if char == self.USED:
-            return False
-
-        for row_delta, col_delta in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-            next_row = row + row_delta
-            next_col = col + col_delta
-
-            board[row][col] = self.USED
-            if self.has_word(board, word, next_row, next_col, current_word + char):
+        def has_word(row, col, word_index):
+            # if order matters
+            if word_index == len(word):
                 return True
-            board[row][col] = char
+
+            if not (
+                0 <= row < row_count and
+                0 <= col < col_count
+            ):
+                return False
+
+            if (row, col) in used:
+                return False
+
+            if board[row][col] != word[word_index]:
+                return False
+
+            used.add((row, col))
+            for row_delta, col_delta in [(0, 1), (1, 0), (-1, 0), (0, -1)]:
+                if has_word(row + row_delta, col + col_delta, word_index + 1):
+                    return True
+            used.remove((row, col))
+
+        for row in range(row_count):
+            for col in range(col_count):
+                if has_word(row, col, 0):
+                    return True
 
         return False
