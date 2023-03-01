@@ -22,52 +22,53 @@
 
 # BFS for shortest path
 class WordLadder:
-    LETTERS = "abcdefghijklmnopqrstuvwxyz"
-
-    def ladderLength(self, start_word: str, end_word: str, wordList: List[str]) -> int:
-        if not start_word or not end_word or not wordList:
+    def ladderLength(self, start: str, end: str, wordList: List[str]) -> int:
+        if not start or not end or not wordList:
             return 0
-
-        word_set = set(wordList)
-        if end_word not in word_set:
+        words = set(wordList)
+        if end not in words:
             return 0
 
         queue = deque()
-        used = set()
-        queue.append(start_word)
-        used.add(start_word)
-        word_count = 1
+        word_to_parent = dict()
+        queue.append(start)
+        word_to_parent[start] = None
         while queue:
-            words = self.get_all_words(queue)
-            for word in words:
-                if word == end_word:
-                    return word_count
-                else:
-                    next_words = self.get_next_words(word, word_set)
-                    for next_word in next_words:
-                        if next_word in used:
-                            continue
-                        queue.append(next_word)
-                        used.add(next_word)
-            word_count += 1
+            all_words = self.get_all_words(queue)
+            for word in all_words:
+                next_words = self.get_next_words(word)
+                for next_word in next_words:
+                    if next_word in word_to_parent:
+                        continue
+                    if next_word not in words:
+                        continue
+                    queue.append(next_word)
+                    word_to_parent[next_word] = word
+                    if next_word == end:
+                        return len(self.build_path(end, word_to_parent))
 
         return 0
+
+    def build_path(self, word, word_to_parent):
+        path = deque()
+        while word:
+            path.appendleft(word)
+            word = word_to_parent[word]
+        print("->".join(path))
+        return path
 
     def get_all_words(self, queue):
         words = list()
         while queue:
             words.append(queue.popleft())
-
         return words
 
-    def get_next_words(self, word, word_set):
-        words = list()
+    def get_next_words(self, word):
+        new_words = list()
         for i, letter in enumerate(word):
-            for new_letter in self.LETTERS:
-                if letter == new_letter:
-                    continue
-                new_word = word[:i] + new_letter + word[i+1:]
-                if new_word in word_set:
-                    words.append(new_word)
+            for new_letter in 'abcdefghijklmnopqrstuvwxyz':
+                # if letter == new_letter:
+                #     continue
+                new_words.append(word[:i] + new_letter + word[i+1:])
 
-        return words
+        return new_words
