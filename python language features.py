@@ -1,3 +1,5 @@
+from dateutil import parser
+from datetime import datetime
 from typing import List, Dict
 import abc
 import unittest
@@ -137,7 +139,7 @@ class Vals:  # ObjectWithCustomComparator
 
         return self.val1 < other.val1
 
-    def __str__(self):
+    def __repr__(self):
         return "val1: %d val2: %d" % (self.val1, self.val2)
 
 
@@ -164,6 +166,52 @@ class TestCustomComparator(unittest.TestCase):
         self.assertEqual(heapq.heappop(min_heap), val2)
         self.assertEqual(heapq.heappop(min_heap), val1)
         self.assertEqual(heapq.heappop(min_heap), val3)
+
+
+class DataTime:
+    def get_closest_k_days(days, target_day, k):
+        min_heap = list()
+        for day in days:
+            # diff = abs(day.timestamp() - target_day.timestamp())
+            diff = abs(day - target_day)  # datetime.timedelta
+            heapq.heappush(min_heap, (-diff, day))  # max diff at peak
+            if len(min_heap) > k:
+                heapq.heappop(min_heap)
+
+        output = list()
+        for _, day in min_heap:
+            output.append(day)
+
+        return output
+
+
+class TestDataTime(unittest.TestCase):
+    def test_closest(self):
+        day1 = parser.parse('2022-12-21')
+        day2 = parser.parse('2022-12-22')
+        day3 = parser.parse('2022-12-23')
+        day4 = parser.parse('2022-12-24')
+        day5 = datetime(2022, 12, 25)
+        day6 = datetime(2022, 12, 26)
+        day7 = datetime(2022, 12, 27)
+        day8 = datetime(2022, 12, 28)
+
+        self.assertEqual(
+            DataTime.get_closest_k_days(
+                [day1, day2, day3, day4, day5, day6, day7, day8], day3, 3),
+            [datetime(2022, 12, 22, 0, 0),
+             datetime(2022, 12, 24, 0, 0),
+             datetime(2022, 12, 23, 0, 0)]
+        )
+        self.assertEqual(
+            DataTime.get_closest_k_days(
+                [day1, day2, day3, day4, day5, day6, day7, day8], day3, 5),
+            [datetime(2022, 12, 21, 0, 0),
+             datetime(2022, 12, 25, 0, 0),
+             datetime(2022, 12, 23, 0, 0),
+             datetime(2022, 12, 24, 0, 0),
+             datetime(2022, 12, 22, 0, 0)]
+        )
 
 
 unittest.main()
