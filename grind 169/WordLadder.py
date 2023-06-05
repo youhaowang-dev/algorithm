@@ -20,8 +20,56 @@
 # Output: 0
 # Explanation: The endWord "cog" is not in wordList, therefore there is no valid transformation sequence.
 
+
 # BFS for shortest path
+# time O(nm) for hashing
 class WordLadder:
+    def ladderLength(self, start_word: str, end_word: str, words: List[str]) -> int:
+        words = set(words)
+        if not words or end_word not in words:
+            return 0
+
+        queue = deque()
+        visited = set()
+        queue.append(start_word)
+        visited.add(start_word)
+        count = 1
+        while queue:
+            all_words = self.get_all_words(queue)
+            count += 1
+            for word in all_words:
+                visited.add(word)
+                next_words = self.get_next_words(word)
+                for next_word in next_words:
+                    if next_word == end_word:
+                        return count
+                    if next_word in visited:
+                        continue
+                    if next_word in words:
+                        queue.append(next_word)
+                        visited.add(next_word)
+
+        return 0
+
+    def get_next_words(self, word):
+        next_words = list()
+        for new_letter in "abcdefghijklmnopqrstuvwxyz":
+            for i, old_letter in enumerate(word):
+                # if new_letter == old_letter:
+                #     continue
+                next_words.append(word[:i] + new_letter + word[i + 1:])
+
+        return next_words
+
+    def get_all_words(self, queue):
+        words = list()
+        while queue:
+            words.append(queue.popleft())
+
+        return words
+
+
+class WordLadderWithPathPrint:
     def ladderLength(self, start: str, end: str, wordList: List[str]) -> int:
         if not start or not end or not wordList:
             return 0
@@ -66,9 +114,9 @@ class WordLadder:
     def get_next_words(self, word):
         new_words = list()
         for i, letter in enumerate(word):
-            for new_letter in 'abcdefghijklmnopqrstuvwxyz':
+            for new_letter in "abcdefghijklmnopqrstuvwxyz":
                 # if letter == new_letter:
                 #     continue
-                new_words.append(word[:i] + new_letter + word[i+1:])
+                new_words.append(word[:i] + new_letter + word[i + 1:])
 
         return new_words
